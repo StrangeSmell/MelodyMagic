@@ -1,0 +1,14 @@
+{
+  "piaoyi": {
+    "sounds": [ "mcspeed:piaoyi" ]
+  },
+  "xiaopen": {
+    "sounds": [ "mcspeed:xiaopen" ]
+  },
+  "dapen": {
+  "sounds": [ "mcspeed:dapen" ]
+  },
+  "pengzhuang": {
+  "sounds": [ "mcspeed:pengzhuang" ]
+}
+}
