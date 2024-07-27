@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
+import static com.strangesmell.melodymagic.MelodyMagic.LOGGER;
 import static net.minecraft.sounds.SoundEvent.createVariableRangeEvent;
 import static net.minecraft.world.effect.MobEffects.*;
 
@@ -24,7 +25,9 @@ public class Util {
         Random random = new Random(net.minecraft.Util.getMillis());
         return EFFECT_LIST.get(random.nextInt(0,EFFECT_LIST.size()));
     }
-    public static CompoundTag saveSoundDataToTag(List<SoundInstance> subtitles,List<Double> distance){
+
+
+    public static CompoundTag saveSoundDataToTag(List<SoundInstance> subtitles,List<List<Double>> location){
         CompoundTag compoundTag = new CompoundTag();
         int size = subtitles.size();
         compoundTag.putInt("size",size);
@@ -32,7 +35,9 @@ public class Util {
         for(int i = 0;i<size;i++){
             compoundTag.putString("namespace"+i,subtitles.get(i).getLocation().getNamespace());
             compoundTag.putString("path"+i,subtitles.get(i).getLocation().getPath());
-            compoundTag.putDouble("distance"+i,distance.get(i));
+            compoundTag.putDouble("x"+i,location.get(i).get(0));
+            compoundTag.putDouble("y"+i,location.get(i).get(0));
+            compoundTag.putDouble("z"+i,location.get(i).get(0));
         }
         return compoundTag;
     }
@@ -66,17 +71,38 @@ public class Util {
         return subtitles;
     }
 
-    public static void loadSoundDataToTag(CompoundTag tag,List<SoundEvent> list1,List<Double> list2){
+    public static void loadSoundDataToTag(CompoundTag tag,List<SoundEvent> list1,List<List<Double>> list2){
         int size = tag.getInt("size");
         if(size!=0){
             for(int i =0;i<size;i++){
                 list1.add(createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(tag.getString("namespace"+i),tag.getString("path"+i))));
-                list2.add(tag.getDouble("distance"+i));
+                List<Double> xyz = Lists.newArrayList();
+                xyz.add(tag.getDouble("x"+i));
+                xyz.add(tag.getDouble("y"+i));
+                xyz.add(tag.getDouble("z"+i));
+                list2.add(xyz);
             }
         }
     }
 
     public static Vec3 getSoundVec3(SoundInstance soundInstance){
         return new Vec3(soundInstance.getX(),soundInstance.getY(),soundInstance.getZ());
+    }
+
+
+    public static boolean contain(List<SoundEvent> list1,SoundEvent soundEvent){
+        for (SoundEvent event : list1) {
+            if (event.getLocation().equals(soundEvent.getLocation())) return true;
+        }
+        return false;
+    }
+
+    public static int indexOf(List<SoundEvent> list1,SoundEvent soundEvent){
+        for (int i=0;i<list1.size();i++) {
+            if (list1.get(i).getLocation().equals(soundEvent.getLocation())) return i;
+        }
+        LOGGER.info("An error occurred while getting the index");
+        LOGGER.info("The game doesn't crash but tooltip renders an error message");
+        return 0;
     }
 }

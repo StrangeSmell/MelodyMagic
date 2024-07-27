@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+import static com.strangesmell.melodymagic.Hud.SelectHud.location;
 import static com.strangesmell.melodymagic.Hud.SelectHud.subtitles;
 import static com.strangesmell.melodymagic.api.Util.getRandomEffect;
 
@@ -44,19 +45,20 @@ public class SoundContainerItem extends Item {
 
         }
         List<SoundEvent> subtitles = Lists.newArrayList();
-        List<Double> distance = Lists.newArrayList();
+        List<List<Double>> location = Lists.newArrayList();
         if(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA)==null) return InteractionResultHolder.consume(itemstack);
-        Util.loadSoundDataToTag(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,distance);
-        if(pLevel instanceof  ServerLevel) effect(subtitles,distance, pLevel,  pPlayer,  pUsedHand);
+        Util.loadSoundDataToTag(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location);
+        if(pLevel instanceof  ServerLevel) effect(subtitles,location, pLevel,  pPlayer,  pUsedHand);
         if(!subtitles.isEmpty()){
-            for (SoundEvent subtitle : subtitles) {
-                pPlayer.playSound(subtitle, 1, 1);
+            for (int i =0;i<subtitles.size();i++) {
+                pLevel.playSound(null,location.get(i).get(0)+pPlayer.getX(),location.get(i).get(1)+pPlayer.getY(),location.get(i).get(2)+pPlayer.getZ(),subtitles.get(i),pPlayer.getSoundSource() );
+
             }
         }
 
         return InteractionResultHolder.consume(itemstack);
     }
-    public void effect(List<SoundEvent> subtitles,List<Double> distance,Level pLevel, Player pPlayer, InteractionHand pUsedHand){
+    public void effect(List<SoundEvent> subtitles,List<List<Double>> distance,Level pLevel, Player pPlayer, InteractionHand pUsedHand){
 
         MobEffectInstance effectInstance = new MobEffectInstance(getRandomEffect(), 180, 1);
         pPlayer.addEffect(effectInstance);

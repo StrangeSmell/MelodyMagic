@@ -16,14 +16,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import static com.strangesmell.melodymagic.Hud.SelectHud.distance;
-import static com.strangesmell.melodymagic.Hud.SelectHud.subtitles;
-import static com.strangesmell.melodymagic.MelodyMagic.MODID;
-import static com.strangesmell.melodymagic.api.Util.saveSoundDataToTag;
+import static com.strangesmell.melodymagic.Hud.SelectHud.*;
 
 
 public class CollectionItem extends Item {
@@ -39,7 +35,7 @@ public class CollectionItem extends Item {
             //同步到服务端中
             ClientLevel clientLevel = (ClientLevel) pLevel;
 
-            PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,distance)));
+            PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,location)));
 
             for(SoundInstance soundInstance : subtitles){
                 Minecraft.getInstance().getSoundManager().stop(soundInstance);

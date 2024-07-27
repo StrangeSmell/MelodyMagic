@@ -11,6 +11,7 @@ import net.minecraft.client.sounds.SoundEventListener;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -24,6 +25,7 @@ import static com.strangesmell.melodymagic.api.Util.getSoundVec3;
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public static List<SoundInstance> subtitles = Lists.newArrayList();
     public static List<Double> distance = Lists.newArrayList();
+    public static List<List<Double>> location = Lists.newArrayList();
     private static final SelectHud hud = new SelectHud();
     private final ResourceLocation HUD = ResourceLocation.fromNamespaceAndPath(MODID,"textures/gui/select.png");
     private final ResourceLocation HUD2 = ResourceLocation.withDefaultNamespace("textures/item/bucket.png");
@@ -39,7 +41,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             for(int i=0;i<subtitles.size();i++){
                 if(!soundManager.isActive(subtitles.get(i))){
                     subtitles.remove(i);
-                    distance.remove(i);
+                    location.remove(i);
 
                 }
             }
@@ -60,7 +62,12 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             if(Minecraft.getInstance().player==null) return;
             if(subtitles.contains(pSound)) return;
             subtitles.add(pSound);
-            distance.add(getSoundVec3(pSound).distanceTo(Minecraft.getInstance().player.position()));
+            List<Double> temp_location = Lists.newArrayList();
+            Player player = Minecraft.getInstance().player;
+            temp_location.add(pSound.getX()-player.getX());
+            temp_location.add(pSound.getY()-player.getY());
+            temp_location.add(pSound.getZ()-player.getZ());
+            location.add(temp_location);
             Minecraft.getInstance().getSoundManager().stop(pSound);
         }
 
