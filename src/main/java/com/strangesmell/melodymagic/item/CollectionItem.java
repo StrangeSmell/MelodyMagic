@@ -4,11 +4,7 @@ import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.message.SoundData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import static com.strangesmell.melodymagic.Hud.SelectHud.*;
+import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
 
 public class CollectionItem extends Item {

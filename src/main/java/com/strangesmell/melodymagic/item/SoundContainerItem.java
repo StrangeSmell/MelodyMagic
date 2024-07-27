@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -20,8 +19,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.strangesmell.melodymagic.Hud.SelectHud.location;
-import static com.strangesmell.melodymagic.Hud.SelectHud.subtitles;
+import static com.strangesmell.melodymagic.hud.SelectHud.subtitles;
 import static com.strangesmell.melodymagic.api.Util.getRandomEffect;
 
 public class SoundContainerItem extends Item {

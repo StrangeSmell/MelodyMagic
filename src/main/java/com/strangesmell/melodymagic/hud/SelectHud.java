@@ -1,4 +1,4 @@
-package com.strangesmell.melodymagic.Hud;
+package com.strangesmell.melodymagic.hud;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,7 +19,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.List;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
-import static com.strangesmell.melodymagic.api.Util.getSoundVec3;
 
 @OnlyIn(Dist.CLIENT)
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
