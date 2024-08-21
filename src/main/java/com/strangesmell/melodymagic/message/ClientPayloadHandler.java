@@ -1,6 +1,7 @@
 package com.strangesmell.melodymagic.message;
 
 import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.item.CollectionItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -8,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import static com.strangesmell.melodymagic.message.ServerPayloadHandler.getKey;
 
 public class ClientPayloadHandler {
     private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
@@ -31,6 +34,21 @@ public class ClientPayloadHandler {
                     return null;
                 });
     }
+    public static void handleData(final SelectCount data, final IPayloadContext context) {
+        // Do something with the data, on the network thread
+        //blah(data.name());
+
+        // Do something with the data, on the main thread
+        context.enqueueWork(() -> {
+
+                    function2(context,data.selectCount());
+                })
+                .exceptionally(e -> {
+                    // Handle exception
+                    context.disconnect(Component.translatable("melodymagic.networking.failed", e.getMessage()));
+                    return null;
+                });
+    }
 
     public static void function(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();
@@ -38,6 +56,18 @@ public class ClientPayloadHandler {
         CustomData customData = CustomData.of(compoundTag);
         itemStack.set(DataComponents.CUSTOM_DATA,customData);
         player.getInventory().add(itemStack);
+    }
+
+    public static void function2(IPayloadContext context,int selectCount){
+        Player player = context.player();
+        ItemStack itemStack = player.getItemInHand(player.getUsedItemHand());
+        if(itemStack.getItem() instanceof CollectionItem){
+            CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+            compoundTag.putInt(getKey("old_select_index"),compoundTag.getInt(getKey("select_index")));
+            compoundTag.putInt(getKey("select_index"),selectCount);
+            itemStack.set(DataComponents.CUSTOM_DATA,CustomData.of(compoundTag));
+        }
+
     }
 
 }
