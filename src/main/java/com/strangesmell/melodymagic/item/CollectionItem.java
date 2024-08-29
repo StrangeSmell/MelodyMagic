@@ -10,12 +10,16 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.datafix.fixes.OptionsKeyLwjgl3Fix;
 import net.minecraft.world.*;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -30,16 +34,20 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.strangesmell.melodymagic.MelodyMagic.CONDITION;
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.api.Util.getNumOfUntranslate;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
 
@@ -87,6 +95,14 @@ public class CollectionItem extends Item implements  MenuProvider  {
                     List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer);
                     for(int i=0;i<listEffect.size();i++){
                         listEffect.get(i).effect(pPlayer,pLevel,pUsedHand,soundContainer);
+                    }
+
+                    int num= getNumOfUntranslate(soundContainer);
+                    Random random = new Random();
+                    int id = random.nextInt(0,BuiltInRegistries.MOB_EFFECT.size());
+                    for(int i=0;i<num;i++){
+                        pPlayer.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).get(), random.nextInt(50,400), 1));
+
                     }
                 }
             }

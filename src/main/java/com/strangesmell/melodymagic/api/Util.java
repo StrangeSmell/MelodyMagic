@@ -5,6 +5,7 @@ import com.strangesmell.melodymagic.MelodyMagic;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -27,14 +28,10 @@ import static net.minecraft.sounds.SoundEvent.createVariableRangeEvent;
 import static net.minecraft.world.effect.MobEffects.*;
 
 public class Util {
-    public static List<Holder<MobEffect>> EFFECT_LIST = Arrays.asList(MOVEMENT_SPEED, MOVEMENT_SLOWDOWN, DIG_SPEED, DIG_SLOWDOWN, DAMAGE_BOOST, HEAL, HARM, JUMP, CONFUSION, REGENERATION
-            , DAMAGE_RESISTANCE, FIRE_RESISTANCE, WATER_BREATHING, INVISIBILITY, BLINDNESS, NIGHT_VISION, HUNGER, WEAKNESS, POISON, WITHER, HEALTH_BOOST, ABSORPTION
-            , SATURATION, GLOWING, LEVITATION, LUCK, UNLUCK, SLOW_FALLING, CONDUIT_POWER, DOLPHINS_GRACE, BAD_OMEN, HERO_OF_THE_VILLAGE, DARKNESS, TRIAL_OMEN, RAID_OMEN, WIND_CHARGED, WEAVING
-            , OOZING, INFESTED);
-
     public static Holder<MobEffect> getRandomEffect() {
-        Random random = new Random(net.minecraft.Util.getMillis());
-        return EFFECT_LIST.get(random.nextInt(0, EFFECT_LIST.size()));
+        Random random = new Random();
+        int id = random.nextInt(0, BuiltInRegistries.MOB_EFFECT.size());
+        return BuiltInRegistries.MOB_EFFECT.getHolder(id).get();
     }
 
 
@@ -128,6 +125,19 @@ public class Util {
                 list2.add(xyz);
             }
         }
+    }
+
+    public static int getNumOfUntranslate(ItemStack itemStack) {
+        CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+        int size = compoundTag.getInt("size");
+        int num=0;
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                if(compoundTag.getString("subtitle" + i).equals("untranslated_sound")) num++;
+            }
+        }
+        return num;
     }
 
     public static Vec3 getSoundVec3(SoundInstance soundInstance) {

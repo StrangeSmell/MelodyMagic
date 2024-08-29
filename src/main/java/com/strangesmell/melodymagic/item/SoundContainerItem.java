@@ -55,7 +55,6 @@ public class SoundContainerItem extends Item {
         if(!subtitles.isEmpty()){
             for (int i =0;i<subtitles.size();i++) {
                 pLevel.playSound(null,location.get(i).get(0)+pPlayer.getX(),location.get(i).get(1)+pPlayer.getY(),location.get(i).get(2)+pPlayer.getZ(),subtitles.get(i),SoundSource.MASTER );
-
             }
         }
         pPlayer.getCooldowns().addCooldown(this, 5*subtitles.size());
