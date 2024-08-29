@@ -23,6 +23,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.strangesmell.melodymagic.api.Util.effect;
 import static com.strangesmell.melodymagic.hud.SelectHud.subtitles;
 import static com.strangesmell.melodymagic.api.Util.getRandomEffect;
 
@@ -60,11 +61,7 @@ public class SoundContainerItem extends Item {
         pPlayer.getCooldowns().addCooldown(this, 5*subtitles.size());
         return InteractionResultHolder.consume(itemstack);
     }
-    public void effect(List<SoundEvent> subtitles,List<List<Double>> distance,Level pLevel, Player pPlayer, InteractionHand pUsedHand){
 
-        MobEffectInstance effectInstance = new MobEffectInstance(getRandomEffect(), 180, 1);
-        pPlayer.addEffect(effectInstance);
-    }
 
 
 }

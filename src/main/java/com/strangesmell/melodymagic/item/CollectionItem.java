@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.strangesmell.melodymagic.MelodyMagic.CONDITION;
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
@@ -48,26 +49,22 @@ public class CollectionItem extends Item implements  MenuProvider  {
         super(pProperties);
     }
 
-    public static final ItemCapability<IItemHandler, Void> ITEMS =
-            ItemCapability.createVoid(
-                    // Provide a name to uniquely identify the capability.
-                    ResourceLocation.fromNamespaceAndPath(MODID, "wand_item_handler"),
-                    // Provide the queried type. Here, we want to look up `IItemHandler` instances.
-                    IItemHandler.class);
-
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         if(pLevel.isClientSide){
             //同步到服务端中
-            ClientLevel clientLevel = (ClientLevel) pLevel;
             if(pPlayer.isShiftKeyDown()){
-                PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,location)));
+
+                PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,location,subtitles2)));//发包给一个唱片
                 for(SoundInstance soundInstance : subtitles){
                     Minecraft.getInstance().getSoundManager().stop(soundInstance);
                 }
+                for(int i=0;i<subtitles.size();i++){
+                    Minecraft.getInstance().getSoundManager().stop(subtitles.get(i));
+                }
+
             }
         }else{
-            ServerLevel serverLevel = (ServerLevel) pLevel;
             if(pPlayer.isShiftKeyDown()){
                 pPlayer.openMenu(new SimpleMenuProvider(
                         (containerId, playerInventory, player) -> new WandMenu(containerId, playerInventory),
@@ -82,7 +79,9 @@ public class CollectionItem extends Item implements  MenuProvider  {
                 }else{
                     selectCount = compoundTag.getInt(MODID+"select_index");
                 }
+                //使用
                 ItemContainerContents itemContainerContents = itemStack.get(DataComponents.CONTAINER);
+                if(itemContainerContents.getSlots()<= selectCount) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
                 ItemStack soundContainer = itemContainerContents.getStackInSlot(selectCount);
                 if(soundContainer.getItem() instanceof SoundContainerItem){
                     List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer);
@@ -100,7 +99,7 @@ public class CollectionItem extends Item implements  MenuProvider  {
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("wand_menu").withColor(165155);
+        return Component.empty();
     }
 
     @Nullable

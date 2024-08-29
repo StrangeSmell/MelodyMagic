@@ -7,10 +7,17 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -60,6 +67,22 @@ public class Util {
         return compoundTag;
     }
 
+    public static CompoundTag saveSoundDataToTag(List<SoundInstance> subtitles, List<List<Double>> location,Map<ResourceLocation,String> subtitles2) {
+        CompoundTag compoundTag = new CompoundTag();
+        int size = subtitles.size();
+        compoundTag.putInt("size", size);
+        if (subtitles.isEmpty()) return compoundTag;
+        for (int i = 0; i < size; i++) {
+            compoundTag.putString("namespace" + i, subtitles.get(i).getLocation().getNamespace());
+            compoundTag.putString("path" + i, subtitles.get(i).getLocation().getPath());
+            compoundTag.putString("subtitle" + i, subtitles2.get(subtitles.get(i).getLocation()));
+            compoundTag.putDouble("x" + i, location.get(i).get(0));
+            compoundTag.putDouble("y" + i, location.get(i).get(0));
+            compoundTag.putDouble("z" + i, location.get(i).get(0));
+        }
+        return compoundTag;
+    }
+
     public static List<List<Object>> loadSoundDataToTag(CompoundTag tag) {
         List<List<Object>> subtitles = Lists.newArrayList();
         int size = tag.getInt("size");
@@ -81,6 +104,23 @@ public class Util {
         if (size != 0) {
             for (int i = 0; i < size; i++) {
                 list1.add(createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i), tag.getString("path" + i))));
+                List<Double> xyz = Lists.newArrayList();
+                xyz.add(tag.getDouble("x" + i));
+                xyz.add(tag.getDouble("y" + i));
+                xyz.add(tag.getDouble("z" + i));
+                list2.add(xyz);
+            }
+        }
+    }
+
+    public static void loadSoundDataToTag(CompoundTag tag, List<SoundEvent> list1, List<List<Double>> list2,List<String> subtitles2) {
+        int size = tag.getInt("size");
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                ResourceLocation res = ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i), tag.getString("path" + i));
+                SoundEvent soundEvent = createVariableRangeEvent(res);
+                list1.add(soundEvent);
+                subtitles2.add(tag.getString("subtitle" + i));
                 List<Double> xyz = Lists.newArrayList();
                 xyz.add(tag.getDouble("x" + i));
                 xyz.add(tag.getDouble("y" + i));
@@ -130,12 +170,21 @@ public class Util {
         return listString;
     }
 
+    //这里判断是否满足条件，加入对应的key
     public static List<String> getKeyFromSoundRes(List<String> soundList, List<Integer> num) {
-        HashSet<String> soundHashSet = new HashSet<>(soundList);
         List<String> listString = new ArrayList<>();
         for (int i = 0; i < SOUND_LIST.size(); i++) {
             if(soundList.containsAll(SOUND_LIST.get(i))){
-                listString.add(SOUND2KEY.get(SOUND_LIST.get(i)));
+                Boolean flag=true;
+                List<String> strings=SOUND_LIST.get(i).stream().toList();//声音res组合
+                CompoundTag compoundTag = CONDITION.get(SOUND2KEY.get(SOUND_LIST.get(i)));//条件集合
+                for(int j=0;j<strings.size();j++){
+                    if(compoundTag.contains(strings.get(j)+"num")){
+                        if(num.get( soundList.indexOf(strings.get(j)))<compoundTag.getInt(strings.get(j)+"num")) flag=false;
+                    }
+                    //todo:别的条件
+                }
+                if(flag) listString.add(SOUND2KEY.get(SOUND_LIST.get(i)));
             }
         }
         return listString;
@@ -187,6 +236,22 @@ public class Util {
         itemStack.set(DataComponents.CUSTOM_DATA,customData);
     }
 
+    public static void saveToCustomData(ItemStack itemStack,List<String> listString,List<String> subtitles2 ) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("size",listString.size());
+        for(int i=0;i<listString.size();i++){
+            tag.putString("index"+i,listString.get(i));
+        }
+        for(int i=0;i<subtitles2.size();i++){
+            tag.putString("subtitles"+i,subtitles2.get(i));
+        }
+
+        CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        compoundTag.put(MODID+"sound2key",tag);
+        CustomData customData = CustomData.of(compoundTag);
+        itemStack.set(DataComponents.CUSTOM_DATA,customData);
+    }
+
     public static List<String> getFromCustomData(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         CompoundTag tag =(CompoundTag) compoundTag.get(MODID+"sound2key");
@@ -209,4 +274,37 @@ public class Util {
         return listEffect;
     }
 
+    public static List<SoundEffect> getSoundEffectWithCondition(ItemStack itemStack) {
+        CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag =(CompoundTag) compoundTag.get(MODID+"sound2key");
+        CompoundTag condition ;
+        List<SoundEffect> listEffect = new ArrayList<>();
+        int size = tag.getInt("size");
+        for(int i=0;i<size;i++){
+            condition = CONDITION.get(tag.getString("index"+i));
+            if(condition.contains("num")){
+
+            }
+            listEffect.add(KEY2EFFECT.get(tag.getString("index"+i)));
+        }
+        return listEffect;
+    }
+
+    public static void effect(List<SoundEvent> subtitles, List<List<Double>> distance, Level pLevel, Player pPlayer, InteractionHand pUsedHand){
+        MobEffectInstance effectInstance = new MobEffectInstance(getRandomEffect(), 180, 1);
+        pPlayer.addEffect(effectInstance);
+    }
+
+    public static void playSoundFromItem(ItemStack itemStack, Level level ,float x,float y,float z) {
+        List<SoundEvent> subtitles = Lists.newArrayList();
+        List<List<Double>> location = Lists.newArrayList();
+        if(itemStack.get(DataComponents.CUSTOM_DATA)==null) return ;
+        Util.loadSoundDataToTag(itemStack.get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location);
+        //if(level instanceof ServerLevel) effect(subtitles,location, pLevel,  pPlayer,  pUsedHand);
+        if(!subtitles.isEmpty()){
+            for (int i =0;i<subtitles.size();i++) {
+                level.playSound(null,location.get(i).get(0)+x,location.get(i).get(1)+y,location.get(i).get(2)+z,subtitles.get(i),SoundSource.MASTER );
+            }
+        }
+    }
 }

@@ -1,13 +1,13 @@
 package com.strangesmell.melodymagic;
 
 import com.strangesmell.melodymagic.api.SoundEffect;
+import com.strangesmell.melodymagic.block.SoundPlayerBlock;
+import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
 import com.strangesmell.melodymagic.container.WandMenu;
 import com.strangesmell.melodymagic.hud.SelectHud;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,21 +15,23 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -65,15 +67,29 @@ public class MelodyMagic
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredBlock<Block> SOUND_PLAYER_BLOCK = BLOCKS.register("sound_player_block", ()-> new SoundPlayerBlock(
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    //.instrument(NoteBlockInstrument.BASS)
+                    .strength(2.0F, 6.0F)
+                    .sound(SoundType.WOOD)
+                    .ignitedByLava())
+    );
+
+
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new ,new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
     public static final DeferredItem<SoundContainerItem> SOUND_CONTAINER_ITEM = ITEMS.registerItem("sound_container", SoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<BlockItem> SOUND_PLAYER_ITEM = ITEMS.registerSimpleBlockItem("sound_player_block", SOUND_PLAYER_BLOCK);
 
 
     public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(Registries.MENU,MODID);
     public static final Supplier<MenuType<WandMenu>> WAND_MENU = MENU_TYPE.register("wand_menu", () -> new MenuType(WandMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,MODID);
+    public static final Supplier<BlockEntityType<SoundPlayerBlockEntity>> SOUND_PLAYER_BLOCK_ENTITY = BLOCK_ENTITY.register("sound_player_block_entity", () -> BlockEntityType.Builder.of(SoundPlayerBlockEntity::new, SOUND_PLAYER_BLOCK.get()).build(null));
 
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -85,6 +101,7 @@ public class MelodyMagic
             .displayItems((parameters, output) -> {
                 output.accept(COLLECTION_ITEM.get());
                 output.accept(SOUND_CONTAINER_ITEM.get());
+                output.accept(SOUND_PLAYER_ITEM.get());
             }).build());
 
 
@@ -96,6 +113,7 @@ public class MelodyMagic
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
+        BLOCK_ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
@@ -116,7 +134,7 @@ public class MelodyMagic
 
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+        //Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
@@ -170,7 +188,7 @@ public class MelodyMagic
         SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())));
 
         CompoundTag compoundTag =new CompoundTag();
-        compoundTag.putInt("num",9);
+        compoundTag.putInt(SoundEvents.COW_AMBIENT.getLocation()+"num",9);
         CONDITION.put("nine_cow",compoundTag);//数量
 
         KEY2EFFECT.put("nine_cow", new SoundEffect() {

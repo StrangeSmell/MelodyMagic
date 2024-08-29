@@ -6,10 +6,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
+import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.gui.components.SubtitleOverlay;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,6 +21,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +38,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import net.minecraft.world.item.ItemDisplayContext;
 
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.*;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 
@@ -43,6 +47,7 @@ import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 @OnlyIn(Dist.CLIENT)
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public static List<SoundInstance> subtitles = Lists.newArrayList();
+    public static Map<ResourceLocation,String> subtitles2 = new HashMap();
     public static List<Double> distance = Lists.newArrayList();
     public static List<List<Double>> location = Lists.newArrayList();
     private static final SelectHud hud = new SelectHud();
@@ -59,6 +64,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             SoundManager soundManager = Minecraft.getInstance().getSoundManager();
             for(int i=0;i<subtitles.size();i++){
                 if(!soundManager.isActive(subtitles.get(i))){
+                    //subtitles2.remove(subtitles.get(i).getLocation());
                     subtitles.remove(i);
                     location.remove(i);
 
@@ -118,13 +124,16 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             }
 
             int k = 6;
-            pGuiGraphics.pose().scale(3,3,3);
+            pGuiGraphics.pose().scale(3,3,3);//渲染紫水晶
             pGuiGraphics.renderItem(Items.AMETHYST_SHARD.getDefaultInstance(), pGuiGraphics.guiWidth()/k-8, pGuiGraphics.guiHeight()/k-8);
 
             pGuiGraphics.blit(HUD2, 0, 0,  0.0F, 0.0F, 16, 16, 16,16);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+
+
         }
 
     }
@@ -133,8 +142,16 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public void onPlaySound(SoundInstance pSound, WeighedSoundEvents pAccessor, float pRange) {
         if (pSound.getSource() != SoundSource.MASTER && isAudibleFrom(new Vec3(pSound.getX(), pSound.getY(), pSound.getZ()),pRange)) {
             if(Minecraft.getInstance().player==null) return;
+
             if(subtitles.contains(pSound)) return;
             subtitles.add(pSound);
+            if(pAccessor.getSubtitle()==null){
+                subtitles2.put(pSound.getLocation(),"untranslated_sound");
+            }else{
+                subtitles2.put(pSound.getLocation(),pAccessor.getSubtitle().getString());
+            }
+
+
             List<Double> temp_location = Lists.newArrayList();
             Player player = Minecraft.getInstance().player;
             temp_location.add(pSound.getX()-player.getX());
@@ -167,4 +184,62 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
         return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 342)
                 || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 346);
     }
+
+    @OnlyIn(Dist.CLIENT)
+    static record SoundPlayedAt(Vec3 location, long time) {
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class Subtitle {
+        private final Component text;
+        private final float range;
+        private final List<SelectHud.SoundPlayedAt> playedAt = new ArrayList<>();
+
+        public Subtitle(Component pText, float pRange, Vec3 pLocation) {
+            this.text = pText;
+            this.range = pRange;
+            this.playedAt.add(new SelectHud.SoundPlayedAt(pLocation, Util.getMillis()));
+        }
+
+        public Component getText() {
+            return this.text;
+        }
+
+        @Nullable
+        public SelectHud.SoundPlayedAt getClosest(Vec3 p_347452_) {
+            if (this.playedAt.isEmpty()) {
+                return null;
+            } else {
+                return this.playedAt.size() == 1
+                        ? this.playedAt.getFirst()
+                        : this.playedAt.stream().min(Comparator.comparingDouble(p_347541_ -> p_347541_.location().distanceTo(p_347452_))).orElse(null);
+            }
+        }
+
+        public void refresh(Vec3 pLocation) {
+            this.playedAt.removeIf(p_347631_ -> pLocation.equals(p_347631_.location()));
+            this.playedAt.add(new SelectHud.SoundPlayedAt(pLocation, Util.getMillis()));
+        }
+
+        public boolean isAudibleFrom(Vec3 pLocation) {
+            if (Float.isInfinite(this.range)) {
+                return true;
+            } else if (this.playedAt.isEmpty()) {
+                return false;
+            } else {
+                SelectHud.SoundPlayedAt subtitleoverlay$soundplayedat = this.getClosest(pLocation);
+                return subtitleoverlay$soundplayedat != null && pLocation.closerThan(subtitleoverlay$soundplayedat.location, (double) this.range);
+            }
+        }
+
+        public void purgeOldInstances(double p_347730_) {
+            long i = Util.getMillis();
+            this.playedAt.removeIf(p_347590_ -> (double)(i - p_347590_.time()) > p_347730_);
+        }
+
+        public boolean isStillActive() {
+            return !this.playedAt.isEmpty();
+        }
+    }
+
 }

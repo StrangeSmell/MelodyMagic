@@ -3,7 +3,7 @@
   "item.melodymagic.collection": "collector",
   "item.melodymagic.sound_container": "melody container",
 
-  "block.mcspeed.n2o_block": "Accelerate block",
+  "block.melodymagic.sound_player_block": "sound player",
 
 
   "mcspeed.time": "TIME",
@@ -12,14 +12,7 @@
 
 
 
-
-
-
-
-
-
-
-
+  "untranslated_sound": "Unknown sound",
 
   "subtitles.ambient.cave": "Eerie noise",
   "subtitles.block.amethyst_block.chime": "Amethyst chimes",

@@ -1,12 +1,14 @@
 {
   "item.melodymagic.collection": "旋律留声机",
   "item.melodymagic.sound_container": "唱片",
+  "block.melodymagic.sound_player_block": "唱片机",
 
 
   "block.mcspeed.n2o_block": "加速方块",
 
 
   "mcspeed.time": "时间",
+  "untranslated_sound": "未知的声音",
 
   "itemGroup.melodymagic": "旋律魔法"
 

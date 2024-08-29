@@ -58,8 +58,10 @@ public class ServerPayloadHandler {
         //存入KEY
         //todo:这部分计算可以在客户端上实现
         List<SoundEvent> subtitles = Lists.newArrayList();
+        List<String> subtitles2 = Lists.newArrayList();
         List<List<Double>> location = Lists.newArrayList();
-        Util.loadSoundDataToTag(compoundTag.copy(),subtitles,location);
+
+        Util.loadSoundDataToTag(compoundTag.copy(),subtitles,location,subtitles2);
 
         List<SoundEvent> soundEvents = Lists.newArrayList();
         List<Integer> num = Lists.newArrayList();
@@ -74,7 +76,7 @@ public class ServerPayloadHandler {
         CustomData customData = CustomData.of(compoundTag);
         itemStack.set(DataComponents.CUSTOM_DATA,customData);
 
-        Util.saveToCustomData(itemStack,listString);
+        Util.saveToCustomData(itemStack,listString,subtitles2);
 
         player.getInventory().add(itemStack);
     }

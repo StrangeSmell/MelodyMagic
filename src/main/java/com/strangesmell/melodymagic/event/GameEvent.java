@@ -8,6 +8,9 @@ import com.strangesmell.melodymagic.message.SelectCount;
 import com.strangesmell.melodymagic.message.SoundData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -40,26 +43,30 @@ public class GameEvent {
     {
         if(event.getItemStack().getItem() instanceof SoundContainerItem){
             List<SoundEvent> subtitles = Lists.newArrayList();
+            List<String> subtitles2 = Lists.newArrayList();
             List<List<Double>> location = Lists.newArrayList();
+
             if(event.getItemStack().get(DataComponents.CUSTOM_DATA) ==null) return;
-            Util.loadSoundDataToTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location);
-            List<SoundEvent> tooltip = Lists.newArrayList();
+            Util.loadSoundDataToTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
+            List<String> tooltip = Lists.newArrayList();
             List<Integer> num = Lists.newArrayList();
-            for(int i=0;i<subtitles.size();i++){
-                if(!Util.contain(tooltip,subtitles.get(i))){
-                    tooltip.add(subtitles.get(i));
+            for(int i=0;i<subtitles2.size();i++){
+                if(!tooltip.contains(subtitles2.get(i))){
+                    tooltip.add(subtitles2.get(i));
                     num.add(1);
                 }else{
-                    int index = Util.indexOf(tooltip,subtitles.get(i));
+                    int index = tooltip.indexOf(subtitles2.get(i));
                     num.set(index,num.get(index)+1);
                 }
             }
-            for(int i=0;i<tooltip.size();i++){
-                ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(MODID,"subtitles."+tooltip.get(i).getLocation().getPath());
-                TranslatableContents translatableContents = new TranslatableContents(resourceLocation.toString(),null,TranslatableContents.NO_ARGS);
-                TranslatableContents translatableContents2 = new TranslatableContents(resourceLocation.toString(),null,TranslatableContents.NO_ARGS);
 
-                event.getToolTip().add(Component.translatable("subtitles."+tooltip.get(i).getLocation().getPath()).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+            for(int i=0;i<tooltip.size();i++){
+                if(subtitles2.get(i)==null){
+                    //event.getToolTip().add(Component.translatable("subtitles."+tooltip.get(i).getLocation().getPath()).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                }else{
+                    event.getToolTip().add(Component.translatable(tooltip.get(i)).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                }
+
             }
         }
     }
