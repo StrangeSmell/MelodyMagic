@@ -59,9 +59,12 @@ public class ServerPayloadHandler {
         //todo:这部分计算可以在客户端上实现
         List<SoundEvent> subtitles = Lists.newArrayList();
         List<String> subtitles2 = Lists.newArrayList();
+        List<Float> range = Lists.newArrayList();
+        List<Float> volume = Lists.newArrayList();
+        List<Float> peach = Lists.newArrayList();
         List<List<Double>> location = Lists.newArrayList();
 
-        Util.loadSoundDataToTag(compoundTag.copy(),subtitles,location,subtitles2);
+        Util.loadSoundDataToTag(compoundTag.copy(),subtitles,location,subtitles2,range,volume,peach);
 
         List<SoundEvent> soundEvents = Lists.newArrayList();
         List<Integer> num = Lists.newArrayList();

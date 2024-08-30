@@ -74,8 +74,27 @@ public class Util {
             compoundTag.putString("path" + i, subtitles.get(i).getLocation().getPath());
             compoundTag.putString("subtitle" + i, subtitles2.get(subtitles.get(i).getLocation()));
             compoundTag.putDouble("x" + i, location.get(i).get(0));
-            compoundTag.putDouble("y" + i, location.get(i).get(0));
-            compoundTag.putDouble("z" + i, location.get(i).get(0));
+            compoundTag.putDouble("y" + i, location.get(i).get(1));
+            compoundTag.putDouble("z" + i, location.get(i).get(2));
+        }
+        return compoundTag;
+    }
+
+    public static CompoundTag saveSoundDataToTag(List<SoundInstance> subtitles, List<List<Double>> location,Map<ResourceLocation,String> subtitles2,List<Float> range,List<Float> volume,List<Float> peach) {
+        CompoundTag compoundTag = new CompoundTag();
+        int size = subtitles.size();
+        compoundTag.putInt("size", size);
+        if (subtitles.isEmpty()) return compoundTag;
+        for (int i = 0; i < size; i++) {
+            compoundTag.putString("namespace" + i, subtitles.get(i).getLocation().getNamespace());
+            compoundTag.putString("path" + i, subtitles.get(i).getLocation().getPath());
+            compoundTag.putString("subtitle" + i, subtitles2.get(subtitles.get(i).getLocation()));
+            compoundTag.putDouble("x" + i, location.get(i).get(0));
+            compoundTag.putDouble("y" + i, location.get(i).get(1));
+            compoundTag.putDouble("z" + i, location.get(i).get(2));
+            compoundTag.putFloat("range" + i, range.get(i));
+            compoundTag.putFloat("volume" + i, volume.get(i));
+            compoundTag.putFloat("peach" + i, peach.get(i));
         }
         return compoundTag;
     }
@@ -100,7 +119,9 @@ public class Util {
         int size = tag.getInt("size");
         if (size != 0) {
             for (int i = 0; i < size; i++) {
-                list1.add(createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i), tag.getString("path" + i))));
+                ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+                SoundEvent soundEvent =SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
+                list1.add(soundEvent);
                 List<Double> xyz = Lists.newArrayList();
                 xyz.add(tag.getDouble("x" + i));
                 xyz.add(tag.getDouble("y" + i));
@@ -110,12 +131,14 @@ public class Util {
         }
     }
 
+
+
     public static void loadSoundDataToTag(CompoundTag tag, List<SoundEvent> list1, List<List<Double>> list2,List<String> subtitles2) {
         int size = tag.getInt("size");
         if (size != 0) {
             for (int i = 0; i < size; i++) {
-                ResourceLocation res = ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i), tag.getString("path" + i));
-                SoundEvent soundEvent = createVariableRangeEvent(res);
+                ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+                SoundEvent soundEvent =SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
                 list1.add(soundEvent);
                 subtitles2.add(tag.getString("subtitle" + i));
                 List<Double> xyz = Lists.newArrayList();
@@ -123,6 +146,44 @@ public class Util {
                 xyz.add(tag.getDouble("y" + i));
                 xyz.add(tag.getDouble("z" + i));
                 list2.add(xyz);
+            }
+        }
+    }
+
+    public static void loadSoundDataToTag(CompoundTag tag, List<SoundEvent> list1, List<List<Double>> list2,List<Float> volume,List<Float> peach) {
+        int size = tag.getInt("size");
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+                SoundEvent soundEvent =SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
+                list1.add(soundEvent);
+                List<Double> xyz = Lists.newArrayList();
+                xyz.add(tag.getDouble("x" + i));
+                xyz.add(tag.getDouble("y" + i));
+                xyz.add(tag.getDouble("z" + i));
+                list2.add(xyz);
+                volume.add(tag.getFloat("volume" + i));
+                peach.add(tag.getFloat("peach" + i));
+            }
+        }
+    }
+
+    public static void loadSoundDataToTag(CompoundTag tag, List<SoundEvent> list1, List<List<Double>> list2,List<String> subtitles2,List<Float> range,List<Float> volume,List<Float> peach) {
+        int size = tag.getInt("size");
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+                SoundEvent soundEvent =SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
+                list1.add(soundEvent);
+                subtitles2.add(tag.getString("subtitle" + i));
+                List<Double> xyz = Lists.newArrayList();
+                xyz.add(tag.getDouble("x" + i));
+                xyz.add(tag.getDouble("y" + i));
+                xyz.add(tag.getDouble("z" + i));
+                list2.add(xyz);
+                range.add(tag.getFloat("range" + i));
+                volume.add(tag.getFloat("volume" + i));
+                peach.add(tag.getFloat("peach" + i));
             }
         }
     }
@@ -189,6 +250,7 @@ public class Util {
                 List<String> strings=SOUND_LIST.get(i).stream().toList();//声音res组合
                 CompoundTag compoundTag = CONDITION.get(SOUND2KEY.get(SOUND_LIST.get(i)));//条件集合
                 for(int j=0;j<strings.size();j++){
+                    if(compoundTag ==null) break;
                     if(compoundTag.contains(strings.get(j)+"num")){
                         if(num.get( soundList.indexOf(strings.get(j)))<compoundTag.getInt(strings.get(j)+"num")) flag=false;
                     }
@@ -200,10 +262,10 @@ public class Util {
         return listString;
     }
 
-    public static void getSoundEventNum(CompoundTag compoundTag, List<SoundEvent> soundEvents, List<Integer> num) {
+    public static void getSoundEventNum(CompoundTag compoundTag, List<SoundEvent> soundEvents, List<Integer> num,List<Float> volume,List<Float> peach) {
         List<SoundEvent> subtitles = Lists.newArrayList();
         List<List<Double>> location = Lists.newArrayList();
-        Util.loadSoundDataToTag(compoundTag.copy(), subtitles, location);
+        Util.loadSoundDataToTag(compoundTag.copy(), subtitles, location,volume,peach);
         for (int i = 0; i < subtitles.size(); i++) {
             if (!Util.contain(soundEvents, subtitles.get(i))) {
                 soundEvents.add(subtitles.get(i));

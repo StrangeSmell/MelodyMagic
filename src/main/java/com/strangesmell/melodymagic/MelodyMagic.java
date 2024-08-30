@@ -181,24 +181,37 @@ public class MelodyMagic
     }
 
     private void init2Map(){
-
-
         SOUND2KEY.put(new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())),"nine_cow");
+        SOUND2KEY.put(new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())),"water_breath");
 
         SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())));
+        SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())));
 
         CompoundTag compoundTag =new CompoundTag();
         compoundTag.putInt(SoundEvents.COW_AMBIENT.getLocation()+"num",9);
         CONDITION.put("nine_cow",compoundTag);//数量
+        //水下呼吸没有数量条件
 
         KEY2EFFECT.put("nine_cow", new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 900, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 1));
             }
             @Override
             public String text(Player player, Level level, InteractionHand pUsedHand, CollectionItem collectionItem) {
                 return "nine cow";
+            }
+        });
+
+
+        KEY2EFFECT.put("water_breath", new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
+            }
+            @Override
+            public String text(Player player, Level level, InteractionHand pUsedHand, CollectionItem collectionItem) {
+                return "water breathing";
             }
         });
     }

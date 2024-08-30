@@ -48,13 +48,15 @@ public class SoundContainerItem extends Item {
 
         }
         List<SoundEvent> subtitles = Lists.newArrayList();
+        List<Float> volume = Lists.newArrayList();
+        List<Float> peach = Lists.newArrayList();
         List<List<Double>> location = Lists.newArrayList();
         if(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA)==null) return InteractionResultHolder.consume(itemstack);
-        Util.loadSoundDataToTag(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location);
-        if(pLevel instanceof  ServerLevel) effect(subtitles,location, pLevel,  pPlayer,  pUsedHand);
+        Util.loadSoundDataToTag(pPlayer.getItemInHand(pUsedHand).get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,volume,peach);
+        //if(pLevel instanceof  ServerLevel) effect(subtitles,location, pLevel,  pPlayer,  pUsedHand);
         if(!subtitles.isEmpty()){
             for (int i =0;i<subtitles.size();i++) {
-                pLevel.playSound(null,location.get(i).get(0)+pPlayer.getX(),location.get(i).get(1)+pPlayer.getY(),location.get(i).get(2)+pPlayer.getZ(),subtitles.get(i),SoundSource.MASTER );
+                pLevel.playSound(null,location.get(i).get(0)+pPlayer.getX(),location.get(i).get(1)+pPlayer.getY(),location.get(i).get(2)+pPlayer.getZ(),subtitles.get(i),SoundSource.MASTER ,volume.get(i),peach.get(i));
             }
         }
         pPlayer.getCooldowns().addCooldown(this, 5*subtitles.size());

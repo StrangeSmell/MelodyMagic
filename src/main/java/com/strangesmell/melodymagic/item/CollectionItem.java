@@ -49,6 +49,7 @@ import static com.strangesmell.melodymagic.MelodyMagic.CONDITION;
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 import static com.strangesmell.melodymagic.api.Util.getNumOfUntranslate;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
+import static com.strangesmell.melodymagic.item.SoundContainerItemStackRenderer.EXTENSIONS;
 
 
 public class CollectionItem extends Item implements  MenuProvider  {
@@ -63,7 +64,7 @@ public class CollectionItem extends Item implements  MenuProvider  {
             //同步到服务端中
             if(pPlayer.isShiftKeyDown()){
 
-                PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,location,subtitles2)));//发包给一个唱片
+                PacketDistributor.sendToServer(new SoundData(Util.saveSoundDataToTag(subtitles,location,subtitles2,range,volume,peach)));//发包给一个唱片
                 for(SoundInstance soundInstance : subtitles){
                     Minecraft.getInstance().getSoundManager().stop(soundInstance);
                 }
@@ -126,15 +127,6 @@ public class CollectionItem extends Item implements  MenuProvider  {
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(
-                new IClientItemExtensions() {
-
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-
-                        return new SoundContainerItemStackRenderer();
-                    }
-                }
-        );
+        consumer.accept(EXTENSIONS);
     }
 }

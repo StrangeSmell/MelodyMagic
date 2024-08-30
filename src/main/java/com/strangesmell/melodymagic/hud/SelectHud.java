@@ -48,7 +48,9 @@ import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public static List<SoundInstance> subtitles = Lists.newArrayList();
     public static Map<ResourceLocation,String> subtitles2 = new HashMap();
-    public static List<Double> distance = Lists.newArrayList();
+    public static List<Float> range = Lists.newArrayList();
+    public static List<Float> volume = Lists.newArrayList();
+    public static List<Float> peach = Lists.newArrayList();
     public static List<List<Double>> location = Lists.newArrayList();
     private static final SelectHud hud = new SelectHud();
     private final ResourceLocation HUD = ResourceLocation.fromNamespaceAndPath(MODID,"textures/gui/select.png");
@@ -67,6 +69,9 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
                     //subtitles2.remove(subtitles.get(i).getLocation());
                     subtitles.remove(i);
                     location.remove(i);
+                    range.remove(i);
+                    volume.remove(i);
+                    peach.remove(i);
 
                 }
             }
@@ -158,6 +163,9 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             temp_location.add(pSound.getY()-player.getY());
             temp_location.add(pSound.getZ()-player.getZ());
             location.add(temp_location);
+            range.add(pRange);
+            volume.add(pSound.getVolume());
+            peach.add(pSound.getPitch());
             Minecraft.getInstance().getSoundManager().stop(pSound);
         }
 
