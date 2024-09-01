@@ -38,7 +38,7 @@ public class WandMenu extends AbstractContainerMenu {
         itemStack.getOrDefault(DataComponents.CONTAINER,EMPTY).copyInto(pContainer.getItems());
         this.container = pContainer;
         this.containerRows = 3;
-        pContainer.startOpen(pPlayerInventory.player);
+        pContainer.startOpen(player);
         //加入格子
         int r = 50;
         for(int i = 0;i<9;i++){

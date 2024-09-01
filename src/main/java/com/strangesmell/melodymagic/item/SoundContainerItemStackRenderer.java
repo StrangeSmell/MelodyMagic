@@ -1,6 +1,7 @@
 package com.strangesmell.melodymagic.item;
 
 import com.google.common.base.Suppliers;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.strangesmell.melodymagic.MelodyMagic;
@@ -25,23 +26,13 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class SoundContainerItemStackRenderer extends BlockEntityWithoutLevelRenderer {
     private static int degree = 0;
-    public static final Supplier<BlockEntityWithoutLevelRenderer> INSTANCE = Suppliers.memoize(() ->
-            new SoundContainerItemStackRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-                    Minecraft.getInstance().getEntityModels()));
-    public SoundContainerItemStackRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet set) {
-        super(dispatcher, set);
+
+    public SoundContainerItemStackRenderer() {
+        super(null, null);
     }
-    public static final IClientItemExtensions EXTENSIONS = new IClientItemExtensions() {
 
-        @Override
-        public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-            return INSTANCE.get();
-        }
-
-    };
     @Override
     public void renderByItem(ItemStack pStack, ItemDisplayContext ctx, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-
         int k = 5;
         if (degree == 360 * k) {
             degree = 0;
@@ -63,20 +54,21 @@ public class SoundContainerItemStackRenderer extends BlockEntityWithoutLevelRend
             pPoseStack.translate(xOffset, 0, zOffset);
         }
 
+        if (ctx == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND || ctx == ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
+            pPoseStack.translate(0.15F, 0.15F, 0);
+        }
 
-        pPoseStack.translate(0.15F, 0.15F, 0);
-
-        itemRenderer.renderStatic(MelodyMagic.COLLECTION_ITEM.toStack(), ItemDisplayContext.NONE, pPackedLight, pPackedOverlay, pPoseStack, pBuffer, null, 1);
+        itemRenderer.renderStatic(MelodyMagic.COLLECTION_DISPLAY_ITEM.toStack(), ItemDisplayContext.NONE, pPackedLight, pPackedOverlay, pPoseStack, pBuffer, null, 1);
         pPoseStack.popPose();
+
+        //紫水晶
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.5F, 0.5F, 0.5F);
-        double x = Minecraft.getInstance().player.position().x;
-        double y = Minecraft.getInstance().player.position().y;
-        double z = Minecraft.getInstance().player.position().z;
 
-        if (ctx == ItemDisplayContext.GUI || ctx == ItemDisplayContext.FIXED) {
-
+        if (ctx != ItemDisplayContext.FIRST_PERSON_LEFT_HAND && ctx != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
+            pPoseStack.popPose();
+            return;
         } else {
             pPoseStack.translate(-xOffset, 0, -zOffset);
             pPoseStack.mulPose(Axis.YP.rotationDegrees(90));

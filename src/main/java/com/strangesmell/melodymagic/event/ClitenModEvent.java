@@ -41,9 +41,9 @@ public class ClitenModEvent {
         ModelResourceLocation location = new ModelResourceLocation(BuiltInRegistries.ITEM.getKey(MelodyMagic.COLLECTION_ITEM.get()), "inventory");
         BakedModel existingModel = modelRegistry.get(location);
         if (existingModel == null) {
-            throw new RuntimeException("Did not find Obsidian Hidden in registry");
+            throw new RuntimeException("Did not find COLLECTION_ITEM in registry");
         } else if (existingModel instanceof SoundContainerBakedModel) {
-            throw new RuntimeException("Tried to replaceObsidian Hidden twice");
+            throw new RuntimeException("Tried to replace COLLECTION_ITEM twice");
         } else {
             SoundContainerBakedModel model = new SoundContainerBakedModel(existingModel);
             event.getModels().put(location, model);

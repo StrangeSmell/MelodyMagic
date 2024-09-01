@@ -82,7 +82,7 @@ public class GameEvent {
             if(compoundTag.contains(MODID+"select_index")){
                 selectCount = compoundTag.getInt(MODID+"select_index");
             }
-            selectCount = selectCount + (int)event.getScrollDeltaY();
+            selectCount = selectCount - (int)event.getScrollDeltaY();
             if(selectCount<0) selectCount = selectCount + 9;
             if(selectCount>8) selectCount = selectCount - 9;
 

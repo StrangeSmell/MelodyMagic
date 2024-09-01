@@ -2,6 +2,7 @@ package com.strangesmell.melodymagic.container;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.strangesmell.melodymagic.MelodyMagic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -15,16 +16,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class WandScreen extends AbstractContainerScreen<WandMenu> {
     private final NonNullList<ItemStack> lastSlots = NonNullList.withSize(9,ItemStack.EMPTY);
-
     private static final ResourceLocation CONTAINER_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/dispenser.png");
+    private static final ResourceLocation SELECT = ResourceLocation.fromNamespaceAndPath(MelodyMagic.MODID,"textures/gui/select.png");
 
     public WandScreen(WandMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+        super(pMenu, pPlayerInventory, Component.empty());
         //lastSlots.addAll(pMenu.getItems());
+        this.inventoryLabelY = this.imageHeight - 52;
+        //inventory.getName()
     }
     @Override
     protected void init() {
@@ -34,7 +38,7 @@ public class WandScreen extends AbstractContainerScreen<WandMenu> {
 
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
         pGuiGraphics.pose().pushPose();
@@ -60,7 +64,6 @@ public class WandScreen extends AbstractContainerScreen<WandMenu> {
         }
 
 
-
         pGuiGraphics.renderItem(new ItemStack(Items.AMETHYST_SHARD),  (int) (this.width/k-16*0.5), (int) (this.height/k-16*0.5-r));
         //pGuiGraphics.renderItem(new ItemStack(Items.AMETHYST_SHARD),  (int) pMouseX/k,  (int) pMouseY/k);
 
@@ -73,10 +76,18 @@ public class WandScreen extends AbstractContainerScreen<WandMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        int i = (this.width - this.imageWidth) / 2;
+        int l = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2+40;
 
-        pGuiGraphics.blit(CONTAINER_LOCATION, i, j+77, 0, 0, this.imageWidth, 5);
-        pGuiGraphics.blit(CONTAINER_LOCATION, i, j+82, 0, 82, this.imageWidth, this.imageHeight);
+
+
+        pGuiGraphics.blit(CONTAINER_LOCATION, l, j+70, 0, 0, this.imageWidth, 12);
+        pGuiGraphics.blit(CONTAINER_LOCATION, l, j+82, 0, 82, this.imageWidth, this.imageHeight);
+
+        int r = 50;
+        for(int i=0;i<9;i++){
+
+            pGuiGraphics.blit(SELECT,(int) (this.width/2-12+Math.sin(2*Math.PI*i/9)*r), (int) (j-12+8-Math.cos(2*Math.PI*i/9)*r),0,0,0,24,24,24,24);
+        }
     }
 }

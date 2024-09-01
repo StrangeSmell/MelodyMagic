@@ -47,7 +47,7 @@ public class SoundContainerBakedModel implements BakedModel {
 
     @Override
     public boolean usesBlockLight() {
-        return this.existingModel.usesBlockLight();
+        return false;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SoundContainerBakedModel implements BakedModel {
     @Override
     public BakedModel applyTransform(ItemDisplayContext transformType, PoseStack poseStack, boolean applyLeftHandTransform) {
 
-        if (transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND || transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND||transformType != ItemDisplayContext.NONE){
+        if (transformType != ItemDisplayContext.NONE){
             return this;
         }
         return this.existingModel.applyTransform(transformType,poseStack,applyLeftHandTransform);

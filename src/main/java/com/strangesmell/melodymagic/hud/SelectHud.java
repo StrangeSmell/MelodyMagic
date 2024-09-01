@@ -43,7 +43,6 @@ import java.util.*;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 
-
 @OnlyIn(Dist.CLIENT)
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public static List<SoundInstance> subtitles = Lists.newArrayList();
@@ -59,6 +58,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
     public static SelectHud getInstance(){
         return hud;
     }
+    private static final ResourceLocation SELECT = ResourceLocation.fromNamespaceAndPath(MelodyMagic.MODID,"textures/gui/select.png");
 
     @Override
     public void render(GuiGraphics pGuiGraphics, DeltaTracker p_348559_) {
@@ -111,6 +111,20 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             //double dx= Mth.lerp(p_348559_.getGameTimeDeltaPartialTick());
             for(int i=0;i<9;i++){
+                if(selectCount==i){
+                    pGuiGraphics.pose().scale(2,2,2);
+                    pGuiGraphics.blit(SELECT,(int) (pGuiGraphics.guiWidth()/4-12+Math.sin(2*Math.PI*i/9)*r/2), (int) (pGuiGraphics.guiHeight()/4-12-Math.cos(2*Math.PI*i/9)*r/2),0,0,0,24,24,24,24);
+                    pGuiGraphics.pose().scale(0.5F,0.5F,0.5F);
+                }else{
+                    pGuiGraphics.blit(SELECT,(int) (pGuiGraphics.guiWidth()/2-12+Math.sin(2*Math.PI*i/9)*r), (int) (pGuiGraphics.guiHeight()/2-12-Math.cos(2*Math.PI*i/9)*r),0,0,0,24,24,24,24);
+
+                }
+            }
+
+            for(int i=0;i<9;i++){
+
+
+
                 //加入格子
                 if(itemContainerContents==null || itemContainerContents.getSlots()<=i)return;
                 if(selectCount==i){

@@ -79,8 +79,8 @@ public class MelodyMagic
 
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new ,new Item.Properties().food(new FoodProperties.Builder()
-            .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
+    public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new ,new Item.Properties());
+    public static final DeferredItem<Item> COLLECTION_DISPLAY_ITEM = ITEMS.registerItem("collection_display", Item::new ,new Item.Properties());
     public static final DeferredItem<SoundContainerItem> SOUND_CONTAINER_ITEM = ITEMS.registerItem("sound_container", SoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> SOUND_PLAYER_ITEM = ITEMS.registerSimpleBlockItem("sound_player_block", SOUND_PLAYER_BLOCK);
 
@@ -183,9 +183,11 @@ public class MelodyMagic
     private void init2Map(){
         SOUND2KEY.put(new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())),"nine_cow");
         SOUND2KEY.put(new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())),"water_breath");
+        //SOUND2KEY.put(new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())),"lightning_bolt_thunder");
 
         SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())));
         SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())));
+        //SOUND_LIST.add(new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())));
 
         CompoundTag compoundTag =new CompoundTag();
         compoundTag.putInt(SoundEvents.COW_AMBIENT.getLocation()+"num",9);

@@ -49,7 +49,6 @@ import static com.strangesmell.melodymagic.MelodyMagic.CONDITION;
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 import static com.strangesmell.melodymagic.api.Util.getNumOfUntranslate;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
-import static com.strangesmell.melodymagic.item.SoundContainerItemStackRenderer.EXTENSIONS;
 
 
 public class CollectionItem extends Item implements  MenuProvider  {
@@ -125,8 +124,16 @@ public class CollectionItem extends Item implements  MenuProvider  {
         return new WandMenu(pContainerId,pPlayerInventory);
     }
 
+
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(EXTENSIONS);
+        consumer.accept(
+                new IClientItemExtensions() {
+                    @Override
+                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                        return new SoundContainerItemStackRenderer();
+                    }
+                }
+        );
     }
 }
