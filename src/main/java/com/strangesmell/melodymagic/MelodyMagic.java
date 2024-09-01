@@ -96,7 +96,6 @@ public class MelodyMagic
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.melodymagic")) //The language key for the title of your CreativeModeTab
-            .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> COLLECTION_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(COLLECTION_ITEM.get());

@@ -2,10 +2,12 @@ package com.strangesmell.melodymagic.message;
 
 import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.api.RecodeUtil;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -72,9 +74,13 @@ public class ServerPayloadHandler {
 
         List<String> listString = Util.getKeyFromSoundRes(strings,num);
 
-
         //结束存入KEY
 
+        //记录玩家搜集的声音种类
+        RecodeUtil.saveSoundKinds(player,soundEvents);
+        RecodeUtil.saveEffectKinds(player,listString);
+
+        //结束
 
         CustomData customData = CustomData.of(compoundTag);
         itemStack.set(DataComponents.CUSTOM_DATA,customData);

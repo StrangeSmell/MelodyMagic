@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.api.distmarker.Dist;
@@ -28,6 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -69,6 +71,26 @@ public class GameEvent {
 
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void playerEvent(PlayerEvent.Clone event)
+    {
+        if(event.isWasDeath()){
+            Player oldPlayer = event.getOriginal();
+            Player newPlayer = event.getEntity();
+            if(oldPlayer.getPersistentData().get(MODID+"sound_kinds")!=null) {
+                newPlayer.getPersistentData().put(MODID+"sound_kinds",oldPlayer.getPersistentData().get(MODID+"sound_kinds"));
+
+            }
+
+            if(oldPlayer.getPersistentData().get(MODID+"effect_kinds")!=null) {
+                newPlayer.getPersistentData().put(MODID+"effect_kinds",oldPlayer.getPersistentData().get(MODID+"effect_kinds"));
+
+            }
+        }
+
+
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -379,4 +380,20 @@ public class Util {
             }
         }
     }
+
+    public static void putResToTag(CompoundTag tag, ResourceLocation res,int i) {
+        tag.putString("namespace" + i,res.getNamespace());
+        tag.putString("path" + i,res.getPath());
+    }
+
+    public static ResourceLocation getResFromTag(CompoundTag tag,int i) {
+        return ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+    }
+
+    public static SoundEvent getSoundEventFromTag(CompoundTag tag,int i) {
+        ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+        return SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
+    }
+
+
 }
