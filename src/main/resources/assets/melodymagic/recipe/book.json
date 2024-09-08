@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "patchouli"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "melodymagic:collection_display"
+    }
+  ],
+  "result": {
+    "components": {
+      "patchouli:book": "melodymagic:melodymagic_book"
+    },
+    "count": 1,
+    "id": "patchouli:guide_book"
+  }
+}

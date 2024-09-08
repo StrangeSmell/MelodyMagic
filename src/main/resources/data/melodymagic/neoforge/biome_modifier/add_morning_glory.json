@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:plains",
+  "features": "melodymagic:morning_glory",
+  "step": "vegetal_decoration"
+}

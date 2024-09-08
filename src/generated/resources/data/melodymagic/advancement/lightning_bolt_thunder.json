@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "lightning_bolt_thunder": {
+      "conditions": {
+        "customDataPredicate": "{adv:\"lightning_bolt_thunder\"}"
+      },
+      "trigger": "melodymagic:mm_trigger"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "adv.melodymagic.thunder"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "melodymagic:collection"
+    },
+    "title": {
+      "translate": "adv.melodymagic.thunder"
+    }
+  },
+  "requirements": [
+    [
+      "lightning_bolt_thunder"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

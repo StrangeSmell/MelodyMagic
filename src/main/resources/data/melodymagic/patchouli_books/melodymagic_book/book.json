@@ -1,0 +1,8 @@
+{
+  "landing_text": "patchouli.melodymagic.landing",
+  "model": "melodymagic:record_book",
+  "name": "patchouli.melodymagic.title",
+  "creative_tab": "melodymagic:melodymagic",
+  "use_resource_pack": true,
+  "version": 1
+}
