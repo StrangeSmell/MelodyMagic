@@ -42,7 +42,12 @@ public class WandMenu extends AbstractContainerMenu {
         //加入格子
         int r = 50;
         for(int i = 0;i<9;i++){
-            this.addSlot(new CollectionSlot(pContainer,i,(int)(80+Math.sin(2*Math.PI*i/9)*r),(int)(40-Math.cos(2*Math.PI*i/9)*r)));
+            if(i==3){
+                this.addSlot(new CollectionSlot(pContainer,i,(int)(80+Math.sin(2*Math.PI*i/9)*r),(int)(40-Math.cos(2*Math.PI*i/9)*r+0.00001)));
+            }else{
+                this.addSlot(new CollectionSlot(pContainer,i,(int)(80+Math.sin(2*Math.PI*i/9)*r),(int)(40-Math.cos(2*Math.PI*i/9)*r)));
+
+            }
         }
 /*        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

@@ -25,6 +25,7 @@ import net.minecraft.world.ticks.ContainerSingleItem;
 
 public class SoundPlayerBlockEntity extends BlockEntity implements Clearable, ContainerSingleItem.BlockContainerSingleItem{
     private ItemStack item = ItemStack.EMPTY;
+    private int cooldown = 0;
     public SoundPlayerBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(MelodyMagic.SOUND_PLAYER_BLOCK_ENTITY.get(), pPos, pBlockState);
     }
@@ -43,7 +44,17 @@ public class SoundPlayerBlockEntity extends BlockEntity implements Clearable, Co
             }
         }
     }
-
+    public void deCooldown() {
+        if(cooldown > 0) {
+            cooldown--;
+        }
+    }
+    public int getCooldown() {
+        return this.cooldown;
+    }
+    public void setCooldown(int cooldown) {
+        this.cooldown=cooldown;
+    }
     @Override
     public ItemStack splitTheItem(int pAmount) {
         ItemStack itemstack = this.item;

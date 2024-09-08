@@ -4,10 +4,7 @@ import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.container.WandScreen;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerBakedModel;
-import com.strangesmell.melodymagic.message.ClientPayloadHandler;
-import com.strangesmell.melodymagic.message.SelectCount;
-import com.strangesmell.melodymagic.message.ServerPayloadHandler;
-import com.strangesmell.melodymagic.message.SoundData;
+import com.strangesmell.melodymagic.message.*;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
@@ -50,6 +47,14 @@ public class MODEvent {
                 new DirectionalPayloadHandler<>(
                         ClientPayloadHandler::handleData,
                         ServerPayloadHandler::handleData
+                )
+        );
+        registrar.playBidirectional(
+                RecordData.TYPE,
+                RecordData.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        ClientPayloadHandler::handleRecordData,
+                        ServerPayloadHandler::handleRecordData
                 )
         );
     }

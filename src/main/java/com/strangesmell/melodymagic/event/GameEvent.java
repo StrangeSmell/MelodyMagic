@@ -4,21 +4,15 @@ import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
+import com.strangesmell.melodymagic.message.RecordData;
 import com.strangesmell.melodymagic.message.SelectCount;
-import com.strangesmell.melodymagic.message.SoundData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +43,7 @@ public class GameEvent {
             List<List<Double>> location = Lists.newArrayList();
 
             if(event.getItemStack().get(DataComponents.CUSTOM_DATA) ==null) return;
-            Util.loadSoundDataToTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
+            Util.loadSoundDataFromTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
             List<String> tooltip = Lists.newArrayList();
             List<Integer> num = Lists.newArrayList();
             for(int i=0;i<subtitles2.size();i++){
@@ -88,8 +82,25 @@ public class GameEvent {
                 newPlayer.getPersistentData().put(MODID+"effect_kinds",oldPlayer.getPersistentData().get(MODID+"effect_kinds"));
 
             }
+            if(oldPlayer.getPersistentData().get(MODID+"subtitle_kinds")!=null) {
+                newPlayer.getPersistentData().put(MODID+"subtitle_kinds",oldPlayer.getPersistentData().get(MODID+"subtitle_kinds"));
+
+            }
         }
 
+
+    }
+
+    @SubscribeEvent
+    public static void playerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        if(event.getEntity().level().isClientSide) return;
+        Player player = event.getEntity();
+        CompoundTag compoundTag =new CompoundTag();
+        compoundTag.put(MODID+"sound_kinds",player.getPersistentData().getCompound(MODID+"sound_kinds") );
+        compoundTag.put(MODID+"subtitle_kinds",player.getPersistentData().getCompound(MODID+"subtitle_kinds") );
+        compoundTag.put(MODID+"effect_kinds",player.getPersistentData().getCompound(MODID+"effect_kinds") );
+        PacketDistributor.sendToPlayer((ServerPlayer) player,new RecordData(compoundTag));//发包给一个唱片
 
     }
 

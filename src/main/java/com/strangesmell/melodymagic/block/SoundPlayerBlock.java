@@ -64,11 +64,14 @@ public class SoundPlayerBlock extends BaseEntityBlock {
     @Override
     protected void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         SoundPlayerBlockEntity soundPlayerBlockEntity = pLevel.getBlockEntity(pPos, MelodyMagic.SOUND_PLAYER_BLOCK_ENTITY.get()).orElse(null);
-        ItemStack itemStack = soundPlayerBlockEntity.getTheItem();
-        if(itemStack.isEmpty()){
-        }else {
-            playSoundFromItem(soundPlayerBlockEntity.getTheItem(),pLevel,pPos.getX(),pPos.getY(),pPos.getZ());
+        if(soundPlayerBlockEntity.getCooldown()>0) {
+            soundPlayerBlockEntity.deCooldown();
+            return;
         }
+        ItemStack itemStack = soundPlayerBlockEntity.getTheItem();
+        if(!itemStack.isEmpty()) playSoundFromItem(soundPlayerBlockEntity.getTheItem(),pLevel,pPos.getX(),pPos.getY(),pPos.getZ());
+
+        soundPlayerBlockEntity.setCooldown(soundPlayerBlockEntity.getTheItem().getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getInt("cooldown"));
     }
 
 
@@ -120,10 +123,6 @@ public class SoundPlayerBlock extends BaseEntityBlock {
         return new SoundPlayerBlockEntity(pPos, pState);
     }
 
-    /**
-     * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only, LIQUID for vanilla liquids, INVISIBLE to skip all rendering
-     * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#getRenderShape} whenever possible. Implementing/overriding is fine.
-     */
     @Override
     protected RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;

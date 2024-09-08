@@ -26,8 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.phys.Vec3;
@@ -36,7 +35,6 @@ import net.minecraft.sounds.SoundSource;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
-import net.minecraft.world.item.ItemDisplayContext;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -110,29 +108,31 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             //double dx= Mth.lerp(p_348559_.getGameTimeDeltaPartialTick());
+            float k1 =1.25f;
+            float k2 =0.8f;
             for(int i=0;i<9;i++){
                 if(selectCount==i){
-                    pGuiGraphics.pose().scale(2,2,2);
-                    pGuiGraphics.blit(SELECT,(int) (pGuiGraphics.guiWidth()/4-12+Math.sin(2*Math.PI*i/9)*r/2), (int) (pGuiGraphics.guiHeight()/4-12-Math.cos(2*Math.PI*i/9)*r/2),0,0,0,24,24,24,24);
-                    pGuiGraphics.pose().scale(0.5F,0.5F,0.5F);
+                    pGuiGraphics.pose().scale(k1,k1,k1);
+                    pGuiGraphics.blit(SELECT,(int) (pGuiGraphics.guiWidth()/2/k1-12+Math.sin(2*Math.PI*i/9)*r/k1), (int) (pGuiGraphics.guiHeight()/2/k1-12-Math.cos(2*Math.PI*i/9)*r/k1),0,0,0,24,24,24,24);
+                    pGuiGraphics.pose().scale(k2,k2,k2);
                 }else{
                     pGuiGraphics.blit(SELECT,(int) (pGuiGraphics.guiWidth()/2-12+Math.sin(2*Math.PI*i/9)*r), (int) (pGuiGraphics.guiHeight()/2-12-Math.cos(2*Math.PI*i/9)*r),0,0,0,24,24,24,24);
 
                 }
             }
-
+            //加入格子
             for(int i=0;i<9;i++){
-
-
-
-                //加入格子
                 if(itemContainerContents==null || itemContainerContents.getSlots()<=i)return;
                 if(selectCount==i){
-                    pGuiGraphics.pose().scale(2,2,2);
-                    pGuiGraphics.renderItem(itemContainerContents.getStackInSlot(i),(int)(pGuiGraphics.guiWidth()/2-8+Math.sin(2*Math.PI*i/9)*r)/2-4,(int)(pGuiGraphics.guiHeight()/2-8-Math.cos(2*Math.PI*i/9)*r)/2-4);
-                    pGuiGraphics.pose().scale(0.5F,0.5F,0.5F);
+                    pGuiGraphics.pose().scale(k1,k1,k1);
+                    pGuiGraphics.renderItem(itemContainerContents.getStackInSlot(i),(int) (pGuiGraphics.guiWidth()/2/k1-8+Math.sin(2*Math.PI*i/9)*r/k1), (int) (pGuiGraphics.guiHeight()/2/k1-8-Math.cos(2*Math.PI*i/9)*r/k1));
 
-                    itemRenderer.renderStatic(Items.AMETHYST_SHARD.getDefaultInstance(),ItemDisplayContext.FIXED,LevelRenderer.getLightColor(Minecraft.getInstance().level,Minecraft.getInstance().player.getOnPos()), OverlayTexture.NO_OVERLAY,pGuiGraphics.pose(),pGuiGraphics.bufferSource(),null,1);
+                    pGuiGraphics.pose().scale(k2,k2,k2);
+                    if(!(itemContainerContents.getStackInSlot(i).getItem() == Items.AIR)){
+                        pGuiGraphics.renderComponentTooltip(Minecraft.getInstance().font,itemContainerContents.getStackInSlot(i).getTooltipLines(Item.TooltipContext.EMPTY,null, TooltipFlag.NORMAL),(int)(pGuiGraphics.guiWidth()/2-8+Math.sin(2*Math.PI*i/9)*r)+20,(int)(pGuiGraphics.guiHeight()/2-8-Math.cos(2*Math.PI*i/9)*r)+8);
+                    }
+
+                    itemRenderer.renderStatic(Items.AMETHYST_SHARD.getDefaultInstance(), ItemDisplayContext.FIXED, LevelRenderer.getLightColor(Minecraft.getInstance().level, Minecraft.getInstance().player.getOnPos()), OverlayTexture.NO_OVERLAY, pGuiGraphics.pose(), pGuiGraphics.bufferSource(), null, 1);
 
 
                 }else{
