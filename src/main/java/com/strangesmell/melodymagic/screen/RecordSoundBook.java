@@ -6,12 +6,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.strangesmell.melodymagic.MelodyMagic.KEY2EFFECT;
 
 public class RecordSoundBook extends Screen {
     private static final Component PLAY = Component.translatable("melodymagic.recode_play");
@@ -72,6 +75,8 @@ public class RecordSoundBook extends Screen {
                 String soundSub = subList.get(page*10+i);
                 graphics.drawString(this.font, Component.translatable(soundSub), 30, this.height / 8 + 20 * i+3 , 16777215 );
             }
+            graphics.drawString(this.font,subList.size() +" / "+ BuiltInRegistries.SOUND_EVENT.size(), (this.width- this.font.width(subList.size() +" / "+ BuiltInRegistries.SOUND_EVENT.size()))/2, this.height -80, 16777215 );
+
         }else{
             List<String> values= new ArrayList<>();
             for (String s : subList) if (s.contains(name)) values.add(s);

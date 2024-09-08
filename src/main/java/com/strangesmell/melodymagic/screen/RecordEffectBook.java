@@ -65,6 +65,9 @@ public class RecordEffectBook extends Screen {
                 rendIcon(graphics,  30,  this.height / 8 + 20 * i +3,  partialTick, soundEffect);
                 graphics.drawString(this.font,Component.translatable(tranList.get(i)), 60, this.height / 8 + 20 * i+3 , 16777215 );
             }
+            graphics.drawString(this.font,tranList.size() +" / "+ KEY2EFFECT.size(), (this.width- this.font.width(tranList.size() +" / "+ KEY2EFFECT.size()))/2, this.height -80, 16777215 );
+
+
         }else{
             List<String> values= new ArrayList<>();
             for (String s : tranList) if (s.toString().contains(name)) values.add(s.toString());
@@ -81,6 +84,7 @@ public class RecordEffectBook extends Screen {
                 graphics.drawString(this.font, Component.translatable(soundEffect.name(null,null,null,null)), 60, this.height / 8 + 20 * i +3, 16777215 );
             }
         }
+
     }
 
     @Override
