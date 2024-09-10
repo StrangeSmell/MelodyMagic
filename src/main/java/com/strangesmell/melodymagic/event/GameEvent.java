@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -26,9 +27,11 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
 
@@ -46,6 +49,12 @@ public class GameEvent {
             Util.loadSoundDataFromTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
             List<String> tooltip = Lists.newArrayList();
             List<Integer> num = Lists.newArrayList();
+
+            List<String> effectList =getSoundEffectToString(event.getItemStack());
+            for (int j=0;j<effectList.size();j++){
+                event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+            }
+
             for(int i=0;i<subtitles2.size();i++){
                 if(!tooltip.contains(subtitles2.get(i))){
                     tooltip.add(subtitles2.get(i));
@@ -57,9 +66,7 @@ public class GameEvent {
             }
 
             for(int i=0;i<tooltip.size();i++){
-                if(subtitles2.get(i)==null){
-                    //event.getToolTip().add(Component.translatable("subtitles."+tooltip.get(i).getLocation().getPath()).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-                }else{
+                if(subtitles2.get(i)!=null){
                     event.getToolTip().add(Component.translatable(tooltip.get(i)).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
                 }
 

@@ -13,7 +13,7 @@
   "untranslated_sound": "未知的声音",
 
   "adv.melodymagic.thunder": "天威",
-  "patcholi.melodymagic.title": "旋律魔法",
+  "patchouli.melodymagic.title": "旋律魔法",
   "itemGroup.melodymagic": "旋律魔法",
 
   "melodymagic.recode_play": "播放",
@@ -23,6 +23,8 @@
   "melodymagic.sound_screen": "旋律",
   "melodymagic.effect_screen": "效果",
 
+
+  "warden_sonic_boon": "音爆",
   "nine_cow": "九牛之力",
   "water_breath": "水下呼吸",
   "lightning_bolt_thunder": "雷击"

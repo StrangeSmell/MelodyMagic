@@ -358,6 +358,17 @@ public class Util {
         return listEffect;
     }
 
+    public static List<String> getSoundEffectToString(ItemStack itemStack) {
+        CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag =(CompoundTag) compoundTag.get(MODID+"sound2key");
+        List<String> listEffectString = new ArrayList<>();
+        int size = tag.getInt("effect_size");
+        for(int i=0;i<size;i++){
+            listEffectString.add(tag.getString("index"+i));
+        }
+        return listEffectString;
+    }
+
     public static void effect(List<SoundEvent> subtitles, List<List<Double>> distance, Level pLevel, Player pPlayer, InteractionHand pUsedHand){
         MobEffectInstance effectInstance = new MobEffectInstance(getRandomEffect(), 180, 1);
         pPlayer.addEffect(effectInstance);

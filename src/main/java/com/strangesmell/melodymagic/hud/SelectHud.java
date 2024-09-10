@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,8 @@ import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 
 @OnlyIn(Dist.CLIENT)
 public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
@@ -129,6 +133,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
 
                     pGuiGraphics.pose().scale(k2,k2,k2);
                     if(!(itemContainerContents.getStackInSlot(i).getItem() == Items.AIR)){
+
                         pGuiGraphics.renderComponentTooltip(Minecraft.getInstance().font,itemContainerContents.getStackInSlot(i).getTooltipLines(Item.TooltipContext.EMPTY,null, TooltipFlag.NORMAL),(int)(pGuiGraphics.guiWidth()/2-8+Math.sin(2*Math.PI*i/9)*r)+20,(int)(pGuiGraphics.guiHeight()/2-8-Math.cos(2*Math.PI*i/9)*r)+8);
                     }
 
