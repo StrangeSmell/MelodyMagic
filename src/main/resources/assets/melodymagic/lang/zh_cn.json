@@ -13,7 +13,6 @@
   "untranslated_sound": "未知的声音",
 
   "adv.melodymagic.thunder": "天威",
-  "patchouli.melodymagic.title": "旋律魔法",
   "itemGroup.melodymagic": "旋律魔法",
 
   "melodymagic.recode_play": "播放",
@@ -22,6 +21,10 @@
   "melodymagic.recode_previous": "上一页",
   "melodymagic.sound_screen": "旋律",
   "melodymagic.effect_screen": "效果",
+
+
+  "patchouli.melodymagic.title": "旋律魔法",
+  "patchouli.melodymagic.landing": "旋律魔法玩法介绍",
 
 
   "warden_sonic_boon": "音爆",

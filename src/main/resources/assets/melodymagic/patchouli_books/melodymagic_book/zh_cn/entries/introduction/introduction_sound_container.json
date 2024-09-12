@@ -1,0 +1,17 @@
+{
+  "name": "Sound Container",
+  "icon": "melodymagic:sound_container",
+  "category": "melodymagic:introduction",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  紫水晶材质的旋律容器，这是卡牵牛花的回礼，蕴含着旋律的奥秘，你可以从中听到熟悉的旋律。"
+    },
+    {
+      "item": "melodymagic:sound_container",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

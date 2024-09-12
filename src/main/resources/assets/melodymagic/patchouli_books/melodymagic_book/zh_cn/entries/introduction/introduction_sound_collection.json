@@ -1,0 +1,17 @@
+{
+  "name": "Melody Collection",
+  "icon": "melodymagic:sound_collection",
+  "category": "melodymagic:introduction",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  右键会消耗紫水晶倾听世界的旋律，会返回给你一张唱片，作为你帮助她倾听世界的回礼。"
+    },
+    {
+      "item": "melodymagic:sound_collection",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

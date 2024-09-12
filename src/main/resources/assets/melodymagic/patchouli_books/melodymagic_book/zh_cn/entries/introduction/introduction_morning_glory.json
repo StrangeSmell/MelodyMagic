@@ -1,0 +1,17 @@
+{
+  "name": "Morning Glory",
+  "icon": "melodymagic:morning_glory",
+  "category": "melodymagic:introduction",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  喇叭花，或者说牵牛花，试试把她插到耳朵里？这样你或许可以听到以前你听不到的旋律。$(br)  你可以在平原找到她。"
+    },
+    {
+      "item": "melodymagic:morning_glory",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:jukebox"
+    },
+    "|": {
+      "item": "melodymagic:morning_glory"
+    }
+  },
+  "pattern": [
+    "|||",
+    "|#|",
+    "|||"
+  ],
+  "result": {
+    "count": 1,
+    "id": "melodymagic:sound_player_block"
+  }
+}

@@ -44,6 +44,7 @@ public class RecordSoundBook extends Screen {
     protected List<SoundEvent> soundEventList = new ArrayList<>();
     protected List<String> effectList= new ArrayList<>();
     protected List<String> subList= new ArrayList<>();
+    protected List<String> values= new ArrayList<>();
     protected Player player;
 
     public RecordSoundBook( Player  player_ ) {
@@ -67,7 +68,8 @@ public class RecordSoundBook extends Screen {
         if(name.equals("")){
             int size = soundEventList.size();
 
-            if(page*10+10<size) nextButton.render( graphics,  mouseX,  mouseY,  partialTick);
+            if(page*10+10<size) nextButton.render(graphics, mouseX, mouseY, partialTick);
+
             if(page>0) previousButton.render(graphics,  mouseX,  mouseY,  partialTick);
 
             for(int i = 0; i+page*10<size&&i<10;i++){
@@ -78,7 +80,7 @@ public class RecordSoundBook extends Screen {
             graphics.drawString(this.font,subList.size() +" / "+ BuiltInRegistries.SOUND_EVENT.size(), (this.width- this.font.width(subList.size() +" / "+ BuiltInRegistries.SOUND_EVENT.size()))/2, this.height -80, 16777215 );
 
         }else{
-            List<String> values= new ArrayList<>();
+
             for (String s : subList) if (s.contains(name)) values.add(s);
 
             int size = values.size();
@@ -136,12 +138,18 @@ public class RecordSoundBook extends Screen {
 
 
     protected void nextDone() {
-        if(searchName.equals("")) page++;
-        else searchPage++;
+        if(searchName.equals("")) {
+            if(page*10+10<soundEventList.size()) page++;
+        }
+        else {
+            if(page*10+10<values.size()) searchPage++;
+        }
     }
     protected void previousDone() {
-        if(searchName.equals("")) page--;
-        else searchPage--;
+        if(searchName.equals("")) {
+            if(page>0) page--;
+        }
+        else if(page>0) searchPage--;
     }
     //按键的回调函数
     protected void onDone(int i) {

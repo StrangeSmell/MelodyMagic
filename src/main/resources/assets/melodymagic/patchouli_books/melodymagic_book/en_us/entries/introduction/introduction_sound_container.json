@@ -1,0 +1,17 @@
+{
+  "name": "Sound Container",
+  "icon": "melodymagic:sound_container",
+  "category": "melodymagic:introduction",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  A melodic container made of amethyst, which is a return gift of the card petunia, contains a melodic mystery in which you can hear a familiar melody."
+    },
+    {
+      "item": "melodymagic:sound_container",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

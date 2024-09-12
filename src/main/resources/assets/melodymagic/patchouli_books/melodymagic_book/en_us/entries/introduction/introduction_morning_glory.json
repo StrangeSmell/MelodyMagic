@@ -1,0 +1,17 @@
+{
+  "name": "Morning Glory",
+  "icon": "melodymagic:morning_glory",
+  "category": "melodymagic:introduction",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  A trumpet flower, or a morning glory. Try sticking her in your ear? That way you might hear a melody you couldn't hear before. $(br) You can find her in the plains."
+    },
+    {
+      "item": "melodymagic:morning_glory",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

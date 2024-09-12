@@ -1,0 +1,17 @@
+{
+  "name": "Melody Collection",
+  "icon": "melodymagic:sound_collection",
+  "category": "melodymagic:introduction",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Right clicking will consume the amethyst to listen to the melodies of the world, and will return a record to you as a gift in return for helping her listen to the world."
+    },
+    {
+      "item": "melodymagic:sound_collection",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

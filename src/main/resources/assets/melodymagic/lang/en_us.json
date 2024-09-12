@@ -14,7 +14,6 @@
 
   "adv.melodymagic.thunder": "heaven's fury",
 
-  "patchouli.melodymagic.title": "Melody Magic",
   "untranslated_sound": "Unknown sound",
 
 
@@ -24,6 +23,13 @@
   "melodymagic.recode_previous": "previous",
   "melodymagic.sound_screen": "melody",
   "melodymagic.effect_screen": "effect",
+
+
+  "patchouli.melodymagic.title": "Melody Magic",
+  "patchouli.melodymagic.landing": "This is an introduction to the gameplay of Melodic Magic!",
+  "patchouli.melodymagic.introduction_morning_glory": "morning_glory",
+  "melodymagic.introduction_morning_glory": "morning_glory1",
+  "melodymagic.introduction.introduction_morning_glory": "morning_glory2",
 
 
 

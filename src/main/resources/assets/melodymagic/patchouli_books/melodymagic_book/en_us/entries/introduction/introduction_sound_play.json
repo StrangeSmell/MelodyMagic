@@ -1,0 +1,17 @@
+{
+  "name": "Melody Player",
+  "icon": "melodymagic:sound_player_block",
+  "category": "melodymagic:introduction",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  You can put in a record and activate it via the Redstone model."
+    },
+    {
+      "recipe": "melodymagic:sound_player_block",
+      "type": "patchouli:crafting",
+      "link_recipe": true
+    }
+  ]
+}

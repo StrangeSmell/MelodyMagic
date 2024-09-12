@@ -1,0 +1,17 @@
+{
+  "name": "MelodyMagic Wand",
+  "icon": "melodymagic:collection",
+  "category": "melodymagic:introduction",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Crouch right to open the staff GUI, put in a valid record, alt to open the hud, and scroll wheel to select casting."
+    },
+    {
+      "item": "melodymagic:collection",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}

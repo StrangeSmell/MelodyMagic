@@ -1,0 +1,17 @@
+{
+  "name": "Melody Player",
+  "icon": "melodymagic:sound_player_block",
+  "category": "melodymagic:introduction",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  可以放入唱片，通过红石型号激活它。"
+    },
+    {
+      "recipe": "melodymagic:sound_player_block",
+      "type": "patchouli:crafting",
+      "link_recipe": true
+    }
+  ]
+}

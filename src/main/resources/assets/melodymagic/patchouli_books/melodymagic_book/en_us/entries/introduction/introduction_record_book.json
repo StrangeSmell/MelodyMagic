@@ -1,0 +1,17 @@
+{
+  "name": "Record Book",
+  "icon": "melodymagic:record_book",
+  "category": "melodymagic:introduction",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  It records all the sounds you listen to, and all the melodies you comprehend."
+    },
+    {
+      "item": "melodymagic:record_book",
+      "type": "patchouli:spotlight",
+      "link_recipe": true
+    }
+  ]
+}
