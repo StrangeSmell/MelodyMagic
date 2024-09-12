@@ -20,6 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -128,6 +129,18 @@ public class Init {
             }
         }, List.of(10, DEFALUTRES));
 
+        initAll("village_reputation", new HashSet<>(List.of(SoundEvents.VILLAGER_YES.getLocation().toString()
+   )), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 200, 1));
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "village_reputation";
+            }
+        }, List.of(10, DEFALUTRES));
 
 
     }
