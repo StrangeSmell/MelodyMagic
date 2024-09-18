@@ -9,8 +9,8 @@
       "text": "  Crouch right to open the staff GUI, put in a valid record, alt to open the hud, and scroll wheel to select casting."
     },
     {
-      "item": "melodymagic:collection",
-      "type": "patchouli:spotlight",
+      "recipe": "melodymagic:collection",
+      "type": "patchouli:crafting",
       "link_recipe": true
     }
   ]

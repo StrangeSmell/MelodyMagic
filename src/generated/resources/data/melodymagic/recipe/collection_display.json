@@ -2,17 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
+    "a": {
       "item": "minecraft:stick"
     },
-    "|": {
+    "b": {
       "item": "minecraft:glow_berries"
+    },
+    "c": {
+      "item": "minecraft:sweet_berries"
     }
   },
   "pattern": [
-    "  |",
-    " # ",
-    "#  "
+    " ca",
+    " ab",
+    "b  "
   ],
   "result": {
     "count": 1,

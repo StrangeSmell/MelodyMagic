@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:jukebox"
-    },
-    "|": {
+    "a": {
       "item": "melodymagic:morning_glory"
+    },
+    "b": {
+      "item": "minecraft:jukebox"
     }
   },
   "pattern": [
-    "|||",
-    "|#|",
-    "|||"
+    "aaa",
+    "aba",
+    "aaa"
   ],
   "result": {
     "count": 1,

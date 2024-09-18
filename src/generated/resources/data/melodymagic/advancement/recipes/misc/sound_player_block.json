@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_jukebox": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:jukebox"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_morning_glory": {
+      "conditions": {
+        "items": [
+          {
+            "items": "melodymagic:morning_glory"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "melodymagic:sound_player_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_morning_glory",
+      "has_jukebox"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "melodymagic:sound_player_block"
+    ]
+  }
+}

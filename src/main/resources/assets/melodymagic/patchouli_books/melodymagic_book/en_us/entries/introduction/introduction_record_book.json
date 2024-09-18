@@ -9,8 +9,8 @@
       "text": "  It records all the sounds you listen to, and all the melodies you comprehend."
     },
     {
-      "item": "melodymagic:record_book",
-      "type": "patchouli:spotlight",
+      "recipe": "melodymagic:record_book",
+      "type": "patchouli:crafting",
       "link_recipe": true
     }
   ]

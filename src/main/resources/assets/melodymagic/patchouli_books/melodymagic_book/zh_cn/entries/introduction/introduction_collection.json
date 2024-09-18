@@ -9,8 +9,8 @@
       "text": "  蹲下右键可以打开法杖GUI，放入有效的唱片，alt打开hud，滚轮选择施法。"
     },
     {
-      "item": "melodymagic:collection",
-      "type": "patchouli:spotlight",
+      "recipe": "melodymagic:collection",
+      "type": "patchouli:crafting",
       "link_recipe": true
     }
   ]

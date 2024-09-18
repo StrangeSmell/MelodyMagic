@@ -9,8 +9,8 @@
       "text": "  它可以记录你倾听的所有声音，和你领悟的所有旋律。"
     },
     {
-      "item": "melodymagic:record_book",
-      "type": "patchouli:spotlight",
+      "recipe": "melodymagic:record_book",
+      "type": "patchouli:crafting",
       "link_recipe": true
     }
   ]

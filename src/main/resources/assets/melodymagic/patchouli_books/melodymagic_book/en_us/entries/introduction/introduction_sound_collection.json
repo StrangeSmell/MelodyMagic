@@ -9,8 +9,13 @@
       "text": "  Right clicking will consume the amethyst to listen to the melodies of the world, and will return a record to you as a gift in return for helping her listen to the world."
     },
     {
-      "item": "melodymagic:sound_collection",
-      "type": "patchouli:spotlight",
+      "recipe": "melodymagic:sound_collection",
+      "type": "patchouli:crafting",
+      "link_recipe": true
+    },
+    {
+      "recipe": "melodymagic:collection_display",
+      "type": "patchouli:crafting",
       "link_recipe": true
     }
   ]

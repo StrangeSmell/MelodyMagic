@@ -5,36 +5,27 @@ import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.api.MMCriterionTrigger;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.commands.execution.tasks.BuildContexts;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.component.DataComponentPredicate;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.recipes.*;
 import net.minecraft.data.tags.VanillaBlockTagsProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
@@ -71,6 +62,7 @@ public class DataGenerators {
         gen.addProvider(event.includeServer(), new CustomBlockTag(packOutput, lookupProvider));
         gen.addProvider(event.includeServer(), new CustomAdvancementProvider(packOutput, lookupProvider,existingFileHelper));
         gen.addProvider(event.includeServer(), new MMWorldGen(packOutput, lookupProvider));
+        gen.addProvider(event.includeServer(), new CustomRecipeProvider(packOutput, lookupProvider));
 
 
     }
@@ -227,6 +219,62 @@ public class DataGenerators {
 
             }
         }
+    }
+
+    public static class CustomRecipeProvider extends RecipeProvider {
+
+        public CustomRecipeProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
+            super(pOutput, pRegistries);
+        }
+
+        @Override
+        protected void buildRecipes(RecipeOutput pRecipeOutput) {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SOUND_COLLECTION_ITEM.get())
+                    .pattern(" a ") // 创建配方图案
+                    .pattern(" b ") // 创建配方图案
+                    .define('a', MORNING_GLORY_ITEM) // 定义符号代表什么
+                    .define('b', Items.AMETHYST_SHARD) // 定义符号代表什么
+                    .unlockedBy(getHasName(MORNING_GLORY_ITEM), has(MORNING_GLORY_ITEM)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, COLLECTION_DISPLAY_ITEM.get())
+                    .pattern(" ca") // 创建配方图案
+                    .pattern(" ab") // 创建配方图案
+                    .pattern("b  ") // 创建配方图案
+                    .define('a', Items.STICK) // 定义符号代表什么
+                    .define('b', Items.GLOW_BERRIES) // 定义符号代表什么
+                    .define('c', Items.SWEET_BERRIES) // 定义符号代表什么
+                    .unlockedBy(getHasName(Items.GLOW_BERRIES), has(Items.GLOW_BERRIES)) // 该配方如何解锁
+                    .unlockedBy(getHasName(Items.SWEET_BERRIES), has(Items.SWEET_BERRIES)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, COLLECTION_ITEM.get())
+                    .requires(COLLECTION_DISPLAY_ITEM)
+                    .requires(Items.AMETHYST_SHARD)
+                    .unlockedBy(getHasName(COLLECTION_DISPLAY_ITEM), has(COLLECTION_DISPLAY_ITEM)) // 该配方如何解锁
+                    .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, RECORD_BOOK.get())
+                    .requires(Items.BOOK)
+                    .requires(Items.AMETHYST_SHARD)
+                    .unlockedBy(getHasName(Items.BOOK), has(Items.BOOK)) // 该配方如何解锁
+                    .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SOUND_PLAYER_BLOCK.get())
+                    .pattern("aaa") // 创建配方图案
+                    .pattern("aba") // 创建配方图案
+                    .pattern("aaa") // 创建配方图案
+                    .define('a', MORNING_GLORY_ITEM) // 定义符号代表什么
+                    .define('b', Items.JUKEBOX) // 定义符号代表什么
+                    .unlockedBy(getHasName(MORNING_GLORY_ITEM), has(MORNING_GLORY_ITEM)) // 该配方如何解锁
+                    .unlockedBy(getHasName(Items.JUKEBOX), has(Items.JUKEBOX)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
+
+        }
+
+
     }
 
 }

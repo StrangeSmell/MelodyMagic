@@ -64,7 +64,7 @@ public class RecordEffectBook extends Screen {
 
             for(int i = 0; i+page*10<size && i<10;i++){
                 SoundEffect soundEffect = KEY2EFFECT.get(effectList.get(page*10+i));
-                rendIcon(graphics,  30,  this.height / 8 + 20 * i +3,  partialTick, soundEffect);
+                rendIcon(graphics,  30,  this.height / 8 + 20 * i ,  partialTick, soundEffect);
                 graphics.drawString(this.font,Component.translatable(tranList.get(i)), 60, this.height / 8 + 20 * i+3 , 16777215 );
             }
             graphics.drawString(this.font,tranList.size() +" / "+ KEY2EFFECT.size(), (this.width- this.font.width(tranList.size() +" / "+ KEY2EFFECT.size()))/2, this.height -80, 16777215 );
@@ -80,7 +80,7 @@ public class RecordEffectBook extends Screen {
             for(int i = 0; i+page*10<size&&i<10;i++){
 
                 SoundEffect soundEffect = KEY2EFFECT.get(values.get(page*10+i));
-                rendIcon(graphics,  30,  this.height / 8 + 20 * i +3,  partialTick, soundEffect);
+                rendIcon(graphics,  30,  this.height / 8 + 20 * i,  partialTick, soundEffect);
 
                 graphics.drawString(this.font, Component.translatable(soundEffect.name(null,null,null,null)), 60, this.height / 8 + 20 * i +3, 16777215 );
             }
