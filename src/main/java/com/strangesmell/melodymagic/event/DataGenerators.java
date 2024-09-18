@@ -160,10 +160,10 @@ public class DataGenerators {
 
         @Override
         protected void generate() {
-            // 此处添加 xiaozhong:sulfur_block 处的战利品表，意为掉落自身对应物品一个
             this.dropSelf(SOUND_PLAYER_BLOCK.get());
             this.dropSelf(MORNING_GLORY.get());
             this.dropSelf(POT_MORNING_GLORY.get());
+            this.dropOther(FAKE_NETHER_PORTAL.get(),Items.AIR);
 
         /*
         // 如欲在非精准采集的情况下掉落九个 xiaozhong:sulfur_dust，请使用以下代码：
@@ -187,6 +187,9 @@ public class DataGenerators {
         protected void addTags(HolderLookup.Provider pProvider) {
             this.tag(BlockTags.MINEABLE_WITH_AXE).add(
                     SOUND_PLAYER_BLOCK.get()
+            );
+            this.tag(BlockTags.FLOWERS).add(
+                    MORNING_GLORY.get()
             );
         }
     }

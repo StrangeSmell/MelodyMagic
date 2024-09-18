@@ -75,6 +75,14 @@ public class ServerPayloadHandler {
         RecordUtil.saveEffectKinds(player,listString);
 
         //结束
+/*
+         //todo 等待更新item_model
+          if(!listString.isEmpty()){
+            itemStack.set(DataComponents.CUSTOM_MODEL_DATA,)
+            for(int i=0;i<listString.size();i++){
+
+            }
+        }*/
 
         CustomData customData = CustomData.of(compoundTag);
         itemStack.set(DataComponents.CUSTOM_DATA,customData);

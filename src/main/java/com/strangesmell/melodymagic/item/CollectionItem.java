@@ -15,6 +15,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -59,7 +60,8 @@ public class CollectionItem extends Item implements  MenuProvider  {
             selectCount = compoundTag.getInt(MODID+"select_index");
         }
         //使用
-        ItemContainerContents itemContainerContents = itemStack.get(DataComponents.CONTAINER);
+
+        ItemContainerContents itemContainerContents = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         if(itemContainerContents.getSlots()<= selectCount) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         ItemStack soundContainer = itemContainerContents.getStackInSlot(selectCount);
         if(soundContainer.getItem() instanceof SoundContainerItem){
