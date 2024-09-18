@@ -3,6 +3,7 @@ package com.strangesmell.melodymagic.api;
 import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.MelodyMagic;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -405,5 +408,7 @@ public class Util {
         return SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
     }
 
-
+    public static void  setBlock(Level level , BlockPos pos, BlockState blockState) {
+        if(!level.getBlockState(pos).getBlock().getDescriptionId().equals("block.minecraft.bedrock")) level.setBlock(pos, blockState, 2);
+    }
 }

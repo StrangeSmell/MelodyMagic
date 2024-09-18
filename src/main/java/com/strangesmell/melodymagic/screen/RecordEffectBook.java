@@ -43,6 +43,7 @@ public class RecordEffectBook extends Screen {
         player = player_;
         RecordUtil.loadEffectKinds(player_,effectList);
         for(int i=0;i<effectList.size();i++){
+            if(KEY2EFFECT.get(effectList.get(i))==null)continue;
             tranList.add(KEY2EFFECT.get(effectList.get(i)).name(null,null,null,null));
         }
     }

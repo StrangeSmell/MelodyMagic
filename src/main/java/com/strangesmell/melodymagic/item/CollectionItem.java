@@ -51,6 +51,11 @@ public class CollectionItem extends Item implements  MenuProvider  {
                 return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
             }
 
+        }else{
+            if(pPlayer.isShiftKeyDown()){
+                return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
+
+            }
         }
         int selectCount=0;
         CompoundTag compoundTag =itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
