@@ -47,31 +47,27 @@ public class CollectionItem extends Item implements  MenuProvider  {
                         (containerId, playerInventory, player) -> new WandMenu(containerId, playerInventory),
                         Component.translatable("wand_menu")
                 ));
-            }else{
-
-                int selectCount=0;
-                CompoundTag compoundTag =itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-                if(!compoundTag.contains(MODID+"select_index")){
-                    compoundTag.putInt(MODID+"select_index",selectCount);
-                }else{
-                    selectCount = compoundTag.getInt(MODID+"select_index");
-                }
-                //使用
-                ItemContainerContents itemContainerContents = itemStack.get(DataComponents.CONTAINER);
-                if(itemContainerContents.getSlots()<= selectCount) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
-                ItemStack soundContainer = itemContainerContents.getStackInSlot(selectCount);
-                if(soundContainer.getItem() instanceof SoundContainerItem){
-                    List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer);
-                    for(int i=0;i<listEffect.size();i++){
-                        listEffect.get(i).effect(pPlayer,pLevel,pUsedHand,soundContainer);
-                    }
-
-
-                    pPlayer.getCooldowns().addCooldown(this, soundContainer.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getInt("cooldown"));
-                }
+                return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
             }
 
-
+        }
+        int selectCount=0;
+        CompoundTag compoundTag =itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if(!compoundTag.contains(MODID+"select_index")){
+            compoundTag.putInt(MODID+"select_index",selectCount);
+        }else{
+            selectCount = compoundTag.getInt(MODID+"select_index");
+        }
+        //使用
+        ItemContainerContents itemContainerContents = itemStack.get(DataComponents.CONTAINER);
+        if(itemContainerContents.getSlots()<= selectCount) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+        ItemStack soundContainer = itemContainerContents.getStackInSlot(selectCount);
+        if(soundContainer.getItem() instanceof SoundContainerItem){
+            List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer);
+            for(int i=0;i<listEffect.size();i++){
+                listEffect.get(i).effect(pPlayer,pLevel,pUsedHand,soundContainer);
+            }
+            pPlayer.getCooldowns().addCooldown(this, soundContainer.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getInt("cooldown"));
         }
         return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
     }

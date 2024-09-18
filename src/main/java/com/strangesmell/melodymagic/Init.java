@@ -4,6 +4,7 @@ import com.strangesmell.melodymagic.api.EffectUtil;
 import com.strangesmell.melodymagic.api.SoundEffect;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
+import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,6 +73,7 @@ public class Init {
         initAll("nine_cow", new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
             }
 
@@ -84,6 +86,7 @@ public class Init {
         initAll("water_breath", new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
             }
 
@@ -96,6 +99,7 @@ public class Init {
         initAll("lightning_bolt_thunder", new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num,res,itemStack);
@@ -125,6 +129,7 @@ public class Init {
         initAll("warden_sonic_boon", new HashSet<>(List.of(SoundEvents.WARDEN_SONIC_BOOM.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 HitResult hitResult = getHitResult(level, player, 20);
                 Vec3 vec3 = player.position().add(player.getAttachments().get(EntityAttachment.WARDEN_CHEST, 0, player.getYRot()));
                 Vec3 vec31 = hitResult.getLocation().subtract(vec3);
@@ -159,6 +164,7 @@ public class Init {
         initAll("village_reputation", new HashSet<>(List.of(SoundEvents.VILLAGER_YES.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num,res,itemStack);
@@ -178,6 +184,7 @@ public class Init {
         initAll("eat", new HashSet<>(List.of(SoundEvents.PLAYER_BURP.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num,res,itemStack);
@@ -201,6 +208,7 @@ public class Init {
         initAll("bow", new HashSet<>(List.of(SoundEvents.ARROW_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num,res,itemStack);
@@ -224,6 +232,7 @@ public class Init {
         initAll("bone_meal", new HashSet<>(List.of(SoundEvents.BONE_MEAL_USE.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 HitResult hitResult = getHitResult(level, player, player.entityInteractionRange());
                 if(hitResult instanceof BlockHitResult blockHitResult) {
                     UseOnContext useOnContext = new UseOnContext(player,pUsedHand,blockHitResult);
@@ -241,8 +250,8 @@ public class Init {
         initAll("cat", new HashSet<>(List.of(SoundEvents.CAT_PURR.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 Cat cat = EntityType.CAT.create(level);
-
                 if(cat != null) {
                     cat.finalizeSpawn((ServerLevel)level,level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
                     cat.tame(player);
@@ -260,6 +269,7 @@ public class Init {
         initAll("bat", new HashSet<>(List.of(SoundEvents.BAT_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 TargetingConditions alertableTargeting = TargetingConditions.forCombat()
                         .range(12.0)
                         .ignoreLineOfSight()
@@ -281,6 +291,7 @@ public class Init {
         initAll("dolphin", new HashSet<>(List.of(SoundEvents.DOLPHIN_AMBIENT_WATER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 player.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 1000, 1));
             }
 
@@ -293,6 +304,7 @@ public class Init {
         initAll("dragon_breath", new HashSet<>(List.of(SoundEvents.ENDER_DRAGON_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level.isClientSide)return;
                 HitResult hitResult = getHitResult(level, player, 1);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
@@ -312,6 +324,16 @@ public class Init {
         initAll("nether_portal", new HashSet<>(List.of(SoundEvents.PORTAL_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+
+                List<Integer> num = new ArrayList<>();
+                List<String> res = new ArrayList<>();
+                Util.loadSoundDataFromTag(num,res,itemStack);
+                int size=0;
+                for(int i =0;i<res.size();i++) {
+                    if(res.get(i).contains(SoundEvents.PORTAL_AMBIENT.getLocation().toString())) {
+                        size=num.get(i)+size;
+                    }
+                }
                 HitResult hitResult = getHitResult(level, player, 10);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
@@ -341,6 +363,13 @@ public class Init {
 
                     level.setBlock(pos.offset(0,2,0), blockState, 2);
                     level.setBlock(pos.offset(0,3,0), blockState, 2);
+                    if(level.getBlockEntity(pos.offset(0,2,0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity){
+                        fakeNetherPortalBlockEntity.num= 100*size;
+                    }
+                    if(level.getBlockEntity(pos.offset(0,3,0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity){
+                        fakeNetherPortalBlockEntity.num= 100*size;
+                    }
+
                 }
 
             }
@@ -350,6 +379,7 @@ public class Init {
                 return "nether_portal";
             }
         }, List.of(10, DEFALUTRES));
+
 
     }
 
