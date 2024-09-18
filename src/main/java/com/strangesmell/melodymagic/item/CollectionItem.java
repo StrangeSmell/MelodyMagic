@@ -66,13 +66,7 @@ public class CollectionItem extends Item implements  MenuProvider  {
                         listEffect.get(i).effect(pPlayer,pLevel,pUsedHand,soundContainer);
                     }
 
-                    int num= getNumOfUntranslate(soundContainer);
-                    Random random = new Random();
-                    int id = random.nextInt(0,BuiltInRegistries.MOB_EFFECT.size());
-                    for(int i=0;i<num;i++){
-                        pPlayer.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).get(), random.nextInt(50,400), 1));
 
-                    }
                     pPlayer.getCooldowns().addCooldown(this, soundContainer.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getInt("cooldown"));
                 }
             }
@@ -107,3 +101,10 @@ public class CollectionItem extends Item implements  MenuProvider  {
         );
     }
 }
+/*                    int num= getNumOfUntranslate(soundContainer);
+                    Random random = new Random();
+                    int id = random.nextInt(0,BuiltInRegistries.MOB_EFFECT.size());
+                    for(int i=0;i<num;i++){
+                        pPlayer.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).get(), random.nextInt(50,400), 1));
+
+                    }*/

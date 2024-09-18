@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "melodymagic:block/nether_portal_ns"
+    },
+    "axis=z": {
+      "model": "melodymagic:block/nether_portal_ew"
+    }
+  }
+}

@@ -70,8 +70,21 @@ public class Util {
             compoundTag.putString("gather_sound_subtitles" + i, soundSubitlesList.get(i));
             compoundTag.putInt("gather_sound_num" + i, num.get(i));
         }
+        compoundTag.putInt("gather_size", num.size());
         compoundTag.putInt("cooldown", cooldown);
         return compoundTag;
+    }
+
+    //只哪gather data
+    public static void loadSoundDataFromTag(List<Integer> num,List<String> res,ItemStack itemStack) {
+        CompoundTag tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        int size = tag.getInt("gather_size");
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                num.add(tag.getInt("gather_sound_num" + i));
+                res.add(ResourceLocation.fromNamespaceAndPath(tag.getString("gather_sound_namespace" + i), tag.getString("gather_sound_path" + i)).toString());
+            }
+        }
     }
 
     public static List<List<Object>> loadSoundDataFromTag(CompoundTag tag) {
@@ -212,15 +225,6 @@ public class Util {
         LOGGER.info("An error occurred while getting the index");
         LOGGER.info("The game doesn't crash but tooltip renders an error message");
         return 0;
-    }
-
-
-    public static void addSound2Key(HashSet<String> value, String key) {
-        MelodyMagic.SOUND2KEY.put(value, key);
-    }
-
-    public static void addKey2Effect(String value, SoundEffect key) {
-        MelodyMagic.KEY2EFFECT.put(value, key);
     }
 
     public static List<String> getKeyFromSound(List<SoundEvent> soundList, List<Integer> num) {

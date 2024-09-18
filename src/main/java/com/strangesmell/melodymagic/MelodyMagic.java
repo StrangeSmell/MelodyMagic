@@ -2,6 +2,8 @@ package com.strangesmell.melodymagic;
 
 import com.strangesmell.melodymagic.api.MMCriterionTrigger;
 import com.strangesmell.melodymagic.api.SoundEffect;
+import com.strangesmell.melodymagic.block.FakeNetherPortal;
+import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.block.SoundPlayerBlock;
 import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
 import com.strangesmell.melodymagic.container.WandMenu;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent;
@@ -88,6 +91,16 @@ public class MelodyMagic
 
             )
     );
+    public static final DeferredBlock<Block> FAKE_NETHER_PORTAL = BLOCKS.register("fake_nether_portal", ()-> new FakeNetherPortal(
+                    BlockBehaviour.Properties.of()
+                            .noCollission()
+                            .randomTicks()
+                            .strength(-1.0F)
+                            .sound(SoundType.GLASS)
+                            .lightLevel(p_50870_ -> 11)
+                            .pushReaction(PushReaction.BLOCK)
+            )
+    );
 
     public static final DeferredBlock<Block> MORNING_GLORY = BLOCKS.register("morning_glory", ()-> new FlowerBlock(
             MobEffects.LUCK,5
@@ -115,6 +128,7 @@ public class MelodyMagic
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,MODID);
     public static final Supplier<BlockEntityType<SoundPlayerBlockEntity>> SOUND_PLAYER_BLOCK_ENTITY = BLOCK_ENTITY.register("sound_player_block_entity", () -> BlockEntityType.Builder.of(SoundPlayerBlockEntity::new, SOUND_PLAYER_BLOCK.get()).build(null));
+    public static final Supplier<BlockEntityType<FakeNetherPortalBlockEntity>> FAKE_NETHER_PORTAL_BLOCK_ENTITY = BLOCK_ENTITY.register("fake_nether_portal_block_entity", () -> BlockEntityType.Builder.of(FakeNetherPortalBlockEntity::new, FAKE_NETHER_PORTAL.get()).build(null));
 
     public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES = DeferredRegister.create(Registries.TRIGGER_TYPE, MelodyMagic.MODID);
 

@@ -33,6 +33,7 @@ public class RecordEffectBook extends Screen {
     protected Button previousButton;
     protected List<String> effectList= new ArrayList<>();
     protected List<String> tranList= new ArrayList<>();
+    protected List<String> values= new ArrayList<>();
     protected Player player;
 
     public RecordEffectBook(Player  player_ ) {
@@ -69,7 +70,6 @@ public class RecordEffectBook extends Screen {
 
 
         }else{
-            List<String> values= new ArrayList<>();
             for (String s : tranList) if (s.toString().contains(name)) values.add(s.toString());
 
             int size = values.size();
@@ -91,7 +91,7 @@ public class RecordEffectBook extends Screen {
     protected void init() {
         super.init();
         page=0;
-
+        searchName="";
         openSoundButton = this.addRenderableWidget(Button.builder(SOUNDSCREEN, (a) -> {
             this.openSoundButton();
         }).bounds(this.width/2 -15,  this.height -60, 30, 20).build());
@@ -117,12 +117,18 @@ public class RecordEffectBook extends Screen {
 
 
     protected void nextDone() {
-        if(searchName.equals("")) page++;
-        else searchPage++;
+        if(searchName.equals("")) {
+            if(page*10+10<effectList.size()) page++;
+        }
+        else {
+            if(page*10+10<values.size()) searchPage++;
+        }
     }
     protected void previousDone() {
-        if(searchName.equals("")) page--;
-        else searchPage--;
+        if(searchName.equals("")) {
+            if(page>0) page--;
+        }
+        else if(page>0) searchPage--;
     }
     //按键的回调函数
     protected void onDone(int i) {

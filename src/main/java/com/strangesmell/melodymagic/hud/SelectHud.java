@@ -164,7 +164,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
 
     @Override
     public void onPlaySound(SoundInstance pSound, WeighedSoundEvents pAccessor, float pRange) {
-        if (pSound.getSource() != SoundSource.MASTER && isAudibleFrom(new Vec3(pSound.getX(), pSound.getY(), pSound.getZ()),pRange)) {
+         if (pSound.getSource() != SoundSource.MASTER && isAudibleFrom(new Vec3(pSound.getX(), pSound.getY(), pSound.getZ()),pRange)) {
             if(Minecraft.getInstance().player==null) return;
 
             if(subtitles.contains(pSound)) return;
