@@ -25,6 +25,10 @@
   "melodymagic.effect_screen": "effect",
 
 
+
+  "melodymagic.sound_container.empty": "emm... there is no melody... ╮(￣ ▽￣)╭",
+
+
   "patchouli.melodymagic.title": "Melody Magic",
   "patchouli.melodymagic.landing": "This is an introduction to the gameplay of Melodic Magic!",
   "patchouli.melodymagic.introduction_morning_glory": "morning_glory",

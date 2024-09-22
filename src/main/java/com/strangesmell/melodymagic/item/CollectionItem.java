@@ -71,6 +71,9 @@ public class CollectionItem extends Item implements  MenuProvider  {
         ItemStack soundContainer = itemContainerContents.getStackInSlot(selectCount);
         if(soundContainer.getItem() instanceof SoundContainerItem){
             List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer);
+            if(listEffect.isEmpty()&&pLevel.isClientSide){
+                pPlayer.sendSystemMessage(Component.translatable(MODID+".sound_container.empty"));
+            }
             for(int i=0;i<listEffect.size();i++){
                 listEffect.get(i).effect(pPlayer,pLevel,pUsedHand,soundContainer);
             }

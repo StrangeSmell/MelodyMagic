@@ -6,6 +6,7 @@ import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
 import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.item.CollectionItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -44,6 +46,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.timers.TimerCallback;
+import net.minecraft.world.level.timers.TimerQueue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -339,7 +343,26 @@ public class Init {
         initAll("nether_portal", new HashSet<>(List.of(SoundEvents.PORTAL_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(level instanceof ServerLevel serverLevel){
+                    TimerQueue<MinecraftServer> timerqueue =  serverLevel.getServer().getWorldData().overworldData().getScheduledEvents();
+                    TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
 
+                        for(ServerLevel serverLevel1:obj.getAllLevels()){
+                            for(Player player1 : serverLevel1.players()){
+                                player1.sendSystemMessage(Component.literal("1222"));
+                            }
+                        }
+                        if(gameTime==gameTime+100){
+                            for(ServerLevel serverLevel1:obj.getAllLevels()){
+                                for(Player player1 : serverLevel1.players()){
+                                    player1.sendSystemMessage(Component.literal("4444"));
+                                }
+                            }
+                        }
+                    };
+
+                    timerqueue.schedule("nether_portal", level.getGameTime()+100,myCallback);
+                }
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num,res,itemStack);

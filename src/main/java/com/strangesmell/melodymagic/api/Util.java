@@ -357,8 +357,10 @@ public class Util {
     public static List<SoundEffect> getSoundEffect(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         CompoundTag tag =(CompoundTag) compoundTag.get(MODID+"sound2key");
+        if(tag ==null) tag = new CompoundTag();
         List<SoundEffect> listEffect = new ArrayList<>();
-        int size = tag.getInt("effect_size");
+        int size =0;
+        if(tag.contains("effect_size")){size=tag.getInt("effect_size");}
         for(int i=0;i<size;i++){
             listEffect.add(KEY2EFFECT.get(tag.getString("index"+i)));
         }
@@ -409,6 +411,6 @@ public class Util {
     }
 
     public static void  setBlock(Level level , BlockPos pos, BlockState blockState) {
-        if(!level.getBlockState(pos).getBlock().getDescriptionId().equals("block.minecraft.bedrock")) level.setBlock(pos, blockState, 2);
+        if(!level.getBlockState(pos).getBlock().getDescriptionId().equals(Blocks.BEDROCK.getDescriptionId())&&!level.getBlockState(pos).getBlock().getDescriptionId().equals(FAKE_NETHER_PORTAL.get().getDescriptionId())) level.setBlock(pos, blockState, 2);
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.api.ItemUtil;
 import com.strangesmell.melodymagic.api.RecordUtil;
 import com.strangesmell.melodymagic.api.Util;
+import com.strangesmell.melodymagic.hud.RecordHud;
 import com.strangesmell.melodymagic.message.SoundData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
+import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,8 @@ public class SoundCollectionItem extends Item {
                     soundEventList.add(subtitles.get(i).getLocation().toString());
                     putResToTag(sound_kinds,subtitles.get(i).getLocation(),sound_kinds.size()/2);
                     subtitle_kinds.putString("subtitle"+(sound_kinds.size()/2-1),subtitles2.get(subtitles.get(i).getLocation()));
+                    RecordHud.recordSubtitle.add(new Pair<>( subtitles2.get(subtitles.get(i).getLocation()),false));
+                    RecordHud.recordSubtitleTime.add(1000);
                 }
             }
 
@@ -68,12 +72,15 @@ public class SoundCollectionItem extends Item {
                 if (!soundEffectList.contains(s)) {
                     soundEffectList.add(s);
                     effect_kinds.putString("effect" + effect_kinds.size(), s);
+                    RecordHud.recordSubtitle.add(new Pair<>(s,true));
+                    RecordHud.recordSubtitleTime.add(1000);
                 }
             }
 
             pPlayer.getPersistentData().put(MODID+"sound_kinds",sound_kinds);
             pPlayer.getPersistentData().put(MODID+"effect_kinds",effect_kinds);
             pPlayer.getPersistentData().put(MODID+"subtitle_kinds",subtitle_kinds);
+
 
             //record end
             for (SoundInstance soundInstance : subtitles) {

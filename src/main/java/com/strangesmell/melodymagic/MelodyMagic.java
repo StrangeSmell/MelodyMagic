@@ -7,32 +7,25 @@ import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.block.SoundPlayerBlock;
 import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
 import com.strangesmell.melodymagic.container.WandMenu;
+import com.strangesmell.melodymagic.hud.RecordHud;
 import com.strangesmell.melodymagic.hud.SelectHud;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.RecordBook;
 import com.strangesmell.melodymagic.item.SoundCollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -61,7 +54,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static com.strangesmell.melodymagic.api.ViewUtil.getHitResult;
 import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
 
 @Mod(MelodyMagic.MODID)
@@ -72,10 +64,9 @@ public class MelodyMagic
     public static Map<HashSet<String>,String> SOUND2KEY= new HashMap<>();
     public static List<HashSet<String>> SOUND_LIST= new ArrayList<>();
     public static Map<String, CompoundTag> CONDITION= new HashMap<>();
-    public static Map<String, SoundEffect> KEY2EFFECT= new HashMap<>();;
-
-    public static Map<String, Integer> SOUND_INF= new HashMap<>();;
-    public static Map<String, List<Object>> EFFECT_INF= new HashMap<>();;
+    public static Map<String, SoundEffect> KEY2EFFECT= new HashMap<>();
+    public static Map<String, Integer> SOUND_INF= new HashMap<>();
+    public static Map<String, List<Object>> EFFECT_INF= new HashMap<>();
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -223,6 +214,7 @@ public class MelodyMagic
         {
             LOGGER.info("Register hud");
             event.registerAboveAll(fromNamespaceAndPath(MODID,"select_hud"), SelectHud.getInstance());
+            event.registerAboveAll(fromNamespaceAndPath(MODID,"record_hud"), RecordHud.getInstance());
         }
     }
 

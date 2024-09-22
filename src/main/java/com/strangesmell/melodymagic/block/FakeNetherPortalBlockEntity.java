@@ -46,7 +46,7 @@ public class FakeNetherPortalBlockEntity extends BlockEntity {
     }
 
     public static void destroyObAndPortal(Level level, BlockPos pos) {
-        if(level.getBlockState(pos).getBlock() == Blocks.OBSIDIAN||level.getBlockState(pos).getBlock() == MelodyMagic.FAKE_NETHER_PORTAL.get()){
+        if(level.getBlockState(pos).getBlock() == Blocks.OBSIDIAN){
             level.destroyBlock(pos, false);
         }
     }
