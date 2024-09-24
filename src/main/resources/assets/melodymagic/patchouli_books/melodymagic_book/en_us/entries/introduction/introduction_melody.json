@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "  For example, you can record the sound of a cow mooing in a number greater than 9, and this effect gives the player the best Power effect."
+      "text": "  For example, you can record the sound of a cow mooing in a number greater than 9. This effect gives the player power effect."
     }
   ]
 }
