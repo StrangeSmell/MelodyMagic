@@ -1,0 +1,12 @@
+{
+  "name": "简要流程",
+  "icon": "minecraft:amethyst_shard",
+  "category": "melodymagic:introduction",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  先寻找到牵牛花和紫水晶，在用牵牛花和紫水晶制作旋律收集器，在背包有紫水晶时，使用旋律搜集器会获得搜集了声音的紫水晶唱片，蹲下使用法杖打开gui，把唱片放入，alt打开hud选择使用的唱片，如果唱片中含有旋律就会释放出其中的力量。"
+    }
+  ]
+}

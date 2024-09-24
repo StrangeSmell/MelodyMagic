@@ -1,0 +1,12 @@
+{
+  "name": "Tour Flow",
+  "icon": "minecraft:amethyst_shard",
+  "category": "melodymagic:introduction",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  First find the petunias and amethysts, in using the petunias and amethysts to make the melody collector, use the melody collector when you have amethysts in your backpack to get the amethyst record with the sounds collected, crouch down and use the staff to open the gui and put the record in, alt open the hud to select the record to use, if the record contains a melody it will unleash the power in it."
+    }
+  ]
+}

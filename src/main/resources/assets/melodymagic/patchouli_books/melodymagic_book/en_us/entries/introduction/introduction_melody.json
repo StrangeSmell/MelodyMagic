@@ -1,0 +1,16 @@
+{
+  "name": "Melody",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:introduction",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Melodies that have been recorded to a record are shown in red font in the item information.$(br)  And in gold are all the types and numbers of sounds that have been recorded."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "  For example, you can record the sound of a cow mooing in a number greater than 9, and this effect gives the player the best Power effect."
+    }
+  ]
+}

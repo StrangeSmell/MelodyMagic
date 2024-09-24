@@ -1,0 +1,16 @@
+{
+  "name": "旋律",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:introduction",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  被记录到唱片的旋律会在物品信息里以红色字体显示，金色则是记录的所有声音种类和数量。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "  比如你可以记录数量大于9的牛叫声，此效果可以给玩家最佳力量效果."
+    }
+  ]
+}
