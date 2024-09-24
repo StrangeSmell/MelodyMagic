@@ -32,10 +32,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.npc.CatSpawner;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
@@ -60,6 +62,7 @@ import java.util.*;
 import static com.strangesmell.melodymagic.MelodyMagic.*;
 import static com.strangesmell.melodymagic.api.Util.setBlock;
 import static com.strangesmell.melodymagic.api.ViewUtil.getHitResult;
+import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
 public class Init {
     public static ResourceLocation DEFALUTRES = ResourceLocation.fromNamespaceAndPath(MODID, "textures/effect_icon/img.png");
@@ -80,7 +83,7 @@ public class Init {
         initAll("nine_cow", new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
             }
 
@@ -92,7 +95,7 @@ public class Init {
         initAll("water_breath", new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
             }
 
@@ -104,16 +107,16 @@ public class Init {
         initAll("lightning_bolt_thunder", new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num,res,itemStack);
-                int size=0;
-                if(res.contains(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())) {
-                    size=num.get(res.indexOf(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString()));
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                if (res.contains(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())) {
+                    size = num.get(res.indexOf(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString()));
                 }
 
-                HitResult hitResult = getHitResult(level, player, 20+size);
+                HitResult hitResult = getHitResult(level, player, 20 + size);
                 LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
                 assert bolt != null;
 
@@ -133,7 +136,7 @@ public class Init {
         initAll("warden_sonic_boon", new HashSet<>(List.of(SoundEvents.WARDEN_SONIC_BOOM.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 20);
                 Vec3 vec3 = player.position().add(player.getAttachments().get(EntityAttachment.WARDEN_CHEST, 0, player.getYRot()));
                 Vec3 vec31 = hitResult.getLocation().subtract(vec3);
@@ -167,15 +170,15 @@ public class Init {
         initAll("village_reputation", new HashSet<>(List.of(SoundEvents.VILLAGER_YES.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num,res,itemStack);
-                int size=0;
-                if(res.contains(SoundEvents.VILLAGER_YES.getLocation().toString())) {
-                    size=num.get(res.indexOf(SoundEvents.VILLAGER_YES.getLocation().toString()));
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                if (res.contains(SoundEvents.VILLAGER_YES.getLocation().toString())) {
+                    size = num.get(res.indexOf(SoundEvents.VILLAGER_YES.getLocation().toString()));
                 }
-                player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 200,size));
+                player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 200, size));
             }
 
             @Override
@@ -186,20 +189,20 @@ public class Init {
         initAll("eat", new HashSet<>(List.of(SoundEvents.PLAYER_BURP.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num,res,itemStack);
-                int size=0;
-                for(int i =0;i<res.size();i++) {
-                    if(res.get(i).contains(".eat")) {
-                        size=num.get(i)+size;
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                for (int i = 0; i < res.size(); i++) {
+                    if (res.get(i).contains(".eat")) {
+                        size = num.get(i) + size;
                     }
                 }
-                for(int i=0;i<size;i++){
-                    player.eat(level,Items.POTATO.getDefaultInstance(), Objects.requireNonNull(Items.POTATO.getDefaultInstance().getFoodProperties(player)));
+                for (int i = 0; i < size; i++) {
+                    player.eat(level, Items.POTATO.getDefaultInstance(), Objects.requireNonNull(Items.POTATO.getDefaultInstance().getFoodProperties(player)));
                 }
-        }
+            }
 
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
@@ -209,19 +212,19 @@ public class Init {
         initAll("bow", new HashSet<>(List.of(SoundEvents.ARROW_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num,res,itemStack);
-                int size=0;
-                for(int i =0;i<res.size();i++) {
-                    if(res.get(i).contains(".shoot")) {
-                        size=num.get(i)+size;
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                for (int i = 0; i < res.size(); i++) {
+                    if (res.get(i).contains(".shoot")) {
+                        size = num.get(i) + size;
                     }
                 }
                 List<ItemStack> draw = new ArrayList<>();
                 draw.add(Items.APPLE.getDefaultInstance());
-                EffectUtil.shoot((ServerLevel) level,player,pUsedHand,Items.BOW.getDefaultInstance(),draw,3,1,true,null);
+                EffectUtil.shoot((ServerLevel) level, player, pUsedHand, Items.BOW.getDefaultInstance(), draw, 3, 1, true, null);
             }
 
             @Override
@@ -232,26 +235,26 @@ public class Init {
         initAll("bone_meal", new HashSet<>(List.of(SoundEvents.BONE_MEAL_USE.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, player.entityInteractionRange());
-                if(hitResult instanceof BlockHitResult blockHitResult) {
-                    if(!level.getBlockState(blockHitResult.getBlockPos()).getTags().anyMatch(tag->tag.equals(BlockTags.FLOWERS))){
-                        UseOnContext useOnContext = new UseOnContext(player,pUsedHand,blockHitResult);
-                        BoneMealItem.applyBonemeal(Items.BONE_MEAL.getDefaultInstance(),level,blockHitResult.getBlockPos(),player);
-                        level.playSound(null,blockHitResult.getBlockPos(),SoundEvents.BONE_MEAL_USE,SoundSource.MASTER);
+                if (hitResult instanceof BlockHitResult blockHitResult) {
+                    if (!level.getBlockState(blockHitResult.getBlockPos()).getTags().anyMatch(tag -> tag.equals(BlockTags.FLOWERS))) {
+                        UseOnContext useOnContext = new UseOnContext(player, pUsedHand, blockHitResult);
+                        BoneMealItem.applyBonemeal(Items.BONE_MEAL.getDefaultInstance(), level, blockHitResult.getBlockPos(), player);
+                        level.playSound(null, blockHitResult.getBlockPos(), SoundEvents.BONE_MEAL_USE, SoundSource.MASTER);
                         return;
-                    }else{
+                    } else {
                         Block flower = level.getBlockState(blockHitResult.getBlockPos()).getBlock();
                         BlockPos blockPos = blockHitResult.getBlockPos();
 
 
-                        for(int i=0;i<200;i++){
-                            int dx =level.random.nextInt(-12,13);
-                            int dy =level.random.nextInt(-3,4);
-                            int dz =level.random.nextInt(-12,13);
-                            if(level.getBlockState(blockPos.offset(dx,dy,dz)).getTags().anyMatch(tag->tag.equals(BlockTags.DIRT))&&level.getBlockState(blockPos.offset(dx,dy+1,dz)).getBlock() instanceof AirBlock){
-                                if(level.random.nextInt(0,100)<90){
-                                    level.setBlock(blockPos.offset(dx,dy+1,dz),flower.defaultBlockState(),2);
+                        for (int i = 0; i < 200; i++) {
+                            int dx = level.random.nextInt(-12, 13);
+                            int dy = level.random.nextInt(-3, 4);
+                            int dz = level.random.nextInt(-12, 13);
+                            if (level.getBlockState(blockPos.offset(dx, dy, dz)).getTags().anyMatch(tag -> tag.equals(BlockTags.DIRT)) && level.getBlockState(blockPos.offset(dx, dy + 1, dz)).getBlock() instanceof AirBlock) {
+                                if (level.random.nextInt(0, 100) < 90) {
+                                    level.setBlock(blockPos.offset(dx, dy + 1, dz), flower.defaultBlockState(), 2);
                                 }
                             }
                         }
@@ -268,14 +271,15 @@ public class Init {
         initAll("cat", new HashSet<>(List.of(SoundEvents.CAT_PURR.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 Cat cat = EntityType.CAT.create(level);
-                if(cat != null) {
-                    cat.finalizeSpawn((ServerLevel)level,level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
+                if (cat != null) {
+                    cat.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
                     cat.tame(player);
                     cat.setAge(-24000);
                     level.addFreshEntity(cat);
                 }
+
             }
 
             @Override
@@ -286,14 +290,14 @@ public class Init {
         initAll("bat", new HashSet<>(List.of(SoundEvents.BAT_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 TargetingConditions alertableTargeting = TargetingConditions.forCombat()
                         .range(12.0)
                         .ignoreLineOfSight()
                         .selector(null);
 
-                List<LivingEntity> list = level.getNearbyEntities(LivingEntity.class,alertableTargeting , player, player.getBoundingBox().inflate(4,3,4));
-                for(LivingEntity livingEntity : list) {
+                List<LivingEntity> list = level.getNearbyEntities(LivingEntity.class, alertableTargeting, player, player.getBoundingBox().inflate(4, 3, 4));
+                for (LivingEntity livingEntity : list) {
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 1000, 1));
                 }
 
@@ -307,7 +311,7 @@ public class Init {
         initAll("dolphin", new HashSet<>(List.of(SoundEvents.DOLPHIN_AMBIENT_WATER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 player.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 1000, 1));
             }
 
@@ -319,14 +323,14 @@ public class Init {
         initAll("dragon_breath", new HashSet<>(List.of(SoundEvents.ENDER_DRAGON_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 1);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
                 DragonFireball dragonFireball = EntityType.DRAGON_FIREBALL.create(level);
                 dragonFireball.setOwner(player);
                 dragonFireball.setPos(player.getX(), player.getY(), player.getZ());
-                dragonFireball.setDeltaMovement(vec31.x,vec31.y,vec31.z);
+                dragonFireball.setDeltaMovement(vec31.x, vec31.y, vec31.z);
                 level.addFreshEntity(dragonFireball);
             }
 
@@ -343,33 +347,13 @@ public class Init {
         initAll("nether_portal", new HashSet<>(List.of(SoundEvents.PORTAL_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level instanceof ServerLevel serverLevel){
-                    TimerQueue<MinecraftServer> timerqueue =  serverLevel.getServer().getWorldData().overworldData().getScheduledEvents();
-                    TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
-
-                        for(ServerLevel serverLevel1:obj.getAllLevels()){
-                            for(Player player1 : serverLevel1.players()){
-                                player1.sendSystemMessage(Component.literal("1222"));
-                            }
-                        }
-                        if(gameTime==gameTime+100){
-                            for(ServerLevel serverLevel1:obj.getAllLevels()){
-                                for(Player player1 : serverLevel1.players()){
-                                    player1.sendSystemMessage(Component.literal("4444"));
-                                }
-                            }
-                        }
-                    };
-
-                    timerqueue.schedule("nether_portal", level.getGameTime()+100,myCallback);
-                }
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num,res,itemStack);
-                int size=0;
-                for(int i =0;i<res.size();i++) {
-                    if(res.get(i).contains(SoundEvents.PORTAL_AMBIENT.getLocation().toString())) {
-                        size=num.get(i)+size;
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                for (int i = 0; i < res.size(); i++) {
+                    if (res.get(i).contains(SoundEvents.PORTAL_AMBIENT.getLocation().toString())) {
+                        size = num.get(i) + size;
                     }
                 }
                 HitResult hitResult = getHitResult(level, player, 10);
@@ -377,36 +361,36 @@ public class Init {
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
                 BlockState blockState = FAKE_NETHER_PORTAL.get().defaultBlockState();
                 BlockState blockState2 = Blocks.OBSIDIAN.defaultBlockState();
-                boolean x=true;
-                if(Math.abs(vec31.x)>Math.abs(vec31.z)){
+                boolean x = true;
+                if (Math.abs(vec31.x) > Math.abs(vec31.z)) {
                     blockState = blockState.setValue(FakeNetherPortal.AXIS, Direction.Axis.Z);
-                    x=false;
+                    x = false;
                 }
-                if(hitResult instanceof BlockHitResult blockHitResult) {
+                if (hitResult instanceof BlockHitResult blockHitResult) {
                     BlockPos pos = blockHitResult.getBlockPos();
 
-                    setBlock(level,pos.offset(0,1,0), blockState2);
-                    setBlock(level,pos.offset(0,4,0), blockState2);
-                    if(x){
-                        for(int i=1;i<5;i++){
-                            setBlock(level,pos.offset(1,i,0), blockState2);
-                            setBlock(level,pos.offset(-1,i,0), blockState2);
+                    setBlock(level, pos.offset(0, 1, 0), blockState2);
+                    setBlock(level, pos.offset(0, 4, 0), blockState2);
+                    if (x) {
+                        for (int i = 1; i < 5; i++) {
+                            setBlock(level, pos.offset(1, i, 0), blockState2);
+                            setBlock(level, pos.offset(-1, i, 0), blockState2);
                         }
 
-                    }else{
-                        for(int i=1;i<5;i++){
-                            setBlock(level,pos.offset(0,i,1), blockState2);
-                            setBlock(level,pos.offset(0,i,-1), blockState2);
+                    } else {
+                        for (int i = 1; i < 5; i++) {
+                            setBlock(level, pos.offset(0, i, 1), blockState2);
+                            setBlock(level, pos.offset(0, i, -1), blockState2);
                         }
                     }
 
-                    setBlock(level,pos.offset(0,2,0), blockState);
-                    setBlock(level,pos.offset(0,3,0), blockState);
-                    if(level.getBlockEntity(pos.offset(0,2,0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity){
-                        fakeNetherPortalBlockEntity.num= 100*size;
+                    setBlock(level, pos.offset(0, 2, 0), blockState);
+                    setBlock(level, pos.offset(0, 3, 0), blockState);
+                    if (level.getBlockEntity(pos.offset(0, 2, 0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity) {
+                        fakeNetherPortalBlockEntity.num = 100 * size;
                     }
-                    if(level.getBlockEntity(pos.offset(0,3,0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity){
-                        fakeNetherPortalBlockEntity.num= 100*size;
+                    if (level.getBlockEntity(pos.offset(0, 3, 0)) instanceof FakeNetherPortalBlockEntity fakeNetherPortalBlockEntity) {
+                        fakeNetherPortalBlockEntity.num = 100 * size;
                     }
 
                 }
@@ -421,15 +405,15 @@ public class Init {
         initAll("blaze", new HashSet<>(List.of(SoundEvents.BLAZE_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 1);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
-                for(int i=0;i<3;i++){
+                for (int i = 0; i < 3; i++) {
                     SmallFireball smallFireball = EntityType.SMALL_FIREBALL.create(level);
                     smallFireball.setOwner(player);
-                    smallFireball.setPos(player.getX(), player.getY(), player.getZ());
-                    smallFireball.setDeltaMovement(vec31.x,vec31.y,vec31.z);
+                    smallFireball.setPos(player.getX(), player.getEyeY()-0.1, player.getZ());
+                    smallFireball.setDeltaMovement(vec31.x, vec31.y, vec31.z);
                     level.addFreshEntity(smallFireball);
                 }
             }
@@ -442,14 +426,14 @@ public class Init {
         initAll("ghast", new HashSet<>(List.of(SoundEvents.GHAST_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 1);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
                 LargeFireball largeFireball = EntityType.FIREBALL.create(level);
                 largeFireball.setOwner(player);
-                largeFireball.setPos(player.getX(), player.getY(), player.getZ());
-                largeFireball.setDeltaMovement(vec31.x,vec31.y,vec31.z);
+                largeFireball.setPos(player.getX(), player.getEyeY()-0.1, player.getZ());
+                largeFireball.setDeltaMovement(vec31.x, vec31.y, vec31.z);
                 level.addFreshEntity(largeFireball);
 
             }
@@ -462,7 +446,7 @@ public class Init {
         initAll("iron_golem", new HashSet<>(List.of(SoundEvents.IRON_GOLEM_REPAIR.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 0));
             }
@@ -475,7 +459,7 @@ public class Init {
         initAll("turtle", new HashSet<>(List.of(SoundEvents.TURTLE_AMBIENT_LAND.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 2));
             }
 
@@ -487,7 +471,7 @@ public class Init {
         initAll("ender_pearl", new HashSet<>(List.of(SoundEvents.ENDER_PEARL_THROW.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 ThrownEnderpearl thrownenderpearl = new ThrownEnderpearl(level, player);
                 thrownenderpearl.setItem(Items.ENDER_PEARL.getDefaultInstance());
                 thrownenderpearl.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
@@ -502,11 +486,9 @@ public class Init {
         initAll("firework_rocket_launch", new HashSet<>(List.of(SoundEvents.FIREWORK_ROCKET_LAUNCH.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
-
+                if (level.isClientSide) return;
                 if (player.isFallFlying()) {
-
-                    FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level,  Items.FIREWORK_ROCKET.getDefaultInstance(), player);
+                    FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level, Items.FIREWORK_ROCKET.getDefaultInstance(), player);
                     level.addFreshEntity(fireworkrocketentity);
 
                 }
@@ -520,9 +502,10 @@ public class Init {
         initAll("ender_dragon_death", new HashSet<>(List.of(SoundEvents.FIREWORK_ROCKET_LAUNCH.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
-                level.playSound(null,player.getOnPos(),SoundEvents.ENDER_DRAGON_DEATH,SoundSource.MASTER,5.0F,1);
+                if (level.isClientSide) return;
+                level.playSound(null, player.getOnPos(), SoundEvents.ENDER_DRAGON_DEATH, SoundSource.MASTER, 5.0F, 1);
             }
+
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
                 return "ender_dragon_death";
@@ -531,26 +514,113 @@ public class Init {
         initAll("wither", new HashSet<>(List.of(SoundEvents.WITHER_DEATH.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                if(level.isClientSide)return;
+                if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 1);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
                 WitherSkull witherSkull = EntityType.WITHER_SKULL.create(level);
                 witherSkull.setOwner(player);
-                witherSkull.setPos(player.getX(), player.getY(), player.getZ());
-                witherSkull.setDeltaMovement(vec31.x,vec31.y,vec31.z);
+                witherSkull.setPos(player.getX(), player.getY()+1, player.getZ());
+                witherSkull.setDeltaMovement(vec31.x, vec31.y, vec31.z);
                 level.addFreshEntity(witherSkull);
 
             }
+
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
                 return "wither";
             }
         }, List.of(20, DEFALUTRES));
+        initAll("wolf", new HashSet<>(List.of(SoundEvents.WOLF_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                List<Integer> num = new ArrayList<>();
+                List<String> res = new ArrayList<>();
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                if (res.contains(SoundEvents.WOLF_AMBIENT.getLocation().toString())) {
+                    size = num.get(res.indexOf(SoundEvents.WOLF_AMBIENT.getLocation().toString()));
+                }
+                List<Wolf> wolfs = new ArrayList<>();
+                for(int i = 0; i < size; i++) {
+                    Wolf wolf = EntityType.WOLF.create(level);
+                    if (wolf != null) {
+                        wolf.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
+                        wolf.tame(player);
+                        if(level.getRandom().nextInt(0,11)<3){
+                            wolf.setAge(-24000);
+                        }else{
+                            wolf.setAge(0);
+                        }
+                        level.addFreshEntity(wolf);
+                    }
+                    wolfs.add(wolf);
+                }
+
+                TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
+                TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
+                    for(Wolf wolf : wolfs) {
+                        wolf.remove(Entity.RemovalReason.KILLED);
+                    }
+                };
+                timerqueue.schedule("wolf", level.getGameTime() +200 +size*10, myCallback);
+
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "wolf";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("breeze", new HashSet<>(List.of(SoundEvents.BREEZE_CHARGE.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                HitResult hitResult = getHitResult(level, player, 1);
+                Vec3 eye = player.getEyePosition();
+                Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
+                for (int i = 0; i < 3; i++) {
+                    BreezeWindCharge breezeWindCharge = EntityType.BREEZE_WIND_CHARGE.create(level);
+                    breezeWindCharge.setOwner(player);
+                    breezeWindCharge.setPos(player.getX(), player.getEyeY()-0.1, player.getZ());
+                    breezeWindCharge.setDeltaMovement(vec31.x, vec31.y, vec31.z);
+                    level.addFreshEntity(breezeWindCharge);
+                }
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "breeze";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("anvil", new HashSet<>(List.of(SoundEvents.ANVIL_USE.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                List<Integer> num = new ArrayList<>();
+                List<String> res = new ArrayList<>();
+                Util.loadSoundDataFromTag(num, res, itemStack);
+                int size = 0;
+                if (res.contains(SoundEvents.ANVIL_USE.getLocation().toString())) {
+                    size = num.get(res.indexOf(SoundEvents.ANVIL_USE.getLocation().toString()));
+                }
+                ItemStack tool = player.getItemInHand(InteractionHand.OFF_HAND);
+                if(tool.getDamageValue()-size*10>=0){
+                    tool.setDamageValue(tool.getDamageValue()-size*10);
+                }else{
+                    tool.setDamageValue(0);
+                }
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "anvil";
+            }
+        }, List.of(20, DEFALUTRES));
 
     }
 
-    private void build(){
+    private void build() {
 
     }
 
