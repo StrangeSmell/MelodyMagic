@@ -1,5 +1,6 @@
 package com.strangesmell.melodymagic;
 
+import com.mojang.serialization.Codec;
 import com.strangesmell.melodymagic.api.MMCriterionTrigger;
 import com.strangesmell.melodymagic.api.SoundEffect;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
@@ -26,9 +27,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -47,9 +49,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -121,6 +120,10 @@ public class MelodyMagic
     public static final Supplier<BlockEntityType<SoundPlayerBlockEntity>> SOUND_PLAYER_BLOCK_ENTITY = BLOCK_ENTITY.register("sound_player_block_entity", () -> BlockEntityType.Builder.of(SoundPlayerBlockEntity::new, SOUND_PLAYER_BLOCK.get()).build(null));
     public static final Supplier<BlockEntityType<FakeNetherPortalBlockEntity>> FAKE_NETHER_PORTAL_BLOCK_ENTITY = BLOCK_ENTITY.register("fake_nether_portal_block_entity", () -> BlockEntityType.Builder.of(FakeNetherPortalBlockEntity::new, FAKE_NETHER_PORTAL.get()).build(null));
 
+    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MODID);
+    // Serialization via codec
+    public static final Supplier<AttachmentType<Integer>> ENTITY_AGE = ATTACHMENT_TYPES.register("entity_age", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+
     public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES = DeferredRegister.create(Registries.TRIGGER_TYPE, MelodyMagic.MODID);
 
     public static final Supplier<MMCriterionTrigger> MM_TRIGGER = TRIGGER_TYPES.register("mm_trigger", MMCriterionTrigger::new);
@@ -153,6 +156,7 @@ public class MelodyMagic
         BLOCK_ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         TRIGGER_TYPES.register(modEventBus);
+        ATTACHMENT_TYPES.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);

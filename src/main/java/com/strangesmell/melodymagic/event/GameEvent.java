@@ -15,6 +15,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -23,13 +27,16 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.strangesmell.melodymagic.MelodyMagic.ENTITY_AGE;
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
 import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
@@ -94,8 +101,23 @@ public class GameEvent {
 
             }
         }
+    }
 
+    @SubscribeEvent
+    public static void entityAge(EntityTickEvent.Pre event)
+    {
+        if(event.getEntity() instanceof Wolf wolf){
+            if(wolf.hasData(ENTITY_AGE)){
+                if( wolf.getData(ENTITY_AGE)>0){
+                    wolf.setData(ENTITY_AGE,wolf.getData(ENTITY_AGE)-1);
+                }else {
+                    wolf.remove(Entity.RemovalReason.KILLED);
+                    wolf.level().playSound(null,wolf.getOnPos(), SoundEvents.WOLF_HOWL, SoundSource.MASTER,(float) (wolf.level().random.nextFloat()*0.25),(float) (wolf.level().random.nextFloat()*0.5));
 
+                }
+
+            }
+        }
     }
 
     @SubscribeEvent

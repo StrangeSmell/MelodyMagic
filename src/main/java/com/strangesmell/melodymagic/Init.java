@@ -48,12 +48,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.timers.FunctionCallback;
 import net.minecraft.world.level.timers.TimerCallback;
 import net.minecraft.world.level.timers.TimerQueue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
@@ -538,34 +540,38 @@ public class Init {
                 List<Integer> num = new ArrayList<>();
                 List<String> res = new ArrayList<>();
                 Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
+                int  size ;
                 if (res.contains(SoundEvents.WOLF_AMBIENT.getLocation().toString())) {
                     size = num.get(res.indexOf(SoundEvents.WOLF_AMBIENT.getLocation().toString()));
+                    if(size>5) size=5;
+                }else {
+                    size=0;
                 }
-                List<Wolf> wolfs = new ArrayList<>();
+
                 for(int i = 0; i < size; i++) {
+                    final int a =i;
                     Wolf wolf = EntityType.WOLF.create(level);
                     if (wolf != null) {
                         wolf.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
                         wolf.tame(player);
+                        wolf.setData(ENTITY_AGE,200+size*10);
+                        wolf.setPos(player.getX()+level.random.nextInt(-3,4), player.getY(), player.getZ()+level.random.nextInt(-3,4));
                         if(level.getRandom().nextInt(0,11)<3){
                             wolf.setAge(-24000);
                         }else{
                             wolf.setAge(0);
                         }
-                        level.addFreshEntity(wolf);
+
+                        TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
+                        TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
+                            level.addFreshEntity(wolf);
+                            level.playSound(null,player.getOnPos(),SoundEvents.WOLF_HOWL,SoundSource.MASTER,(float)(level.random.nextFloat()*0.5),(float) (level.random.nextFloat()*0.5+0.5));
+                        };
+                        timerqueue.schedule("wolf"+a, level.getGameTime() +level.random.nextInt(0,101), myCallback);
+
+
                     }
-                    wolfs.add(wolf);
                 }
-
-                TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
-                TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
-                    for(Wolf wolf : wolfs) {
-                        wolf.remove(Entity.RemovalReason.KILLED);
-                    }
-                };
-                timerqueue.schedule("wolf", level.getGameTime() +200 +size*10, myCallback);
-
             }
 
             @Override
