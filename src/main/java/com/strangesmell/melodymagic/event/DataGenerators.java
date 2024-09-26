@@ -254,6 +254,15 @@ public class DataGenerators {
                     .unlockedBy(getHasName(COLLECTION_DISPLAY_ITEM), has(COLLECTION_DISPLAY_ITEM)) // 该配方如何解锁
                     .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD)) // 该配方如何解锁
                     .save(pRecipeOutput); // 将数据加入生成器
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CONTINUE_SOUND_COLLECTION_ITEM.get())
+                    .pattern("aaa") // 创建配方图案
+                    .pattern("aba") // 创建配方图案
+                    .pattern("aaa") // 创建配方图案
+                    .define('a', Items.AMETHYST_SHARD) // 定义符号代表什么
+                    .define('b', MORNING_GLORY_ITEM) // 定义符号代表什么
+                    .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD)) // 该配方如何解锁
+                    .unlockedBy(getHasName(MORNING_GLORY_ITEM), has(MORNING_GLORY_ITEM)) // 该配方如何解锁
+                    .save(pRecipeOutput); // 将数据加入生成器
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, RECORD_BOOK.get())
                     .requires(Items.BOOK)

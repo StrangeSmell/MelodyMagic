@@ -42,6 +42,14 @@ public class MODEvent {
                 )
         );
         registrar.playBidirectional(
+                ContinueSoundData.TYPE,
+                ContinueSoundData.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        ClientPayloadHandler::handleContinueData,
+                        ServerPayloadHandler::handleContinueData
+                )
+        );
+        registrar.playBidirectional(
                 SelectCount.TYPE,
                 SelectCount.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(

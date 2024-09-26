@@ -12,11 +12,6 @@
       "recipe": "melodymagic:sound_collection",
       "type": "patchouli:crafting",
       "link_recipe": true
-    },
-    {
-      "recipe": "melodymagic:collection_display",
-      "type": "patchouli:crafting",
-      "link_recipe": true
     }
   ]
 }

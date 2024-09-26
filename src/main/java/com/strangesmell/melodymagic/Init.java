@@ -86,7 +86,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 1));
             }
 
             @Override

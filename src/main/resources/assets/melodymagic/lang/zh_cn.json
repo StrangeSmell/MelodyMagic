@@ -2,8 +2,10 @@
   "item.melodymagic.collection": "旋律留声机",
   "item.melodymagic.collection_display": "旋律留声机(未镶嵌)",
   "item.melodymagic.sound_container": "唱片",
+  "item.melodymagic.continue_sound_container": "持久唱片",
   "item.melodymagic.record_book": "旋律之书",
   "item.melodymagic.sound_collection": "旋律收集器",
+  "item.melodymagic.continue_sound_collection": "持久旋律收集器",
   "item.melodymagic.morning_glory": "牵牛花",
 
   "block.melodymagic.pot_morning_glory": "盆装牵牛花",

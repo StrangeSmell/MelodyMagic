@@ -3,7 +3,9 @@ package com.strangesmell.melodymagic.event;
 import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.item.CollectionItem;
+import com.strangesmell.melodymagic.item.ContinueSoundContainerItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
+import com.strangesmell.melodymagic.message.ContinueSoundData;
 import com.strangesmell.melodymagic.message.RecordData;
 import com.strangesmell.melodymagic.message.SelectCount;
 import net.minecraft.client.Minecraft;
@@ -48,6 +50,37 @@ public class GameEvent {
     public static void registerPayloadHandlers( ItemTooltipEvent event)
     {
         if(event.getItemStack().getItem() instanceof SoundContainerItem){
+            List<SoundEvent> subtitles = Lists.newArrayList();
+            List<String> subtitles2 = Lists.newArrayList();
+            List<List<Double>> location = Lists.newArrayList();
+
+            if(event.getItemStack().get(DataComponents.CUSTOM_DATA) ==null) return;
+            Util.loadSoundDataFromTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
+            List<String> tooltip = Lists.newArrayList();
+            List<Integer> num = Lists.newArrayList();
+
+            List<String> effectList =getSoundEffectToString(event.getItemStack());
+            for (int j=0;j<effectList.size();j++){
+                event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+            }
+
+            for(int i=0;i<subtitles2.size();i++){
+                if(!tooltip.contains(subtitles2.get(i))){
+                    tooltip.add(subtitles2.get(i));
+                    num.add(1);
+                }else{
+                    int index = tooltip.indexOf(subtitles2.get(i));
+                    num.set(index,num.get(index)+1);
+                }
+            }
+
+            for(int i=0;i<tooltip.size();i++){
+                if(subtitles2.get(i)!=null){
+                    event.getToolTip().add(Component.translatable(tooltip.get(i)).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                }
+
+            }
+        }else if(event.getItemStack().getItem() instanceof ContinueSoundContainerItem){
             List<SoundEvent> subtitles = Lists.newArrayList();
             List<String> subtitles2 = Lists.newArrayList();
             List<List<Double>> location = Lists.newArrayList();

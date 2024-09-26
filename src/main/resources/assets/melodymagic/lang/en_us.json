@@ -2,8 +2,10 @@
   "item.melodymagic.collection": "Melody Wand",
   "item.melodymagic.collection_display": "Melody Wand(gemless)",
   "item.melodymagic.sound_container": "Melody Container",
+  "item.melodymagic.continue_sound_container": "Continuous Melody Container",
   "item.melodymagic.record_book": "Book Of Melody",
   "item.melodymagic.sound_collection": "Melody collector",
+  "item.melodymagic.continue_sound_collection": "Continuous Melody collector",
   "item.melodymagic.morning_glory": "Morning glory",
 
   "block.melodymagic.pot_morning_glory": "Potted Morning Glory",

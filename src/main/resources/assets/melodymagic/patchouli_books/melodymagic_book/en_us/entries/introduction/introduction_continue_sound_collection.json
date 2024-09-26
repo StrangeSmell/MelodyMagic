@@ -1,0 +1,17 @@
+{
+  "name": "Continuous Melody Collection",
+  "icon": "melodymagic:continue_sound_collection",
+  "category": "melodymagic:introduction",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Press and hold the right button will consume the amethyst to listen to the melodies of the world, and will return a record to you as a gift in return for helping her listen to the world."
+    },
+    {
+      "recipe": "melodymagic:continue_sound_collection",
+      "type": "patchouli:crafting",
+      "link_recipe": true
+    }
+  ]
+}

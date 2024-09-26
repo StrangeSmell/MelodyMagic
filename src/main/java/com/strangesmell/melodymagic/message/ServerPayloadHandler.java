@@ -54,6 +54,22 @@ public class ServerPayloadHandler {
                 });
     }
 
+    public static void handleContinueData(final ContinueSoundData data, final IPayloadContext context) {
+        // Do something with the data, on the network thread
+        //blah(data.name());
+
+        // Do something with the data, on the main thread
+        context.enqueueWork(() -> {
+
+                    handleContinueSoundContainer(context,data.tag());
+                })
+                .exceptionally(e -> {
+                    // Handle exception
+                    context.disconnect(Component.translatable("melodymagic.networking.failed", e.getMessage()));
+                    return null;
+                });
+    }
+
     public static void function(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();
         ItemStack itemStack = new ItemStack(MelodyMagic.SOUND_CONTAINER_ITEM.get());
@@ -126,5 +142,38 @@ public class ServerPayloadHandler {
 
 
 
+    }
+
+    public static void handleContinueSoundContainer(IPayloadContext context, CompoundTag compoundTag){
+        Player player = context.player();
+        ItemStack itemStack = new ItemStack(MelodyMagic.CONTINUE_SOUND_CONTAINER_ITEM.get());
+        //存入KEY
+        //todo:这部分计算可以在客户端上实现
+        List<SoundEvent> soundEvents = Lists.newArrayList();
+        List<Integer> num = Lists.newArrayList();
+
+        List<String> subtitle = Lists.newArrayList();
+
+        List<String> strings = Util.getSoundEventNum2(compoundTag.copy(),soundEvents,num,subtitle);//location key
+
+        List<String> listString = Util.getKeyFromSoundRes(strings,num);//这里判断是否满足条件，加入对应的effect key
+
+        //结束存入KEY
+        //记录玩家搜集的声音种类
+        RecordUtil.saveSoundKindsAndSub(player,soundEvents,subtitle);
+        //RecordUtil.saveSubKinds(player,subtitle);
+        RecordUtil.saveEffectKinds(player,listString);
+
+        //结束
+
+
+        CustomData customData = CustomData.of(compoundTag);
+        itemStack.set(DataComponents.CUSTOM_DATA,customData);
+
+        Util.saveToCustomData(itemStack,listString);
+
+        MM_TRIGGER.get().trigger((ServerPlayer) player,itemStack);
+        ItemUtil.remove1Item(player.getInventory(), Items.AMETHYST_SHARD);
+        player.getInventory().add(itemStack);
     }
 }

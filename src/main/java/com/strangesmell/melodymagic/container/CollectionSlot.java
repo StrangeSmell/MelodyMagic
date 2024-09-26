@@ -1,5 +1,6 @@
 package com.strangesmell.melodymagic.container;
 
+import com.strangesmell.melodymagic.item.ContinueSoundContainerItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
@@ -11,11 +12,9 @@ public class CollectionSlot extends Slot {
         super(pFurnaceContainer, pSlot, pXPosition, pYPosition);
     }
 
-    /**
-     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-     */
     @Override
     public boolean mayPlace(ItemStack pStack) {
-        return pStack.getItem() instanceof SoundContainerItem;
+        if(pStack.getItem() instanceof SoundContainerItem) return true;
+        return pStack.getItem() instanceof ContinueSoundContainerItem;
     }
 }

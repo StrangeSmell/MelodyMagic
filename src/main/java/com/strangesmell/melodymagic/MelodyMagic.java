@@ -10,12 +10,8 @@ import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
 import com.strangesmell.melodymagic.container.WandMenu;
 import com.strangesmell.melodymagic.hud.RecordHud;
 import com.strangesmell.melodymagic.hud.SelectHud;
-import com.strangesmell.melodymagic.item.CollectionItem;
-import com.strangesmell.melodymagic.item.RecordBook;
-import com.strangesmell.melodymagic.item.SoundCollectionItem;
-import com.strangesmell.melodymagic.item.SoundContainerItem;
+import com.strangesmell.melodymagic.item.*;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.flag.FeatureFlags;
@@ -105,10 +101,12 @@ public class MelodyMagic
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredItem<SoundCollectionItem> SOUND_COLLECTION_ITEM = ITEMS.registerItem("sound_collection", SoundCollectionItem::new ,new Item.Properties().stacksTo(1));
+    public static final DeferredItem<ContinueSoundCollectionItem> CONTINUE_SOUND_COLLECTION_ITEM = ITEMS.registerItem("continue_sound_collection", ContinueSoundCollectionItem::new ,new Item.Properties().stacksTo(1));
     public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new ,new Item.Properties().stacksTo(1));
     public static final DeferredItem<RecordBook> RECORD_BOOK = ITEMS.registerItem("record_book", RecordBook::new ,new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> COLLECTION_DISPLAY_ITEM = ITEMS.registerItem("collection_display", Item::new ,new Item.Properties().stacksTo(1));
     public static final DeferredItem<SoundContainerItem> SOUND_CONTAINER_ITEM = ITEMS.registerItem("sound_container", SoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
+    public static final DeferredItem<ContinueSoundContainerItem> CONTINUE_SOUND_CONTAINER_ITEM = ITEMS.registerItem("continue_sound_container", ContinueSoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
     public static final DeferredItem<BlockItem> SOUND_PLAYER_ITEM = ITEMS.registerSimpleBlockItem("sound_player_block", SOUND_PLAYER_BLOCK);
     public static final DeferredItem<BlockItem> MORNING_GLORY_ITEM = ITEMS.registerSimpleBlockItem("morning_glory", MORNING_GLORY);
 
@@ -129,16 +127,17 @@ public class MelodyMagic
     public static final Supplier<MMCriterionTrigger> MM_TRIGGER = TRIGGER_TYPES.register("mm_trigger", MMCriterionTrigger::new);
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("melodymagic", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.melodymagic")) //The language key for the title of your CreativeModeTab
             .icon(() -> COLLECTION_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(SOUND_COLLECTION_ITEM.get());
+                output.accept(CONTINUE_SOUND_COLLECTION_ITEM.get());
                 output.accept(COLLECTION_ITEM.get());
 
                 output.accept(COLLECTION_DISPLAY_ITEM.get());
                 output.accept(SOUND_CONTAINER_ITEM.get());
+                output.accept(CONTINUE_SOUND_CONTAINER_ITEM.get());
                 output.accept(SOUND_PLAYER_ITEM.get());
                 output.accept(RECORD_BOOK.get());
                 output.accept(MORNING_GLORY_ITEM.get());
