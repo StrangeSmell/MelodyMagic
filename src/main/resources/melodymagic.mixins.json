@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.strangesmell.melodymagic.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "IsLivingOnLadderMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

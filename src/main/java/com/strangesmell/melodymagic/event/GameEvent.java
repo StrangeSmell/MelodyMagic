@@ -21,6 +21,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -149,6 +151,18 @@ public class GameEvent {
 
                 }
 
+            }
+        }else if(event.getEntity() instanceof Player player){
+            if(player.hasData(ENTITY_AGE)){
+                if( player.getData(ENTITY_AGE)>0){
+                    player.setData(ENTITY_AGE,player.getData(ENTITY_AGE)-1);
+                }
+            }
+        }else if(event.getEntity() instanceof WanderingTrader wanderingTrader){
+            if(wanderingTrader.hasData(ENTITY_AGE)){
+                if( wanderingTrader.getData(ENTITY_AGE)>0){
+                    wanderingTrader.setData(ENTITY_AGE,wanderingTrader.getData(ENTITY_AGE)-1);
+                }
             }
         }
     }

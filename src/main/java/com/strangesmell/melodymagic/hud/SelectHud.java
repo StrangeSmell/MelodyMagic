@@ -151,7 +151,6 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             pGuiGraphics.pose().scale(3,3,3);//渲染紫水晶
             pGuiGraphics.renderItem(Items.AMETHYST_SHARD.getDefaultInstance(), pGuiGraphics.guiWidth()/k-8, pGuiGraphics.guiHeight()/k-8);
 
-            pGuiGraphics.blit(HUD2, 0, 0,  0.0F, 0.0F, 16, 16, 16,16);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -164,7 +163,8 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
 
     @Override
     public void onPlaySound(SoundInstance pSound, WeighedSoundEvents pAccessor, float pRange) {
-         if (pSound.getSource() != SoundSource.MASTER && isAudibleFrom(new Vec3(pSound.getX(), pSound.getY(), pSound.getZ()),pRange)) {
+        //pSound.getSource() != SoundSource.MASTER &&
+         if ( isAudibleFrom(new Vec3(pSound.getX(), pSound.getY(), pSound.getZ()),pRange)) {
             if(Minecraft.getInstance().player==null) return;
 
             if(subtitles.contains(pSound)) return;
