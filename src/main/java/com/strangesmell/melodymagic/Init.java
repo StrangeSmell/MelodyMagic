@@ -37,6 +37,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.npc.CatSpawner;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.npc.Villager;
@@ -290,7 +291,33 @@ public class Init {
                 return "chicken_egg";
             }
         }, List.of(20, DEFALUTRES));
-        //10
+        initAll("shulker", new HashSet<>(List.of(SoundEvents.SHULKER_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                HitResult hitResult = getHitResult(level, player, 20);
+                ShulkerBullet shulkerBullet;
+
+
+                if(hitResult instanceof EntityHitResult entityHitResult){
+                    shulkerBullet = new ShulkerBullet(level, player, entityHitResult.getEntity(), Direction.Axis.Y);
+                }else{
+                    shulkerBullet = EntityType.SHULKER_BULLET.create(level);
+                    Vec3 eye = player.getEyePosition();
+                    Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
+                    shulkerBullet.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+                    shulkerBullet.setDeltaMovement(vec31.x, vec31.y, vec31.z);
+                }
+                shulkerBullet.setOwner(player);
+                level.addFreshEntity(shulkerBullet);
+
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "shulker";
+            }
+        }, List.of(20, DEFALUTRES));
+        //11
         initAll("lightning_bolt_thunder", new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -651,7 +678,7 @@ public class Init {
                 return "anvil";
             }
         }, List.of(20, DEFALUTRES));
-        //20
+        //21
         initAll("spider", new HashSet<>(List.of(SoundEvents.SPIDER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -672,6 +699,26 @@ public class Init {
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
                 return "spider";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("glow_squid", new HashSet<>(List.of(SoundEvents.GLOW_SQUID_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                HitResult hitResult = getHitResult(level, player, 20);
+                if(hitResult instanceof EntityHitResult entityHitResult) {
+                    for(int i=20;i>0;i--){
+                        level.addParticle(ParticleTypes.GLOW, entityHitResult.getEntity().getRandomX(0.6), entityHitResult.getEntity().getRandomY(), entityHitResult.getEntity().getRandomZ(0.6), 0.0, 0.0, 0.0);
+                    }
+                }else{
+                    for(int i=20;i>0;i--){
+                        level.addParticle(ParticleTypes.GLOW, hitResult.getLocation().x + level.random.nextFloat()-0.5, hitResult.getLocation().y+ level.random.nextFloat()-0.5, hitResult.getLocation().z+ level.random.nextFloat()-0.5, 0.0, 0.0, 0.0);
+                    }
+                }
+
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "glow_squid";
             }
         }, List.of(20, DEFALUTRES));
         initAll("wandering_trader", new HashSet<>(List.of(SoundEvents.WANDERING_TRADER_YES.getLocation().toString())), compoundTag, new SoundEffect() {
@@ -828,7 +875,7 @@ public class Init {
                 return "rabbit";
             }
         }, List.of(20, DEFALUTRES));
-        //30
+        //31
 
     }
 
