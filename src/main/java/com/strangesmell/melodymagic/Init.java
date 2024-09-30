@@ -139,15 +139,6 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                for (int i = 0; i < res.size(); i++) {
-                    if (res.get(i).contains(".shoot")) {
-                        size = num.get(i) + size;
-                    }
-                }
                 List<ItemStack> draw = new ArrayList<>();
                 draw.add(Items.APPLE.getDefaultInstance());
                 EffectUtil.shoot((ServerLevel) level, player, pUsedHand, Items.BOW.getDefaultInstance(), draw, 3, 1, true, null);
@@ -245,7 +236,6 @@ public class Init {
                 if (player.isFallFlying()) {
                     FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level, Items.FIREWORK_ROCKET.getDefaultInstance(), player);
                     level.addFreshEntity(fireworkrocketentity);
-
                 }
             }
 
@@ -299,8 +289,6 @@ public class Init {
                 if (level.isClientSide) return;
                 HitResult hitResult = getHitResult(level, player, 20);
                 ShulkerBullet shulkerBullet;
-
-
                 if(hitResult instanceof EntityHitResult entityHitResult){
                     shulkerBullet = new ShulkerBullet(level, player, entityHitResult.getEntity(), Direction.Axis.Y);
                 }else{
@@ -324,14 +312,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                if (res.contains(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString()));
-                }
-
+                int size=getSoundEventSize(itemStack,SoundEvents.LIGHTNING_BOLT_THUNDER);
                 HitResult hitResult = getHitResult(level, player, 20 + size);
                 LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
                 assert bolt != null;
@@ -387,17 +368,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size;
-                if (res.contains(SoundEvents.WOLF_AMBIENT.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.WOLF_AMBIENT.getLocation().toString()));
-                    if (size > 5) size = 5;
-                } else {
-                    size = 0;
-                }
-
+                int size=getSoundEventSize(itemStack,SoundEvents.WOLF_AMBIENT);
                 for (int i = 0; i < size; i++) {
                     final int a = i;
                     Wolf wolf = EntityType.WOLF.create(level);
@@ -512,15 +483,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                for (int i = 0; i < res.size(); i++) {
-                    if (res.get(i).contains(".eat")) {
-                        size = num.get(i) + size;
-                    }
-                }
+                int size=getSoundEventSize(itemStack,".eat");
                 for (int i = 0; i < size; i++) {
                     player.eat(level, Items.POTATO.getDefaultInstance(), Objects.requireNonNull(Items.POTATO.getDefaultInstance().getFoodProperties(player)));
                 }
@@ -589,15 +552,7 @@ public class Init {
         initAll("nether_portal", new HashSet<>(List.of(SoundEvents.PORTAL_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                for (int i = 0; i < res.size(); i++) {
-                    if (res.get(i).contains(SoundEvents.PORTAL_AMBIENT.getLocation().toString())) {
-                        size = num.get(i) + size;
-                    }
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.PORTAL_AMBIENT);
                 HitResult hitResult = getHitResult(level, player, 10);
                 Vec3 eye = player.getEyePosition();
                 Vec3 vec31 = hitResult.getLocation().subtract(eye).normalize();
@@ -660,13 +615,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                if (res.contains(SoundEvents.ANVIL_USE.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.ANVIL_USE.getLocation().toString()));
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.ANVIL_USE);
                 ItemStack tool = player.getItemInHand(InteractionHand.OFF_HAND);
                 if (tool.getDamageValue() - size * 10 >= 0) {
                     tool.setDamageValue(tool.getDamageValue() - size * 10);
@@ -684,18 +633,8 @@ public class Init {
         initAll("spider", new HashSet<>(List.of(SoundEvents.SPIDER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size;
-                if (res.contains(SoundEvents.WOLF_AMBIENT.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.WOLF_AMBIENT.getLocation().toString()));
-                    if (size > 5) size = 5;
-                } else {
-                    size = 0;
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.SPIDER_AMBIENT);
                 player.setData(ENTITY_AGE, 200 + size * 10);
-
             }
 
             @Override
@@ -727,16 +666,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size;
-                if (res.contains(SoundEvents.WOLF_AMBIENT.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.WOLF_AMBIENT.getLocation().toString()));
-                    if (size > 5) size = 5;
-                } else {
-                    size = 0;
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.WANDERING_TRADER_YES);
                 WanderingTrader wanderingTrader = EntityType.WANDERING_TRADER.create(level);
                 if (wanderingTrader != null) {
                     wanderingTrader.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
@@ -781,13 +711,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size = 0;
-                if (res.contains(SoundEvents.VILLAGER_YES.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.VILLAGER_YES.getLocation().toString()));
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.VILLAGER_YES);
                 player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 200, size));
             }
 
@@ -846,7 +770,7 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                int size=getSoundEventSize(itemStack,SoundEvents.IRON_GOLEM_DEATH.getLocation().toString());
+                int size=getSoundEventSize(itemStack,SoundEvents.IRON_GOLEM_DEATH);
                 IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
                 if (ironGolem != null) {
                     ironGolem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
@@ -883,18 +807,8 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
-                List<Integer> num = new ArrayList<>();
-                List<String> res = new ArrayList<>();
-                Util.loadSoundDataFromTag(num, res, itemStack);
-                int size;
-                if (res.contains(SoundEvents.RABBIT_JUMP.getLocation().toString())) {
-                    size = num.get(res.indexOf(SoundEvents.RABBIT_JUMP.getLocation().toString()));
-                    if (size > 5) size = 5;
-                } else {
-                    size = 0;
-                }
+                int size=getSoundEventSize(itemStack,SoundEvents.RABBIT_JUMP);
                 player.addEffect(new MobEffectInstance(MobEffects.JUMP, 200 + size * 5, size - 1));
-
             }
 
             @Override
