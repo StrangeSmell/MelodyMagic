@@ -36,6 +36,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.npc.CatSpawner;
@@ -73,6 +74,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static com.strangesmell.melodymagic.MelodyMagic.*;
+import static com.strangesmell.melodymagic.api.RecordUtil.getSoundEventSize;
 import static com.strangesmell.melodymagic.api.Util.setBlock;
 import static com.strangesmell.melodymagic.api.ViewUtil.getHitResult;
 import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
@@ -252,7 +254,7 @@ public class Init {
                 return "firework_rocket_launch";
             }
         }, List.of(20, DEFALUTRES));
-        initAll("snowball", new HashSet<>(List.of(SoundEvents.WITCH_DRINK.getLocation().toString(), SoundEvents.WITCH_THROW.getLocation().toString())), compoundTag, new SoundEffect() {
+        initAll("snowball", new HashSet<>(List.of(SoundEvents.SNOWBALL_THROW.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
@@ -838,6 +840,31 @@ public class Init {
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
                 return "iron_golem";
+            }
+        }, List.of(10, DEFALUTRES));
+        initAll("iron_golem_summon", new HashSet<>(List.of(SoundEvents.IRON_GOLEM_DEATH.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                int size=getSoundEventSize(itemStack,SoundEvents.IRON_GOLEM_DEATH.getLocation().toString());
+                IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
+                if (ironGolem != null) {
+                    ironGolem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
+                    ironGolem.setData(ENTITY_AGE, 200 + size * 10);
+                    ironGolem.setPos(player.getX() + level.random.nextInt(-3, 4), player.getY(), player.getZ() + level.random.nextInt(-3, 4));
+                    TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
+                    TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
+                        level.addFreshEntity(ironGolem);
+                    };
+                    timerqueue.schedule("iron_golem_summon", level.getGameTime() + level.random.nextInt(0, 50), myCallback);
+
+
+                }
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "iron_golem_summon";
             }
         }, List.of(10, DEFALUTRES));
         initAll("turtle", new HashSet<>(List.of(SoundEvents.TURTLE_AMBIENT_LAND.getLocation().toString())), compoundTag, new SoundEffect() {

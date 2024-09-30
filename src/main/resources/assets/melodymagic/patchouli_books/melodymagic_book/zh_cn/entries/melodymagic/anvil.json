@@ -1,0 +1,12 @@
+{
+  "name": "铁砧",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  铁砧似乎也有一些神奇的旋律……"
+    }
+  ]
+}

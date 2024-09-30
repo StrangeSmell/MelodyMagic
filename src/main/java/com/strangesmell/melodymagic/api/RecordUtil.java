@@ -2,7 +2,9 @@ package com.strangesmell.melodymagic.api;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,4 +173,20 @@ public class RecordUtil {
         if(compoundTag==null) return 0;
         return compoundTag.size();
     }
+
+    //get the num of soundEvent
+    public static int getSoundEventSize( ItemStack itemStack,String resLocation) {
+        List<Integer> num = new ArrayList<>();
+        List<String> res = new ArrayList<>();
+        Util.loadSoundDataFromTag(num, res, itemStack);
+        int size;
+        if (res.contains(resLocation)) {
+            size = num.get(res.indexOf(resLocation));
+            if (size > 5) size = 5;
+        } else {
+            size = 0;
+        }
+        return size;
+    }
+
 }

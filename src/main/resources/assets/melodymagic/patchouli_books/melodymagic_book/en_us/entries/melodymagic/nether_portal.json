@@ -1,0 +1,12 @@
+{
+  "name": "Nether Portal",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Nether Portal seems to have some amazing tunes too ......"
+    }
+  ]
+}

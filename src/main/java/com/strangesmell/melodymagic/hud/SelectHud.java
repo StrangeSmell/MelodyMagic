@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.event.ClientModEvent;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
 import net.minecraft.ChatFormatting;
@@ -79,8 +80,7 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             }
         }
 
-
-        if(!hasAltDown()) return;
+        if(!ClientModEvent.ALT.get().isDown()) return;
         Player player = Minecraft.getInstance().player;
         ItemStack itemStack = player.getItemInHand(player.getUsedItemHand());
         if(itemStack.getItem() instanceof CollectionItem collectionItem){
@@ -197,19 +197,6 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
             if(Minecraft.getInstance().player==null) return false;
             return !(Minecraft.getInstance().player.position().distanceTo(pLocation) > pRange);
         }
-    }
-
-    public static boolean hasControlDown() {
-        return Minecraft.ON_OSX
-                ? InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 343)
-                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 347)
-                : InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 341)
-                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 345);
-    }
-
-    public static boolean hasAltDown() {
-        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 342)
-                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 346);
     }
 
     @OnlyIn(Dist.CLIENT)

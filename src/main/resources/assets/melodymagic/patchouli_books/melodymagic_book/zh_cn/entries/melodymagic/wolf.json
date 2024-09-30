@@ -1,0 +1,12 @@
+{
+  "name": "狼嚎",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  狼嚎中包含着一种奇怪的力量，去记录下来吧！不过小心点，别沦为了盘中餐……"
+    }
+  ]
+}

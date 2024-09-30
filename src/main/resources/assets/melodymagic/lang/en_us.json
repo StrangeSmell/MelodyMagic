@@ -26,6 +26,9 @@
   "melodymagic.sound_screen": "melody",
   "melodymagic.effect_screen": "effect",
 
+  "key.categories.melodymagic": "Melody Magic",
+  "key.melodymagic.hud": "Press to switch the magic hud on",
+
 
 
   "melodymagic.sound_container.empty": "emm... there is no melody... ╮(￣ ▽￣)╭",

@@ -24,6 +24,9 @@
   "melodymagic.sound_screen": "旋律",
   "melodymagic.effect_screen": "效果",
 
+  "key.categories.melodymagic": "旋律魔法",
+  "key.melodymagic.hud": "按下以打开选择魔法hud",
+
   "melodymagic.sound_container.empty": "emm... 空的不行哦 ╮(￣ ▽￣)╭",
 
   "patchouli.melodymagic.title": "旋律魔法",

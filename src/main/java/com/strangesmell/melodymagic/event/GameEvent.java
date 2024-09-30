@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.WanderingTrader;
@@ -164,6 +165,12 @@ public class GameEvent {
                     wanderingTrader.setData(ENTITY_AGE,wanderingTrader.getData(ENTITY_AGE)-1);
                 }
             }
+        }else if(event.getEntity() instanceof IronGolem entity){
+            if(entity.hasData(ENTITY_AGE)){
+                if( entity.getData(ENTITY_AGE)>0){
+                    entity.setData(ENTITY_AGE,entity.getData(ENTITY_AGE)-1);
+                }
+            }
         }
     }
 
@@ -180,11 +187,20 @@ public class GameEvent {
 
     }
 
+    @SubscribeEvent
+    public static void playerLoggedInEvent(PlayerEvent.Clone event)
+    {
+        Player old = event.getOriginal();
+        Player newPlayer = event.getEntity();
+        CompoundTag oldCompoundTag = old.getPersistentData();
+        newPlayer.saveWithoutId(oldCompoundTag);
+    }
+
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void mouseScrollingEvent(InputEvent.MouseScrollingEvent event){
         ItemStack itemStack = Minecraft.getInstance().player.getItemInHand(Minecraft.getInstance().player.getUsedItemHand());
-        if(itemStack.getItem() instanceof CollectionItem&&hasAltDown()){
+        if(itemStack.getItem() instanceof CollectionItem&&ClientModEvent.ALT.get().isDown()){
             int selectCount=0;
             CompoundTag compoundTag = new CompoundTag();
             compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();

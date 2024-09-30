@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -85,6 +86,12 @@ public class CollectionItem extends Item implements MenuProvider {
             }
             for (int i = 0; i < listEffect.size(); i++) {
                 listEffect.get(i).effect(pPlayer, pLevel, pUsedHand, soundContainer);
+                for(int j=0;j<5;j++){
+                    pLevel.addParticle(
+                            ParticleTypes.NOTE, pPlayer.getRandomX(1.5) , pPlayer.getRandomY(), pPlayer.getRandomZ(1.5) , listEffect.size() / 10.0, 0.0, 0.0
+                    );
+                }
+
             }
             pPlayer.getCooldowns().addCooldown(this, soundContainer.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getInt("cooldown"));
         }else if(soundContainer.getItem() instanceof ContinueSoundContainerItem){
@@ -154,11 +161,17 @@ public class CollectionItem extends Item implements MenuProvider {
             for (int i = 0; i < time.size(); i++) {
                 if (useTime == time.get(i)) {
                     pLevel.playSound((Player) pLivingEntity,pLivingEntity.getX()+ location.get(i).get(0),pLivingEntity.getY()+location.get(i).get(1),pLivingEntity.getZ()+ location.get(i).get(2), subtitles.get(i), SoundSource.MASTER,volume.get(i),peach.get(i));
+                    for(int j=0;j<5;j++){
+                        pLevel.addParticle(
+                                ParticleTypes.NOTE, pLivingEntity.getRandomX(1.5) , pLivingEntity.getRandomY(), pLivingEntity.getRandomZ(1.5) , 0.1, 0.0, 0.0
+                        );
+                    }
                     if(getUseDuration(soundContainer,pLivingEntity)-pRemainingUseDuration==time.get(time.size()-1)){
                         releaseUsing(soundContainer,pLevel,pLivingEntity,0);
                     }
                 }
             }
+
         }
 
 
