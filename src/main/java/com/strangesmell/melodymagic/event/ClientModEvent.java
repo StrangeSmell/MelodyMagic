@@ -2,8 +2,12 @@ package com.strangesmell.melodymagic.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.entity.FriendlyVexModel;
+import com.strangesmell.melodymagic.entity.FriendlyVexRender;
 import com.strangesmell.melodymagic.item.SoundContainerBakedModel;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +15,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.jarjar.nio.util.Lazy;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
@@ -55,5 +61,14 @@ public class ClientModEvent {
     public static void key(RegisterKeyMappingsEvent event) {
         event.register(ALT.get());
     }
+
+    @SubscribeEvent
+    public static void clientSetupEvent(FMLClientSetupEvent event) {
+        event.enqueueWork(()->{
+            EntityRenderers.register(MelodyMagic.FRIENDLY_VEX.get(), FriendlyVexRender::new);
+        });
+    }
+
+
 
 }

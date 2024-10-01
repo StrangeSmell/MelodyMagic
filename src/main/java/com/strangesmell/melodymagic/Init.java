@@ -5,6 +5,7 @@ import com.strangesmell.melodymagic.api.SoundEffect;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
 import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
+import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -38,7 +39,9 @@ import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.npc.CatSpawner;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.npc.Villager;
@@ -67,6 +70,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
@@ -307,6 +311,76 @@ public class Init {
                 return "shulker";
             }
         }, List.of(20, DEFALUTRES));
+        initAll("evoker", new HashSet<>(List.of(SoundEvents.EVOKER_FANGS_ATTACK.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                HitResult hitResult = getHitResult(level, player, 20);
+
+                if(hitResult instanceof EntityHitResult entityHitResult){
+                    performSpellCasting(player, entityHitResult.getEntity().getOnPos());
+                }else if(hitResult instanceof BlockHitResult entityHitResult){
+                    performSpellCasting(player, entityHitResult.getBlockPos());
+                }
+            }
+            private void performSpellCasting(LivingEntity player, BlockPos livingentity) {
+                double d0 = Math.min(livingentity.getY(), player.getY());
+                double d1 = Math.max(livingentity.getY(), player.getY()) + 1.0;
+                float f = (float)Mth.atan2(livingentity.getZ() -player.getZ(), livingentity.getX() - player.getX());
+                if (player.distanceToSqr(livingentity.getX(),livingentity.getY(),livingentity.getZ()) < 9.0) {
+                    for (int i = 0; i < 5; i++) {
+                        float f1 = f + (float)i * (float) Math.PI * 0.4F;
+                        createSpellEntity(player.getX() + (double)Mth.cos(f1) * 1.5, player.getZ() + (double)Mth.sin(f1) * 1.5, d0, d1, f1, 0,player);
+                    }
+
+                    for (int k = 0; k < 8; k++) {
+                        float f2 = f + (float)k * (float) Math.PI * 2.0F / 8.0F + (float) (Math.PI * 2.0 / 5.0);
+                        createSpellEntity(player.getX() + (double)Mth.cos(f2) * 2.5, player.getZ() + (double)Mth.sin(f2) * 2.5, d0, d1, f2, 3,player);
+                    }
+                } else {
+                    for (int l = 0; l < 16; l++) {
+                        double d2 = 1.25 * (double)(l + 1);
+                        int j = 1 * l;
+                        this.createSpellEntity(player.getX() + (double)Mth.cos(f) * d2, player.getZ() + (double)Mth.sin(f) * d2, d0, d1, f, j,player);
+                    }
+                }
+            }
+            private void createSpellEntity(double pX, double pZ, double pMinY, double pMaxY, float pYRot, int pWarmupDelay,LivingEntity livingEntity) {
+                BlockPos blockpos = BlockPos.containing(pX, pMaxY, pZ);
+                boolean flag = false;
+                double d0 = 0.0;
+
+                do {
+                    BlockPos blockpos1 = blockpos.below();
+                    BlockState blockstate = livingEntity.level().getBlockState(blockpos1);
+                    if (blockstate.isFaceSturdy(livingEntity.level(), blockpos1, Direction.UP)) {
+                        if (!livingEntity.level().isEmptyBlock(blockpos)) {
+                            BlockState blockstate1 =livingEntity.level().getBlockState(blockpos);
+                            VoxelShape voxelshape = blockstate1.getCollisionShape(livingEntity.level(), blockpos);
+                            if (!voxelshape.isEmpty()) {
+                                d0 = voxelshape.max(Direction.Axis.Y);
+                            }
+                        }
+
+                        flag = true;
+                        break;
+                    }
+
+                    blockpos = blockpos.below();
+                } while (blockpos.getY() >= Mth.floor(pMinY) - 1);
+
+                if (flag) {
+                    livingEntity.level()
+                            .addFreshEntity(new EvokerFangs(livingEntity.level(), pX, (double)blockpos.getY() + d0, pZ, pYRot, pWarmupDelay, livingEntity));
+                    livingEntity.level()
+                            .gameEvent(GameEvent.ENTITY_PLACE, new Vec3(pX, (double)blockpos.getY() + d0, pZ), GameEvent.Context.of(livingEntity));
+                }
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "evoker";
+            }
+        }, List.of(20, DEFALUTRES));
         //11
         initAll("lightning_bolt_thunder", new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
@@ -398,6 +472,32 @@ public class Init {
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
                 return "wolf";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("vex", new HashSet<>(List.of(SoundEvents.VEX_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                int size=getSoundEventSize(itemStack,SoundEvents.VEX_AMBIENT);
+                for (int i = 0; i < size; i++) {
+                    final int a = i;
+                    FriendlyVex vex = FRIENDLY_VEX.get().create(level);
+                    if (vex != null) {
+                        vex.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(player.getOnPos()), MobSpawnType.NATURAL, null);
+                        vex.setData(ENTITY_AGE, 200 + size * 10);
+                        vex.setPos(player.getX() + level.random.nextInt(-3, 4), player.getY(), player.getZ() + level.random.nextInt(-3, 4));
+                        vex.setOwner(player);
+                        TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
+                        TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
+                            level.addFreshEntity(vex);
+                        };
+                        timerqueue.schedule("vex" + a, level.getGameTime() + level.random.nextInt(0, 101), myCallback);
+                    }
+                }
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "vex";
             }
         }, List.of(20, DEFALUTRES));
         initAll("witch", new HashSet<>(List.of(SoundEvents.WITCH_DRINK.getLocation().toString(), SoundEvents.WITCH_THROW.getLocation().toString())), compoundTag, new SoundEffect() {
@@ -629,7 +729,7 @@ public class Init {
                 return "anvil";
             }
         }, List.of(20, DEFALUTRES));
-        //21
+        //10
         initAll("spider", new HashSet<>(List.of(SoundEvents.SPIDER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -692,7 +792,21 @@ public class Init {
 
             @Override
             public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
-                return "water_breath";
+                return "nine_cow";
+            }
+        }, List.of(20, DEFALUTRES));
+        compoundTag.putInt(SoundEvents.PIG_AMBIENT.getLocation() + "num", 9);
+        initAll("nine_pig", new HashSet<>(List.of(SoundEvents.PIG_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 1));
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "nine_pig";
             }
         }, List.of(20, DEFALUTRES));
         initAll("water_breath", new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
@@ -816,7 +930,22 @@ public class Init {
                 return "rabbit";
             }
         }, List.of(20, DEFALUTRES));
-        //31
+        initAll("totem", new HashSet<>(List.of(SoundEvents.TOTEM_USE.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                level.playSound(null,player.getOnPos(),SoundEvents.TOTEM_USE,SoundSource.MASTER,1,1);
+                player.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.HEAL, 100, 1));
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "totem";
+            }
+        }, List.of(20, DEFALUTRES));
+        //12
 
     }
 

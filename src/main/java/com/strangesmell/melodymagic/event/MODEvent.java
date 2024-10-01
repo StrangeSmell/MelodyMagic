@@ -2,6 +2,7 @@ package com.strangesmell.melodymagic.event;
 
 import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.container.WandScreen;
+import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerBakedModel;
 import com.strangesmell.melodymagic.message.*;
@@ -18,6 +19,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
@@ -69,6 +71,10 @@ public class MODEvent {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(MelodyMagic.WAND_MENU.get(), WandScreen::new);
+    }    @SubscribeEvent
+    public static void registerScreens(EntityAttributeCreationEvent event) {
+        event.put(MelodyMagic.FRIENDLY_VEX.get(), FriendlyVex.createAttributes().build());
+
     }
 
     @SubscribeEvent

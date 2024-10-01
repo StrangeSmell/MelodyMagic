@@ -2,6 +2,7 @@ package com.strangesmell.melodymagic.event;
 
 import com.google.common.collect.Lists;
 import com.strangesmell.melodymagic.api.Util;
+import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.ContinueSoundContainerItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -163,13 +165,22 @@ public class GameEvent {
             if(wanderingTrader.hasData(ENTITY_AGE)){
                 if( wanderingTrader.getData(ENTITY_AGE)>0){
                     wanderingTrader.setData(ENTITY_AGE,wanderingTrader.getData(ENTITY_AGE)-1);
+                }else{
+                    wanderingTrader.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }else if(event.getEntity() instanceof IronGolem entity){
             if(entity.hasData(ENTITY_AGE)){
                 if( entity.getData(ENTITY_AGE)>0){
                     entity.setData(ENTITY_AGE,entity.getData(ENTITY_AGE)-1);
-                }
+                } else entity.remove(Entity.RemovalReason.KILLED);
+            }
+        }else if(event.getEntity() instanceof FriendlyVex entity){
+            if(entity.hasData(ENTITY_AGE)){
+                if( entity.getData(ENTITY_AGE)>0){
+                    entity.setData(ENTITY_AGE,entity.getData(ENTITY_AGE)-1);
+                } else entity.remove(Entity.RemovalReason.KILLED);
+
             }
         }
     }

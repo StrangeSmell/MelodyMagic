@@ -193,10 +193,10 @@ public class RecordUtil {
         List<Integer> num = new ArrayList<>();
         List<String> res = new ArrayList<>();
         Util.loadSoundDataFromTag(num, res, itemStack);
-        int size;
+        int size=0;
         for (int i = 0; i < res.size(); i++) {
             if (res.get(i).contains(resLocation)) {
-                size = num.get(i) + size;
+                size = 1 + size;
             }
         }
         return size;

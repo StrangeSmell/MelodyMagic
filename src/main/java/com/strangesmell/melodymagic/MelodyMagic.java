@@ -8,12 +8,18 @@ import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.block.SoundPlayerBlock;
 import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
 import com.strangesmell.melodymagic.container.WandMenu;
+import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.hud.RecordHud;
 import com.strangesmell.melodymagic.hud.SelectHud;
 import com.strangesmell.melodymagic.item.*;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -52,32 +58,31 @@ import java.util.function.Supplier;
 import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
 
 @Mod(MelodyMagic.MODID)
-public class MelodyMagic
-{
+public class MelodyMagic {
     public static final String MODID = "melodymagic";
 
-    public static Map<HashSet<String>,String> SOUND2KEY= new HashMap<>();
-    public static List<HashSet<String>> SOUND_LIST= new ArrayList<>();
-    public static Map<String, CompoundTag> CONDITION= new HashMap<>();
-    public static Map<String, SoundEffect> KEY2EFFECT= new HashMap<>();
-    public static Map<String, Integer> SOUND_INF= new HashMap<>();
-    public static Map<String, List<Object>> EFFECT_INF= new HashMap<>();
+    public static Map<HashSet<String>, String> SOUND2KEY = new HashMap<>();
+    public static List<HashSet<String>> SOUND_LIST = new ArrayList<>();
+    public static Map<String, CompoundTag> CONDITION = new HashMap<>();
+    public static Map<String, SoundEffect> KEY2EFFECT = new HashMap<>();
+    public static Map<String, Integer> SOUND_INF = new HashMap<>();
+    public static Map<String, List<Object>> EFFECT_INF = new HashMap<>();
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    public static final DeferredBlock<Block> SOUND_PLAYER_BLOCK = BLOCKS.register("sound_player_block", ()-> new SoundPlayerBlock(
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.DIRT)
-                    .instrument(NoteBlockInstrument.BASS)
-                    .strength(2.0F, 6.0F)
-                    .sound(SoundType.WOOD)
-                    .ignitedByLava()
-                    .requiresCorrectToolForDrops()
+    public static final DeferredBlock<Block> SOUND_PLAYER_BLOCK = BLOCKS.register("sound_player_block", () -> new SoundPlayerBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.DIRT)
+                            .instrument(NoteBlockInstrument.BASS)
+                            .strength(2.0F, 6.0F)
+                            .sound(SoundType.WOOD)
+                            .ignitedByLava()
+                            .requiresCorrectToolForDrops()
 
             )
     );
-    public static final DeferredBlock<Block> FAKE_NETHER_PORTAL = BLOCKS.register("fake_nether_portal", ()-> new FakeNetherPortal(
+    public static final DeferredBlock<Block> FAKE_NETHER_PORTAL = BLOCKS.register("fake_nether_portal", () -> new FakeNetherPortal(
                     BlockBehaviour.Properties.of()
                             .noCollission()
                             .randomTicks()
@@ -88,33 +93,43 @@ public class MelodyMagic
             )
     );
 
-    public static final DeferredBlock<Block> MORNING_GLORY = BLOCKS.register("morning_glory", ()-> new FlowerBlock(
-            MobEffects.LUCK,5
-            ,BlockBehaviour.Properties.ofFullCopy(Blocks.DANDELION)
+    public static final DeferredBlock<Block> MORNING_GLORY = BLOCKS.register("morning_glory", () -> new FlowerBlock(
+                    MobEffects.LUCK, 5
+                    , BlockBehaviour.Properties.ofFullCopy(Blocks.DANDELION)
             )
     );
-    public static final DeferredBlock<Block> POT_MORNING_GLORY = BLOCKS.register("pot_morning_glory", ()-> new FlowerPotBlock(
-            ()->((FlowerPotBlock) Blocks.FLOWER_POT),MORNING_GLORY,BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_ALLIUM))
+    public static final DeferredBlock<Block> POT_MORNING_GLORY = BLOCKS.register("pot_morning_glory", () -> new FlowerPotBlock(
+            () -> ((FlowerPotBlock) Blocks.FLOWER_POT), MORNING_GLORY, BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_ALLIUM))
     );
 
-
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
+    public static final Supplier<EntityType<FriendlyVex>> FRIENDLY_VEX = ENTITIES.register("friendly_vex", () ->
+            EntityType.Builder.<FriendlyVex>of(FriendlyVex::new, MobCategory.CREATURE)
+                    .fireImmune()
+                    .sized(0.4F, 0.8F)
+                    .eyeHeight(0.51875F)
+                    .passengerAttachments(0.7375F)
+                    .ridingOffset(0.04F)
+                    .clientTrackingRange(8)
+                    .build("friendly_vex")
+    );
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public static final DeferredItem<SoundCollectionItem> SOUND_COLLECTION_ITEM = ITEMS.registerItem("sound_collection", SoundCollectionItem::new ,new Item.Properties().stacksTo(1));
-    public static final DeferredItem<ContinueSoundCollectionItem> CONTINUE_SOUND_COLLECTION_ITEM = ITEMS.registerItem("continue_sound_collection", ContinueSoundCollectionItem::new ,new Item.Properties().stacksTo(1));
-    public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new ,new Item.Properties().stacksTo(1));
-    public static final DeferredItem<RecordBook> RECORD_BOOK = ITEMS.registerItem("record_book", RecordBook::new ,new Item.Properties().stacksTo(1));
-    public static final DeferredItem<Item> COLLECTION_DISPLAY_ITEM = ITEMS.registerItem("collection_display", Item::new ,new Item.Properties().stacksTo(1));
-    public static final DeferredItem<SoundContainerItem> SOUND_CONTAINER_ITEM = ITEMS.registerItem("sound_container", SoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
-    public static final DeferredItem<ContinueSoundContainerItem> CONTINUE_SOUND_CONTAINER_ITEM = ITEMS.registerItem("continue_sound_container", ContinueSoundContainerItem::new ,new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
+    public static final DeferredItem<SoundCollectionItem> SOUND_COLLECTION_ITEM = ITEMS.registerItem("sound_collection", SoundCollectionItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<ContinueSoundCollectionItem> CONTINUE_SOUND_COLLECTION_ITEM = ITEMS.registerItem("continue_sound_collection", ContinueSoundCollectionItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<CollectionItem> COLLECTION_ITEM = ITEMS.registerItem("collection", CollectionItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<RecordBook> RECORD_BOOK = ITEMS.registerItem("record_book", RecordBook::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> COLLECTION_DISPLAY_ITEM = ITEMS.registerItem("collection_display", Item::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<SoundContainerItem> SOUND_CONTAINER_ITEM = ITEMS.registerItem("sound_container", SoundContainerItem::new, new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
+    public static final DeferredItem<ContinueSoundContainerItem> CONTINUE_SOUND_CONTAINER_ITEM = ITEMS.registerItem("continue_sound_container", ContinueSoundContainerItem::new, new Item.Properties().rarity(Rarity.RARE).stacksTo(1));
     public static final DeferredItem<BlockItem> SOUND_PLAYER_ITEM = ITEMS.registerSimpleBlockItem("sound_player_block", SOUND_PLAYER_BLOCK);
     public static final DeferredItem<BlockItem> MORNING_GLORY_ITEM = ITEMS.registerSimpleBlockItem("morning_glory", MORNING_GLORY);
 
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(Registries.MENU,MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
     public static final Supplier<MenuType<WandMenu>> WAND_MENU = MENU_TYPE.register("wand_menu", () -> new MenuType(WandMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     public static final Supplier<BlockEntityType<SoundPlayerBlockEntity>> SOUND_PLAYER_BLOCK_ENTITY = BLOCK_ENTITY.register("sound_player_block_entity", () -> BlockEntityType.Builder.of(SoundPlayerBlockEntity::new, SOUND_PLAYER_BLOCK.get()).build(null));
     public static final Supplier<BlockEntityType<FakeNetherPortalBlockEntity>> FAKE_NETHER_PORTAL_BLOCK_ENTITY = BLOCK_ENTITY.register("fake_nether_portal_block_entity", () -> BlockEntityType.Builder.of(FakeNetherPortalBlockEntity::new, FAKE_NETHER_PORTAL.get()).build(null));
 
@@ -144,12 +159,12 @@ public class MelodyMagic
             }).build());
 
 
-    public MelodyMagic(IEventBus modEventBus, ModContainer modContainer)
-    {
-        Init init =new Init();
+    public MelodyMagic(IEventBus modEventBus, ModContainer modContainer) {
+        Init init = new Init();
         modEventBus.addListener(this::commonSetup);
 
         BLOCKS.register(modEventBus);
+        ENTITIES.register(modEventBus);
         ITEMS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
         BLOCK_ENTITY.register(modEventBus);
@@ -165,12 +180,11 @@ public class MelodyMagic
         init.init();
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
+    private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
-        event.enqueueWork(()->{
-            ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(MORNING_GLORY.getId(),POT_MORNING_GLORY);
+        event.enqueueWork(() -> {
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(MORNING_GLORY.getId(), POT_MORNING_GLORY);
         });
         if (Config.logDirtBlock)
             LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
@@ -180,47 +194,39 @@ public class MelodyMagic
         //Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
 
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS){
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
 
         }
 
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
+    public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
 
 
-
-
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
+    public static class ClientModEvents {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
         }
 
         @SubscribeEvent
-        public static void loadSoundEngine(SoundEngineLoadEvent event)
-        {
+        public static void loadSoundEngine(SoundEngineLoadEvent event) {
             LOGGER.info("Add sound listener");
             event.getEngine().addEventListener(SelectHud.getInstance());
         }
+
         @SubscribeEvent
-        public static void registerGuiLayersEvent(RegisterGuiLayersEvent event)
-        {
+        public static void registerGuiLayersEvent(RegisterGuiLayersEvent event) {
             LOGGER.info("Register hud");
-            event.registerAboveAll(fromNamespaceAndPath(MODID,"select_hud"), SelectHud.getInstance());
-            event.registerAboveAll(fromNamespaceAndPath(MODID,"record_hud"), RecordHud.getInstance());
+            event.registerAboveAll(fromNamespaceAndPath(MODID, "select_hud"), SelectHud.getInstance());
+            event.registerAboveAll(fromNamespaceAndPath(MODID, "record_hud"), RecordHud.getInstance());
         }
     }
-
 
 
 }
