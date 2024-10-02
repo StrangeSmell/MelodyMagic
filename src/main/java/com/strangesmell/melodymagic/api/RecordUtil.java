@@ -189,6 +189,20 @@ public class RecordUtil {
         return size;
     }
 
+    public static int getSoundEventSize( ItemStack itemStack,SoundEvent resLocation,int limit) {
+        List<Integer> num = new ArrayList<>();
+        List<String> res = new ArrayList<>();
+        Util.loadSoundDataFromTag(num, res, itemStack);
+        int size;
+        if (res.contains(resLocation.getLocation().toString())) {
+            size = num.get(res.indexOf(resLocation.getLocation().toString()));
+            if (size > limit) size = limit;
+        } else {
+            size = 0;
+        }
+        return size;
+    }
+
     public static int getSoundEventSize( ItemStack itemStack,String resLocation) {
         List<Integer> num = new ArrayList<>();
         List<String> res = new ArrayList<>();

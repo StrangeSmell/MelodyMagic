@@ -19,9 +19,7 @@ import static net.minecraft.world.item.component.ItemContainerContents.EMPTY;
 
 
 public class WandMenu extends AbstractContainerMenu {
-    private static final int SLOTS_PER_ROW = 9;
     private final SimpleContainer container;
-    private final int containerRows;
     private ItemStack itemStack ;
 
     private Player player;
@@ -37,8 +35,6 @@ public class WandMenu extends AbstractContainerMenu {
         itemStack = player.getItemInHand(player.getUsedItemHand());
         itemStack.getOrDefault(DataComponents.CONTAINER,EMPTY).copyInto(pContainer.getItems());
         this.container = pContainer;
-        this.containerRows = 3;
-        pContainer.startOpen(player);
         //加入格子
         int r = 50;
         for(int i = 0;i<9;i++){
@@ -49,11 +45,6 @@ public class WandMenu extends AbstractContainerMenu {
 
             }
         }
-/*        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                this.addSlot(new Slot(pContainer, j + i * 3, 62 + j * 18, 17 + i * 18));
-            }
-        }*/
 
         for (int k = 0; k < 3; k++) {
             for (int i1 = 0; i1 < 9; i1++) {
@@ -99,8 +90,8 @@ public class WandMenu extends AbstractContainerMenu {
     }
     @Override
     public void removed(Player pPlayer) {
+        itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         super.removed(pPlayer);
-        this.container.stopOpen(pPlayer);
     }
     @Override
     public boolean stillValid(Player pPlayer) {
@@ -109,7 +100,6 @@ public class WandMenu extends AbstractContainerMenu {
 
     @Override
     public void broadcastChanges() {
-        itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         super.broadcastChanges();
     }
 

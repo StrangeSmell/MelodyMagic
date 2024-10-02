@@ -88,6 +88,16 @@ public class ClientPayloadHandler {
                     return null;
                 });
     }
+/*    public static void handleRecordData(final ItemsData data, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+                    function4(context,data.tag());
+                })
+                .exceptionally(e -> {
+                    // Handle exception
+                    context.disconnect(Component.translatable("melodymagic.networking.failed", e.getMessage()));
+                    return null;
+                });
+    }*/
 
     public static void function(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();
@@ -120,6 +130,24 @@ public class ClientPayloadHandler {
             player.getPersistentData().put(MODID+"subtitle_kinds",compoundTag.get(MODID+"subtitle_kinds"));
         }
     }
+
+/*    public static void function4(IPayloadContext context, CompoundTag compoundTag){
+        Player player = context.player();
+        int selectCount = 0;
+        ItemStack wand = player.getItemInHand(player.getUsedItemHand());
+        CompoundTag wandNbt =wand.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if (!wandNbt.contains(MODID + "select_index")) {
+            wandNbt.putInt(MODID + "select_index", selectCount);
+        } else {
+            selectCount = wandNbt.getInt(MODID + "select_index");
+        }
+        NonNullList<ItemStack> nonNullList = NonNullList.create();
+        ContainerHelper.loadAllItems(compoundTag,nonNullList,player.registryAccess());
+        ItemStack ite= player.getItemInHand(player.getUsedItemHand()).get(DataComponents.CONTAINER).getStackInSlot(selectCount);
+        ItemContainerContents containerData =ite.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        containerData.copyInto(nonNullList);
+        ite.set(DataComponents.CONTAINER, containerData);
+    }*/
 
     public static void handleContinueSoundContainer(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();

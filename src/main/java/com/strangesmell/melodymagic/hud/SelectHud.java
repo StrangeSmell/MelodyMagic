@@ -130,10 +130,9 @@ public class SelectHud implements LayeredDraw.Layer , SoundEventListener {
                 if(selectCount==i){
                     pGuiGraphics.pose().scale(k1,k1,k1);
                     pGuiGraphics.renderItem(itemContainerContents.getStackInSlot(i),(int) (pGuiGraphics.guiWidth()/2/k1-8+Math.sin(2*Math.PI*i/9)*r/k1), (int) (pGuiGraphics.guiHeight()/2/k1-8-Math.cos(2*Math.PI*i/9)*r/k1));
-
                     pGuiGraphics.pose().scale(k2,k2,k2);
-                    if(!(itemContainerContents.getStackInSlot(i).getItem() == Items.AIR)){
 
+                    if(!(itemContainerContents.getStackInSlot(i).getItem() == Items.AIR)){
                         pGuiGraphics.renderComponentTooltip(Minecraft.getInstance().font,itemContainerContents.getStackInSlot(i).getTooltipLines(Item.TooltipContext.EMPTY,null, TooltipFlag.NORMAL),(int)(pGuiGraphics.guiWidth()/2-8+Math.sin(2*Math.PI*i/9)*r)+20,(int)(pGuiGraphics.guiHeight()/2-8-Math.cos(2*Math.PI*i/9)*r)+8);
                     }
 

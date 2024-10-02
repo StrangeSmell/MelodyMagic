@@ -2,12 +2,11 @@ package com.strangesmell.melodymagic;
 
 import com.strangesmell.melodymagic.api.EffectUtil;
 import com.strangesmell.melodymagic.api.SoundEffect;
-import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
 import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
+import com.strangesmell.melodymagic.container.ChestConatiner;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -15,42 +14,33 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.Evoker;
-import net.minecraft.world.entity.monster.Shulker;
-import net.minecraft.world.entity.monster.Vex;
-import net.minecraft.world.entity.npc.CatSpawner;
 import net.minecraft.world.entity.npc.Npc;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
-import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -63,7 +53,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.timers.FunctionCallback;
 import net.minecraft.world.level.timers.TimerCallback;
 import net.minecraft.world.level.timers.TimerQueue;
 import net.minecraft.world.phys.BlockHitResult;
@@ -71,8 +60,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.common.EffectCures;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -81,7 +69,6 @@ import static com.strangesmell.melodymagic.MelodyMagic.*;
 import static com.strangesmell.melodymagic.api.RecordUtil.getSoundEventSize;
 import static com.strangesmell.melodymagic.api.Util.setBlock;
 import static com.strangesmell.melodymagic.api.ViewUtil.getHitResult;
-import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
 public class Init {
     public static ResourceLocation DEFALUTRES = ResourceLocation.fromNamespaceAndPath(MODID, "textures/effect_icon/img.png");
@@ -311,6 +298,7 @@ public class Init {
                 return "shulker";
             }
         }, List.of(20, DEFALUTRES));
+
         initAll("evoker", new HashSet<>(List.of(SoundEvents.EVOKER_FANGS_ATTACK.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -391,7 +379,7 @@ public class Init {
                 LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
                 assert bolt != null;
 
-                bolt.addTag(MelodyMagic.MODID);
+                bolt.addTag(MODID);
                 bolt.moveTo(hitResult.getLocation());
                 bolt.setCause((ServerPlayer) player);
                 bolt.setDamage(5);
@@ -699,6 +687,7 @@ public class Init {
                 return "nether_portal";
             }
         }, List.of(10, DEFALUTRES));
+
         initAll("ender_dragon_death", new HashSet<>(List.of(SoundEvents.FIREWORK_ROCKET_LAUNCH.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -780,6 +769,64 @@ public class Init {
                 return "wandering_trader";
             }
         }, List.of(20, DEFALUTRES));
+        initAll("ender_chest", new HashSet<>(List.of(SoundEvents.ENDER_CHEST_OPEN.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
+                if(playerenderchestcontainer != null){
+                    player.openMenu(
+                            new SimpleMenuProvider(
+                                    (p_53124_, p_53125_, p_53126_) -> ChestMenu.threeRows(p_53124_, p_53125_, playerenderchestcontainer), Component.translatable("container.enderchest"))
+                    );
+                }
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "ender_chest";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("chest", new HashSet<>(List.of(SoundEvents.CHEST_OPEN.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+
+                if (level.isClientSide) {
+                    return;
+                }
+                int size=getSoundEventSize(itemStack,SoundEvents.CHEST_OPEN,6);
+
+                SimpleMenuProvider simpleMenuProvider = null;
+                switch (size) {
+                    case 1 : simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.oneRow(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                    case 2 :simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.twoRows(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                    case 3 :simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.threeRows(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                    case 4 :simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.fourRows(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                    case 5 :simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.fiveRows(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                    case 6 :simpleMenuProvider = new SimpleMenuProvider(
+                            (containerId, playerInventory,player1) ->  ChestConatiner.sixRows(containerId, playerInventory),Component.translatable("chest_menu")
+                    );break;
+                }
+                if(simpleMenuProvider!=null){
+                    player.openMenu(simpleMenuProvider);
+                }
+
+            }
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+                return "chest";
+            }
+        }, List.of(20, DEFALUTRES));
 
 
         compoundTag.putInt(SoundEvents.COW_AMBIENT.getLocation() + "num", 9);
@@ -821,6 +868,7 @@ public class Init {
                 return "water_breath";
             }
         }, List.of(5, DEFALUTRES));
+
         initAll("village_reputation", new HashSet<>(List.of(SoundEvents.VILLAGER_YES.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -935,7 +983,7 @@ public class Init {
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
                 level.playSound(null,player.getOnPos(),SoundEvents.TOTEM_USE,SoundSource.MASTER,1,1);
-                player.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+                player.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
                 player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.HEAL, 100, 1));
             }

@@ -7,6 +7,7 @@ import com.strangesmell.melodymagic.block.FakeNetherPortal;
 import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.block.SoundPlayerBlock;
 import com.strangesmell.melodymagic.block.SoundPlayerBlockEntity;
+import com.strangesmell.melodymagic.container.ChestConatiner;
 import com.strangesmell.melodymagic.container.WandMenu;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.hud.RecordHud;
@@ -14,12 +15,9 @@ import com.strangesmell.melodymagic.hud.SelectHud;
 import com.strangesmell.melodymagic.item.*;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -128,6 +126,12 @@ public class MelodyMagic {
 
     public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
     public static final Supplier<MenuType<WandMenu>> WAND_MENU = MENU_TYPE.register("wand_menu", () -> new MenuType(WandMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW1 = MENU_TYPE.register("chest_row1", () -> new MenuType(ChestConatiner::oneRow, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW2 = MENU_TYPE.register("chest_row2", () -> new MenuType(ChestConatiner::twoRows, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW3 = MENU_TYPE.register("chest_row3", () -> new MenuType(ChestConatiner::threeRows, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW4 = MENU_TYPE.register("chest_row4", () -> new MenuType(ChestConatiner::fourRows, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW5 = MENU_TYPE.register("chest_row5", () -> new MenuType(ChestConatiner::fiveRows, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<ChestConatiner>> CHEST_ROW6 = MENU_TYPE.register("chest_row6", () -> new MenuType(ChestConatiner::sixRows, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     public static final Supplier<BlockEntityType<SoundPlayerBlockEntity>> SOUND_PLAYER_BLOCK_ENTITY = BLOCK_ENTITY.register("sound_player_block_entity", () -> BlockEntityType.Builder.of(SoundPlayerBlockEntity::new, SOUND_PLAYER_BLOCK.get()).build(null));
