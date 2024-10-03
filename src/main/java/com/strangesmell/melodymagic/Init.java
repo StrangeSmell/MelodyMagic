@@ -7,22 +7,27 @@ import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.container.ChestConatiner;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
+import com.strangesmell.melodymagic.item.SoundContainerItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
@@ -41,15 +46,16 @@ import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
-import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -61,6 +67,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.EffectCures;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -69,6 +77,7 @@ import static com.strangesmell.melodymagic.MelodyMagic.*;
 import static com.strangesmell.melodymagic.api.RecordUtil.getSoundEventSize;
 import static com.strangesmell.melodymagic.api.Util.setBlock;
 import static com.strangesmell.melodymagic.api.ViewUtil.getHitResult;
+import static net.minecraft.world.item.component.ItemContainerContents.EMPTY;
 
 public class Init {
     public static ResourceLocation DEFALUTRES = ResourceLocation.fromNamespaceAndPath(MODID, "textures/effect_icon/img.png");
@@ -101,7 +110,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack collectionItem) {
                 return "wither";
             }
         }, List.of(20, DEFALUTRES));
@@ -122,7 +131,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "breeze";
             }
         }, List.of(20, DEFALUTRES));
@@ -130,14 +139,37 @@ public class Init {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
+                String biome =itemStack.get(DataComponents.CUSTOM_DATA).copyTag().getString(MODID+"bow_biome");
+                List<Holder<Biome>> biomeLits = new ArrayList<>();
+                level.registryAccess().registryOrThrow(Registries.BIOME).holders().forEach(biomeLits::add);
+                ItemStack potionArrow = Items.TIPPED_ARROW.getDefaultInstance();
+                PotionContents potionContents = itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                for (Holder<Biome> biomeHolder : biomeLits){
+                    if(biomeHolder.getRegisteredName().contains(biome)){
+                        if(biomeHolder.is(Biomes.SNOWY_BEACH)||biomeHolder.is(Biomes.SNOWY_PLAINS)||biomeHolder.is(Biomes.SNOWY_SLOPES)||biomeHolder.is(Biomes.SNOWY_TAIGA))potionContents= potionContents.withEffectAdded(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100));
+                        if(biomeHolder.is(Biomes.SWAMP)||biomeHolder.is(Biomes.MANGROVE_SWAMP)) potionContents = potionContents.withEffectAdded(new MobEffectInstance(MobEffects.POISON, 100));
+                        if(biomeHolder.is(Biomes.NETHER_WASTES)||biomeHolder.is(Biomes.SOUL_SAND_VALLEY)||biomeHolder.is(Biomes.CRIMSON_FOREST)||biomeHolder.is(Biomes.WARPED_FOREST)||biomeHolder.is(Biomes.BASALT_DELTAS)) potionContents=potionContents.withEffectAdded(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100));
+                    }
+                }
+                potionArrow.set(DataComponents.POTION_CONTENTS, potionContents);
                 List<ItemStack> draw = new ArrayList<>();
-                draw.add(Items.APPLE.getDefaultInstance());
+                draw.add(potionArrow);
                 EffectUtil.shoot((ServerLevel) level, player, pUsedHand, Items.BOW.getDefaultInstance(), draw, 3, 1, true, null);
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack collectionItem) {
                 return "bow";
+            }
+
+            public void saveAdditionData(IPayloadContext context, CompoundTag compoundTag,ItemStack itemStack){
+                Holder<Biome>  biome= context.player().level().getBiome(context.player().getOnPos()) ;
+                compoundTag.putString(MODID+"bow_biome", biome.getKey().location().getPath());
+            }
+            @Override
+            public Component toolTip(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
+                String biome =ItemStack.get(DataComponents.CUSTOM_DATA).copyTag().getString(MODID+"bow_biome");
+                return Component.translatable("bow ").append(Component.translatable("biome.minecraft."+biome)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
             }
         }, List.of(20, DEFALUTRES));
         initAll("dragon_breath", new HashSet<>(List.of(SoundEvents.ENDER_DRAGON_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
@@ -160,7 +192,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "dragon_breath";
             }
         }, List.of(10, DEFALUTRES));
@@ -181,7 +213,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "blaze";
             }
         }, List.of(10, DEFALUTRES));
@@ -201,7 +233,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "ghast";
             }
         }, List.of(10, DEFALUTRES));
@@ -216,7 +248,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "ender_pearl";
             }
         }, List.of(20, DEFALUTRES));
@@ -231,7 +263,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "firework_rocket_launch";
             }
         }, List.of(20, DEFALUTRES));
@@ -250,7 +282,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "snowball";
             }
         }, List.of(20, DEFALUTRES));
@@ -270,7 +302,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "chicken_egg";
             }
         }, List.of(20, DEFALUTRES));
@@ -294,7 +326,7 @@ public class Init {
 
             }
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "shulker";
             }
         }, List.of(20, DEFALUTRES));
@@ -365,7 +397,7 @@ public class Init {
                 }
             }
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "evoker";
             }
         }, List.of(20, DEFALUTRES));
@@ -388,7 +420,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "lightning_bolt_thunder";
             }
         }, List.of(10, DEFALUTRES));
@@ -422,7 +454,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "warden_sonic_boon";
             }
         }, List.of(10, DEFALUTRES));
@@ -458,7 +490,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "wolf";
             }
         }, List.of(20, DEFALUTRES));
@@ -484,7 +516,7 @@ public class Init {
                 }
             }
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "vex";
             }
         }, List.of(20, DEFALUTRES));
@@ -562,7 +594,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "witch";
             }
         }, List.of(20, DEFALUTRES));
@@ -578,7 +610,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "eat";
             }
         }, List.of(10, DEFALUTRES));
@@ -614,7 +646,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "bone_meal";
             }
         }, List.of(10, DEFALUTRES));
@@ -633,7 +665,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "cat";
             }
         }, List.of(100, DEFALUTRES));
@@ -683,7 +715,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "nether_portal";
             }
         }, List.of(10, DEFALUTRES));
@@ -696,7 +728,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
                 return "ender_dragon_death";
             }
         }, List.of(20, DEFALUTRES));
@@ -714,7 +746,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "anvil";
             }
         }, List.of(20, DEFALUTRES));
@@ -727,7 +759,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "spider";
             }
         }, List.of(20, DEFALUTRES));
@@ -747,7 +779,7 @@ public class Init {
 
             }
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "glow_squid";
             }
         }, List.of(20, DEFALUTRES));
@@ -765,7 +797,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "wandering_trader";
             }
         }, List.of(20, DEFALUTRES));
@@ -783,7 +815,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "ender_chest";
             }
         }, List.of(20, DEFALUTRES));
@@ -823,7 +855,7 @@ public class Init {
 
             }
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "chest";
             }
         }, List.of(20, DEFALUTRES));
@@ -838,7 +870,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "nine_cow";
             }
         }, List.of(20, DEFALUTRES));
@@ -852,7 +884,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "nine_pig";
             }
         }, List.of(20, DEFALUTRES));
@@ -864,7 +896,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "water_breath";
             }
         }, List.of(5, DEFALUTRES));
@@ -878,7 +910,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "village_reputation";
             }
         }, List.of(10, DEFALUTRES));
@@ -899,7 +931,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "bat";
             }
         }, List.of(10, DEFALUTRES));
@@ -911,7 +943,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "dolphin";
             }
         }, List.of(10, DEFALUTRES));
@@ -924,7 +956,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "iron_golem";
             }
         }, List.of(10, DEFALUTRES));
@@ -949,7 +981,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "iron_golem_summon";
             }
         }, List.of(10, DEFALUTRES));
@@ -961,7 +993,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "turtle";
             }
         }, List.of(10, DEFALUTRES));
@@ -974,7 +1006,7 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "rabbit";
             }
         }, List.of(20, DEFALUTRES));
@@ -989,8 +1021,22 @@ public class Init {
             }
 
             @Override
-            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable CollectionItem collectionItem) {
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
                 return "totem";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("ominous_bottle", new HashSet<>(List.of(SoundEvents.OMINOUS_BOTTLE_DISPOSE.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                int size=getSoundEventSize(itemStack,SoundEvents.TOTEM_USE,5);
+                level.playSound(null,player.getOnPos(),SoundEvents.OMINOUS_BOTTLE_DISPOSE,SoundSource.MASTER,1,1);
+                player.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, size, false, false, true));
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
+                return "ominous_bottle";
             }
         }, List.of(20, DEFALUTRES));
         //12

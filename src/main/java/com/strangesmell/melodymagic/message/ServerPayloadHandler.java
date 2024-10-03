@@ -21,8 +21,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-import static com.strangesmell.melodymagic.MelodyMagic.MM_TRIGGER;
-import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.MelodyMagic.*;
 
 public class ServerPayloadHandler {
     public static void handleData(final SoundData data, final IPayloadContext context) {
@@ -89,7 +88,10 @@ public class ServerPayloadHandler {
         RecordUtil.saveSoundKindsAndSub(player,soundEvents,subtitle);
         //RecordUtil.saveSubKinds(player,subtitle);
         RecordUtil.saveEffectKinds(player,listString);
-
+        //存入额外数据
+        for (String s : listString) {
+            KEY2EFFECT.get(s).saveAdditionData(context, compoundTag,itemStack);
+        }
         //结束
 /*
          //todo 等待更新item_model
@@ -157,7 +159,10 @@ public class ServerPayloadHandler {
         List<String> strings = Util.getSoundEventNum2(compoundTag.copy(),soundEvents,num,subtitle);//location key
 
         List<String> listString = Util.getKeyFromSoundRes(strings,num);//这里判断是否满足条件，加入对应的effect key
-
+        //存入额外数据
+        for (String s : listString) {
+            KEY2EFFECT.get(s).saveAdditionData(context, compoundTag,itemStack);
+        }
         //结束存入KEY
         //记录玩家搜集的声音种类
         RecordUtil.saveSoundKindsAndSub(player,soundEvents,subtitle);

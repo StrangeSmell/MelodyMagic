@@ -43,8 +43,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.strangesmell.melodymagic.MelodyMagic.ENTITY_AGE;
-import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.MelodyMagic.*;
 import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
@@ -66,7 +65,10 @@ public class GameEvent {
 
             List<String> effectList =getSoundEffectToString(event.getItemStack());
             for (int j=0;j<effectList.size();j++){
-                event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                if(KEY2EFFECT.get(effectList.get(j))==null)  continue;
+                event.getToolTip().add(KEY2EFFECT.get(effectList.get(j)).toolTip(Minecraft.getInstance().player, Minecraft.getInstance().player.level(),null,event.getItemStack()));
+
+                //event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             }
 
             for(int i=0;i<subtitles2.size();i++){
@@ -97,7 +99,9 @@ public class GameEvent {
 
             List<String> effectList =getSoundEffectToString(event.getItemStack());
             for (int j=0;j<effectList.size();j++){
-                event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                if(KEY2EFFECT.get(effectList.get(j))==null)  continue;
+                //event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                event.getToolTip().add(KEY2EFFECT.get(effectList.get(j)).toolTip(event.getEntity(),event.getEntity().level(),null,event.getItemStack()));
             }
 
             for(int i=0;i<subtitles2.size();i++){

@@ -42,9 +42,9 @@ public class RecordEffectBook extends Screen {
         searchPage=0;
         player = player_;
         RecordUtil.loadEffectKinds(player_,effectList);
-        for(int i=0;i<effectList.size();i++){
+        for(int i=0;i<effectList.size()&&i<KEY2EFFECT.size();i++){
             if(KEY2EFFECT.get(effectList.get(i))==null)continue;
-            tranList.add(KEY2EFFECT.get(effectList.get(i)).name(null,null,null,null));
+            tranList.add(KEY2EFFECT.get(effectList.get(i)).name(player,null,null,null));
         }
     }
     @Override
@@ -62,8 +62,9 @@ public class RecordEffectBook extends Screen {
             if(page*10+10<size) nextButton.render( graphics,  mouseX,  mouseY,  partialTick);
             if(page>0) previousButton.render(graphics,  mouseX,  mouseY,  partialTick);
 
-            for(int i = 0; i+page*10<size && i<10;i++){
+            for(int i = 0; i+page*10<size && i<10&&i+page*10<tranList.size();i++){
                 SoundEffect soundEffect = KEY2EFFECT.get(effectList.get(page*10+i));
+                if(soundEffect==null) continue;
                 rendIcon(graphics,  30,  this.height / 8 + 20 * i ,  partialTick, soundEffect);
                 graphics.drawString(this.font,Component.translatable(tranList.get(i+page*10)), 60, this.height / 8 + 20 * i+3 , 16777215 );
             }
@@ -77,12 +78,13 @@ public class RecordEffectBook extends Screen {
             if(searchPage*10+10<size) nextButton.render( graphics,  mouseX,  mouseY,  partialTick);
             if(searchPage>0) previousButton.render(graphics,  mouseX,  mouseY,  partialTick);
 
-            for(int i = 0; i+page*10<size&&i<10;i++){
+            for(int i = 0; i+page*10<size&&i<10&&i<KEY2EFFECT.size();i++){
 
                 SoundEffect soundEffect = KEY2EFFECT.get(values.get(page*10+i));
+                if(soundEffect==null) continue;
                 rendIcon(graphics,  30,  this.height / 8 + 20 * i,  partialTick, soundEffect);
 
-                graphics.drawString(this.font, Component.translatable(soundEffect.name(null,null,null,null)), 60, this.height / 8 + 20 * i +3, 16777215 );
+                graphics.drawString(this.font, Component.translatable(soundEffect.name(player,player.level(),null,null)), 60, this.height / 8 + 20 * i +3, 16777215 );
             }
         }
     }
@@ -118,7 +120,7 @@ public class RecordEffectBook extends Screen {
 
     protected void nextDone() {
         if(searchName.equals("")) {
-            if(page*10+10<effectList.size()) page++;
+            if(page*10+10<effectList.size()&&page*10+10<tranList.size()) page++;
         }
         else {
             if(page*10+10<values.size()) searchPage++;
