@@ -178,7 +178,7 @@ public class ClientPayloadHandler {
         Util.saveToCustomData(itemStack,listString);
 
         MM_TRIGGER.get().trigger((ServerPlayer) player,itemStack);
-        ItemUtil.remove1Item(player.getInventory(), Items.AMETHYST_SHARD);
+        ItemUtil.remove1Item(player, Items.AMETHYST_SHARD);
         player.getInventory().add(itemStack);
     }
 

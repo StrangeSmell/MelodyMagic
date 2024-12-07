@@ -108,7 +108,7 @@ public class ServerPayloadHandler {
         Util.saveToCustomData(itemStack,listString);
 
         MM_TRIGGER.get().trigger((ServerPlayer) player,itemStack);
-        ItemUtil.remove1Item(player.getInventory(), Items.AMETHYST_SHARD);
+        ItemUtil.remove1Item(player, Items.AMETHYST_SHARD);
         player.getInventory().add(itemStack);
     }
     public static void function2(IPayloadContext context,int selectCount){
@@ -178,7 +178,7 @@ public class ServerPayloadHandler {
         Util.saveToCustomData(itemStack,listString);
 
         MM_TRIGGER.get().trigger((ServerPlayer) player,itemStack);
-        ItemUtil.remove1Item(player.getInventory(), Items.AMETHYST_SHARD);
+        ItemUtil.remove1Item(player, Items.AMETHYST_SHARD);
         player.getInventory().add(itemStack);
     }
 }
