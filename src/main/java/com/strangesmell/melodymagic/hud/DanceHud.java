@@ -2,7 +2,6 @@ package com.strangesmell.melodymagic.hud;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.strangesmell.melodymagic.api.RenderUtil;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
