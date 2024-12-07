@@ -70,7 +70,7 @@ public class ContinueSoundCollectionItem extends Item {
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         if(!pLevel.isClientSide) return;
         if (pEntityLiving instanceof Player player) {
-            Boolean contain = ItemUtil.containItem(player.getInventory().items, Items.AMETHYST_SHARD);
+            Boolean contain = ItemUtil.containItem(player.getInventory().items, Items.AMETHYST_SHARD)||player.getOffhandItem().is(Items.AMETHYST_SHARD);
             if(!contain) return;
             PacketDistributor.sendToServer(new ContinueSoundData(Util.saveSoundDataToTag(subtitles, location, subtitles2, range, volume, peach,time)));//发包给一个唱片
             subtitles.clear();

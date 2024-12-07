@@ -36,7 +36,7 @@ public class SoundCollectionItem extends Item {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         if (pLevel.isClientSide) {
             //同步到服务端中
-            Boolean contain = ItemUtil.containItem(pPlayer.getInventory().items, Items.AMETHYST_SHARD);
+            Boolean contain = ItemUtil.containItem(pPlayer.getInventory().items, Items.AMETHYST_SHARD)||pPlayer.getOffhandItem().is(Items.AMETHYST_SHARD);
             if((!contain)||subtitles.isEmpty()){
                 return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
             }
