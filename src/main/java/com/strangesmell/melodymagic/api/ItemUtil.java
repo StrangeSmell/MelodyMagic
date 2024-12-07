@@ -26,7 +26,9 @@ public class ItemUtil {
         return false;
     }
 
-    public static Boolean remove1Item(Inventory inventory, Item item) {
+    public static Boolean remove1Item(Player player, Item item) {
+        Inventory inventory = player.getInventory();
+        if(player.getOffhandItem().is(item)) player.getOffhandItem().shrink(1);
         for(int i = 0; i < inventory.items.size(); ++i) {
             if(inventory.items.get(i).isEmpty()) {
                 continue;
