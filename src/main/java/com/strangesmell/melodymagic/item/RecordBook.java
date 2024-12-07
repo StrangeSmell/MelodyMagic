@@ -19,6 +19,11 @@ public class RecordBook extends Item {
         super(pProperties);
     }
 
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return true;
+    }
+
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if(pLevel.isClientSide){
             function(pPlayer);

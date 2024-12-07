@@ -36,6 +36,10 @@ public class ContinueSoundCollectionItem extends Item {
     private static List<Integer> time = Lists.newArrayList();
     private static List<List<Double>> location = Lists.newArrayList();
 
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return true;
+    }
 
     public ContinueSoundCollectionItem(Properties pProperties) {
         super(pProperties);

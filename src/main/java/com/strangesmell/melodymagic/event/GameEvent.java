@@ -1,30 +1,18 @@
 package com.strangesmell.melodymagic.event;
 
-import com.google.common.collect.Lists;
-import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
-import com.strangesmell.melodymagic.item.ContinueSoundContainerItem;
-import com.strangesmell.melodymagic.item.SoundContainerItem;
-import com.strangesmell.melodymagic.message.ContinueSoundData;
 import com.strangesmell.melodymagic.message.RecordData;
 import com.strangesmell.melodymagic.message.SelectCount;
 import net.minecraft.client.Minecraft;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,95 +22,15 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.strangesmell.melodymagic.MelodyMagic.*;
-import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
-import static com.strangesmell.melodymagic.hud.SelectHud.*;
 
 
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME)
 public class GameEvent {
-    @SubscribeEvent
-    public static void registerPayloadHandlers( ItemTooltipEvent event)
-    {
-        if(event.getItemStack().getItem() instanceof SoundContainerItem){
-            List<SoundEvent> subtitles = Lists.newArrayList();
-            List<String> subtitles2 = Lists.newArrayList();
-            List<List<Double>> location = Lists.newArrayList();
-
-            if(event.getItemStack().get(DataComponents.CUSTOM_DATA) ==null) return;
-            Util.loadSoundDataFromTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
-            List<String> tooltip = Lists.newArrayList();
-            List<Integer> num = Lists.newArrayList();
-
-            List<String> effectList =getSoundEffectToString(event.getItemStack());
-            for (int j=0;j<effectList.size();j++){
-                if(KEY2EFFECT.get(effectList.get(j))==null)  continue;
-                event.getToolTip().add(KEY2EFFECT.get(effectList.get(j)).toolTip(Minecraft.getInstance().player, Minecraft.getInstance().player.level(),null,event.getItemStack()));
-
-                //event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-            }
-
-            for(int i=0;i<subtitles2.size();i++){
-                if(!tooltip.contains(subtitles2.get(i))){
-                    tooltip.add(subtitles2.get(i));
-                    num.add(1);
-                }else{
-                    int index = tooltip.indexOf(subtitles2.get(i));
-                    num.set(index,num.get(index)+1);
-                }
-            }
-
-            for(int i=0;i<tooltip.size();i++){
-                if(subtitles2.get(i)!=null){
-                    event.getToolTip().add(Component.translatable(tooltip.get(i)).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-                }
-
-            }
-        }else if(event.getItemStack().getItem() instanceof ContinueSoundContainerItem){
-            List<SoundEvent> subtitles = Lists.newArrayList();
-            List<String> subtitles2 = Lists.newArrayList();
-            List<List<Double>> location = Lists.newArrayList();
-
-            if(event.getItemStack().get(DataComponents.CUSTOM_DATA) ==null) return;
-            Util.loadSoundDataFromTag(event.getItemStack().get(DataComponents.CUSTOM_DATA).copyTag(),subtitles,location,subtitles2);
-            List<String> tooltip = Lists.newArrayList();
-            List<Integer> num = Lists.newArrayList();
-
-            List<String> effectList =getSoundEffectToString(event.getItemStack());
-            for (int j=0;j<effectList.size();j++){
-                if(KEY2EFFECT.get(effectList.get(j))==null)  continue;
-                //event.getToolTip().add(Component.translatable(effectList.get(j)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                event.getToolTip().add(KEY2EFFECT.get(effectList.get(j)).toolTip(event.getEntity(),event.getEntity().level(),null,event.getItemStack()));
-            }
-
-            for(int i=0;i<subtitles2.size();i++){
-                if(!tooltip.contains(subtitles2.get(i))){
-                    tooltip.add(subtitles2.get(i));
-                    num.add(1);
-                }else{
-                    int index = tooltip.indexOf(subtitles2.get(i));
-                    num.set(index,num.get(index)+1);
-                }
-            }
-
-            for(int i=0;i<tooltip.size();i++){
-                if(subtitles2.get(i)!=null){
-                    event.getToolTip().add(Component.translatable(tooltip.get(i)).append(" *"+num.get(i)).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-                }
-
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void playerEvent(PlayerEvent.Clone event)
     {

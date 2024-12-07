@@ -306,6 +306,7 @@ public class Init {
                 return "chicken_egg";
             }
         }, List.of(20, DEFALUTRES));
+
         initAll("shulker", new HashSet<>(List.of(SoundEvents.SHULKER_SHOOT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -330,7 +331,6 @@ public class Init {
                 return "shulker";
             }
         }, List.of(20, DEFALUTRES));
-
         initAll("evoker", new HashSet<>(List.of(SoundEvents.EVOKER_FANGS_ATTACK.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -401,7 +401,6 @@ public class Init {
                 return "evoker";
             }
         }, List.of(20, DEFALUTRES));
-        //11
         initAll("lightning_bolt_thunder", new HashSet<>(List.of(SoundEvents.LIGHTNING_BOLT_THUNDER.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -598,7 +597,6 @@ public class Init {
                 return "witch";
             }
         }, List.of(20, DEFALUTRES));
-
         initAll("eat", new HashSet<>(List.of(SoundEvents.PLAYER_BURP.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -669,6 +667,7 @@ public class Init {
                 return "cat";
             }
         }, List.of(100, DEFALUTRES));
+
         initAll("nether_portal", new HashSet<>(List.of(SoundEvents.PORTAL_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -719,8 +718,7 @@ public class Init {
                 return "nether_portal";
             }
         }, List.of(10, DEFALUTRES));
-
-        initAll("ender_dragon_death", new HashSet<>(List.of(SoundEvents.FIREWORK_ROCKET_LAUNCH.getLocation().toString())), compoundTag, new SoundEffect() {
+        initAll("ender_dragon_death", new HashSet<>(List.of(SoundEvents.ENDER_DRAGON_DEATH.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
                 if (level.isClientSide) return;
@@ -750,7 +748,6 @@ public class Init {
                 return "anvil";
             }
         }, List.of(20, DEFALUTRES));
-        //10
         initAll("spider", new HashSet<>(List.of(SoundEvents.SPIDER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -859,8 +856,6 @@ public class Init {
                 return "chest";
             }
         }, List.of(20, DEFALUTRES));
-
-
         compoundTag.putInt(SoundEvents.COW_AMBIENT.getLocation() + "num", 9);
         initAll("nine_cow", new HashSet<>(List.of(SoundEvents.COW_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
@@ -888,6 +883,7 @@ public class Init {
                 return "nine_pig";
             }
         }, List.of(20, DEFALUTRES));
+
         initAll("water_breath", new HashSet<>(List.of(SoundEvents.WATER_AMBIENT.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -900,7 +896,6 @@ public class Init {
                 return "water_breath";
             }
         }, List.of(5, DEFALUTRES));
-
         initAll("village_reputation", new HashSet<>(List.of(SoundEvents.VILLAGER_YES.getLocation().toString())), compoundTag, new SoundEffect() {
             @Override
             public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
@@ -1039,7 +1034,7 @@ public class Init {
                 return "ominous_bottle";
             }
         }, List.of(20, DEFALUTRES));
-        //12
+
 
     }
 

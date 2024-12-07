@@ -1,4 +1,5 @@
 package com.strangesmell.melodymagic.mixin;
+//record: 9.27 21:00 the first mixin of strange_smell
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,7 +11,6 @@ import net.neoforged.neoforge.common.CommonHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
@@ -19,27 +19,17 @@ import static com.strangesmell.melodymagic.MelodyMagic.ENTITY_AGE;
 
 @Mixin(CommonHooks.class)
 public class IsLivingOnLadderMixin {
-    //record: 9.27 21:00 the first mixin of strange_smell
+
     @Inject(method = "isLivingOnLadder", at = @At("HEAD"), cancellable = true)
-    private static void  isLivingOnLadder(BlockState state, Level level, BlockPos pos, LivingEntity entity, CallbackInfoReturnable<Optional<BlockPos>> info) {
+    private static void isLivingOnLadder(BlockState state, Level level, BlockPos pos, LivingEntity entity, CallbackInfoReturnable<Optional<BlockPos>> info) {
         boolean isSpectator = (entity instanceof Player && entity.isSpectator());
         if (isSpectator) info.setReturnValue(Optional.empty());
-        if(entity instanceof Player player) {
-            if(player.getData(ENTITY_AGE)>0){
-                if(entity.horizontalCollision){
+        if (entity instanceof Player player) {
+            if (player.getData(ENTITY_AGE) > 0) {
+                if (entity.horizontalCollision) {
                     info.setReturnValue(Optional.of(pos));
                 }
             }
         }
-        /*        boolean isSpectator = (entity instanceof Player && entity.isSpectator());
-
-        if (isSpectator) info.setReturnValue(Optional.empty());
-        if(entity instanceof Player player) {
-            if(player.getData(ENTITY_AGE)>0){
-                info.setReturnValue(Optional.of(pos));
-            }
-
-        }
-        entity.sendSystemMessage(Component.literal(entity.getData(ENTITY_AGE).toString()));*/
     }
 }
