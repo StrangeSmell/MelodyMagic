@@ -5,8 +5,10 @@ import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.entity.FriendlyVexModel;
 import com.strangesmell.melodymagic.entity.FriendlyVexRender;
 import com.strangesmell.melodymagic.item.SoundContainerBakedModel;
+import com.strangesmell.melodymagic.item.SoundContainerItemStackRenderer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -20,6 +22,8 @@ import net.neoforged.jarjar.nio.util.Lazy;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
@@ -68,6 +72,19 @@ public class ClientModEvent {
             EntityRenderers.register(MelodyMagic.FRIENDLY_VEX.get(), FriendlyVexRender::new);
         });
     }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void registerClientExtensionsEvent(RegisterClientExtensionsEvent event) {
+        event.registerItem(
+                new IClientItemExtensions() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return new SoundContainerItemStackRenderer();
+            }
+        }, MelodyMagic.COLLECTION_ITEM.get());
+    }
+
 
 
 

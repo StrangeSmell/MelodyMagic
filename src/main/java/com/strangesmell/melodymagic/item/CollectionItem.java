@@ -1,47 +1,31 @@
 package com.strangesmell.melodymagic.item;
 
 import com.google.common.collect.Lists;
-import com.strangesmell.melodymagic.api.ItemUtil;
 import com.strangesmell.melodymagic.api.SoundEffect;
 import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.container.WandMenu;
-import com.strangesmell.melodymagic.hud.SelectHud;
-import com.strangesmell.melodymagic.message.SoundData;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.resources.sounds.SoundInstance;
+import com.strangesmell.melodymagic.hud.DanceHud;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Consumer;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
-import static com.strangesmell.melodymagic.hud.SelectHud.location;
 
 
 public class CollectionItem extends Item implements MenuProvider {
@@ -115,19 +99,6 @@ public class CollectionItem extends Item implements MenuProvider {
         return new WandMenu(pContainerId, pPlayerInventory);
     }
 
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(
-                new IClientItemExtensions() {
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return new SoundContainerItemStackRenderer();
-                    }
-                }
-        );
-    }
-
     @Override
     public int getUseDuration(ItemStack pStack, LivingEntity p_345962_) {
         return 72000;
@@ -171,6 +142,21 @@ public class CollectionItem extends Item implements MenuProvider {
                     }
                 }
             }
+            pLivingEntity.sendSystemMessage(Component.literal("usetime "+ useTime ));
+            if(pLevel.isClientSide){
+
+                    DanceHud hud = DanceHud.getInstance();
+                    hud.subtitles=subtitles;
+                    hud.volume=volume;
+                    hud.peach=peach;
+                    hud.location=location;
+                    hud.time=time;
+                    hud.useTime =itemStack.getUseDuration(pLivingEntity) -  pLivingEntity.getUseItemRemainingTicks();
+                    for(int a :time){
+                        hud.random_time.add(pLevel.random.nextInt(0,11));
+                    }
+
+            }
 
         }
 
@@ -192,6 +178,16 @@ public class CollectionItem extends Item implements MenuProvider {
                 player.getCooldowns().addCooldown(this, soundContainer.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getInt("cooldown"));
 
             }
+        }
+        if(pLevel.isClientSide){
+            DanceHud hud = DanceHud.getInstance();
+            hud.subtitles.clear();
+            hud.volume.clear();
+            hud.peach.clear();
+            hud.location.clear();
+            hud.time.clear();
+            hud.useTime =0;
+
         }
 
     }
