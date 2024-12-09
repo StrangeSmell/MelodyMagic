@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "melodymagic:block/composition_workbench",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "melodymagic:block/composition_workbench"
+    },
+    "facing=south": {
+      "model": "melodymagic:block/composition_workbench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "melodymagic:block/composition_workbench",
+      "y": 270
+    }
+  }
+}
