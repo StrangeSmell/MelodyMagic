@@ -476,12 +476,18 @@ public class Init {
                             wolf.setAge(0);
                         }
 
+                        level.addFreshEntity(wolf);
+                        level.playSound(null, player.getOnPos(), SoundEvents.WOLF_HOWL, SoundSource.MASTER, (float) (level.random.nextFloat() * 0.5), (float) (level.random.nextFloat() * 0.5 + 0.5));
+
+
+/*
                         TimerQueue<MinecraftServer> timerqueue = ((ServerLevel) level).getServer().getWorldData().overworldData().getScheduledEvents();
                         TimerCallback<MinecraftServer> myCallback = (obj, timerQueue, gameTime) -> {
                             level.addFreshEntity(wolf);
                             level.playSound(null, player.getOnPos(), SoundEvents.WOLF_HOWL, SoundSource.MASTER, (float) (level.random.nextFloat() * 0.5), (float) (level.random.nextFloat() * 0.5 + 0.5));
                         };
                         timerqueue.schedule("wolf" + a, level.getGameTime() + level.random.nextInt(0, 101), myCallback);
+*/
 
 
                     }
