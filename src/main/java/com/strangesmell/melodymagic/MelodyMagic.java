@@ -38,7 +38,7 @@ import net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.registries.*;
-import org.jtransforms.fft.FloatFFT_1D;
+
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
