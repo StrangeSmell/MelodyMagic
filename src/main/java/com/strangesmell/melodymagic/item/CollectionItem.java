@@ -169,9 +169,9 @@ public class CollectionItem extends Item implements MenuProvider {
         if(pEntityLiving instanceof Player player){
             if (soundContainer.getItem() instanceof ContinueSoundContainerItem) {
                 List<SoundEffect> listEffect = Util.getSoundEffect(soundContainer.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag());
-                if (listEffect.isEmpty() && pLevel.isClientSide) {
+/*                if (listEffect.isEmpty() && pLevel.isClientSide) {
                     player.sendSystemMessage(Component.translatable(MODID + ".sound_container.empty"));
-                }
+                }*/
                 for (int i = 0; i < listEffect.size(); i++) {
                     listEffect.get(i).effect(player, pLevel, player.getUsedItemHand(), soundContainer);
                 }
