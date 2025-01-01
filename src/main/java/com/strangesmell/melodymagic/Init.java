@@ -742,6 +742,7 @@ public class Init {
                 if (level.isClientSide) return;
                 int size=getSoundEventSize(itemStack,SoundEvents.ANVIL_USE);
                 ItemStack tool = player.getItemInHand(InteractionHand.OFF_HAND);
+                if(!tool.isRepairable()) return;
                 if (tool.getDamageValue() - size * 10 >= 0) {
                     tool.setDamageValue(tool.getDamageValue() - size * 10);
                 } else {

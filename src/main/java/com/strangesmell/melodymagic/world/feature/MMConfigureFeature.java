@@ -33,9 +33,9 @@ public class MMConfigureFeature {
         RuleTest deepslateReplaceables = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
         RuleTest netherrackReplaceables = new BlockMatchTest(Blocks.NETHERRACK);
         RuleTest endstoneReplaceables = new BlockMatchTest(Blocks.END_STONE);
-
+        //生成太多了，注意这里修改后需要数据生成一下
         register(context,MORNING_GLORY_KEY,Feature.FLOWER,
-                new RandomPatchConfiguration(32,6,2, PlacementUtils.onlyWhenEmpty(Feature.SIMPLE_BLOCK,
+                new RandomPatchConfiguration(1,6,2, PlacementUtils.onlyWhenEmpty(Feature.SIMPLE_BLOCK,
                         new SimpleBlockConfiguration(BlockStateProvider.simple(MORNING_GLORY.get())))));
     }
 
