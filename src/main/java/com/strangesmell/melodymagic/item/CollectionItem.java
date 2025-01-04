@@ -142,7 +142,7 @@ public class CollectionItem extends Item implements MenuProvider {
                     }
                 }
             }
-            pLivingEntity.sendSystemMessage(Component.literal("usetime "+ useTime ));
+            //pLivingEntity.sendSystemMessage(Component.literal("usetime "+ useTime ));
             if(pLevel.isClientSide){
 
                     DanceHud hud = DanceHud.getInstance();
