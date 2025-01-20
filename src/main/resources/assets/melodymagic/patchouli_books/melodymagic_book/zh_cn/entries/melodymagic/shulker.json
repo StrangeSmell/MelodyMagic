@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "潜影贝",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集潜影贝导弹的发射声，你可以施法释放潜影贝导弹。"
     }
   ]
 }

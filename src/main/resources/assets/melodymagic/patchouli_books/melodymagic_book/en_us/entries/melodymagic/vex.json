@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "vex",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  By collecting vex voices, you can cast spells to summon vexs to fight for you. The number is related to the number of voices."
     }
   ]
 }

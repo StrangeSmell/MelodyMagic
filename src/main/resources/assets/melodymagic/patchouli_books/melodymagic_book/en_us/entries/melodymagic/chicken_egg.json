@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "chicken egg",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  Collect the sound of throwing eggs and you can cast spells to throw eggs."
     }
   ]
 }

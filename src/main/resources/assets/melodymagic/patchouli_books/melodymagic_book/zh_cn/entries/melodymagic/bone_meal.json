@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "骨粉",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  搜集使用骨粉的声音，你可以释放魔法代替骨粉。如果对一朵花释放，则催生同种花朵。"
     }
   ]
 }

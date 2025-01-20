@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "firework rocket launch",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  Record the sound of firework rockets being launched and you can cast a spell to release them."
     }
   ]
 }

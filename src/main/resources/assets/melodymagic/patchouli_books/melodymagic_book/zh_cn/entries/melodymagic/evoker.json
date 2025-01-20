@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "唤魔者",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集唤魔者攻击的声音，你将可以释放唤魔者的两种法术。"
     }
   ]
 }

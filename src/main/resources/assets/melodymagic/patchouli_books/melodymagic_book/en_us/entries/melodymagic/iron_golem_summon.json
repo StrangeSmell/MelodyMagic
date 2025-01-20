@@ -1,0 +1,12 @@
+{
+  "name": "iron golem summon",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  By collecting the sounds when the Iron Golem dies, you will be able to summon temporary Iron Golems, the number of which is related to the number of sounds collected."
+    }
+  ]
+}

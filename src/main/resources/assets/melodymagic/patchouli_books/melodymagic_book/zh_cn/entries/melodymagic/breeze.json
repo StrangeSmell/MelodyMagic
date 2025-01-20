@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "狂风人",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  搜集狂风人风弹发射声，你可以释放风弹魔法。"
     }
   ]
 }

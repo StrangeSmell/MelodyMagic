@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "铁傀儡",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集修复铁傀儡的声音，你将获得力量和伤害减免。"
     }
   ]
 }

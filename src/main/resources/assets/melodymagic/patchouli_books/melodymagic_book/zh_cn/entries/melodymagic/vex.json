@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "闹鬼",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集闹鬼的声音，你可以施法召唤闹鬼为你作战。数量和声音数量相关。"
     }
   ]
 }

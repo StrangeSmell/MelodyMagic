@@ -1,0 +1,12 @@
+{
+  "name": "bone meal",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Search for sounds that use bone meal, and you can release magic instead of bone meal. If released on a flower, it spawns the same kind of flower."
+    }
+  ]
+}

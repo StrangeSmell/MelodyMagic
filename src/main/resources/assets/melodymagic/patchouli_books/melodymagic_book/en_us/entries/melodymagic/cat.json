@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "cat",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  Search for the sound of cats mating and you can cast a spell to get a kitten of your own, but there is a long cooldown."
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "蜘蛛",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集蜘蛛的嘶嘶声，你将获得爬墙的能力。"
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "猫",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  搜集猫交配的声音，你可以施法获得一只属于你的小猫，但会有很长的冷却时间。"
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "兔子",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集兔子的声音，你可以获得跳跃buff。"
     }
   ]
 }

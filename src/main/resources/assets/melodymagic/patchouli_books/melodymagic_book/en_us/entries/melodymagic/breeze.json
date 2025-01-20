@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "breeze",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  Collecting the sound of the Windrunner's wind bomb firing, you can unleash wind bomb magic."
     }
   ]
 }

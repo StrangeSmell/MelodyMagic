@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "ender pearl",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  Collect the Mordor Pearl casting sound and you can cast spells to cast Mordor Pearls."
     }
   ]
 }

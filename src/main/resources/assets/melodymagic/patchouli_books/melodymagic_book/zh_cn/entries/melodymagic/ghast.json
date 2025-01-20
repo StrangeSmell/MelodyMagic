@@ -1,12 +1,12 @@
 {
-  "name": "烈焰人",
+  "name": "恶魂",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  收集烈焰人火球发射声会有什么效果呢……"
+      "text": "  收集恶魂发射大火球的声音，你将可以施法释放大火球。"
     }
   ]
 }
