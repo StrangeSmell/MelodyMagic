@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  Anvil seems to have some amazing tunes too ......"
+      "text": "  Anvils can be used to repair tool durability by placing the tool in the secondary hand and casting a spell in the primary hand after the sound of the anvil's iron striking while repairing the item has been recorded."
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
-  "name": "下届传送门",
+  "name": "下界传送门",
   "icon": "minecraft:textures/particle/note.png",
   "category": "melodymagic:melodymagic",
   "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "  下届传送门似乎也有一些神奇的旋律……"
+      "text": "  收集下界传送门的呼啸声可以让你释放一个临时传送门，传送会加速他的毁坏。"
     }
   ]
 }
