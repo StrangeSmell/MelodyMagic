@@ -1,10 +1,14 @@
 package com.strangesmell.melodymagic.event;
 
+import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.message.RecordData;
 import com.strangesmell.melodymagic.message.SelectCount;
+import com.strangesmell.melodymagic.playerLookControl.CameraLookControl;
+import com.strangesmell.melodymagic.playerLookControl.PlayerLookControl;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,16 +21,22 @@ import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.strangesmell.melodymagic.MelodyMagic.*;
+import static java.lang.Math.atan2;
 
 
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -140,6 +150,45 @@ public class GameEvent {
             PacketDistributor.sendToServer(new SelectCount(selectCount));
             event.setCanceled(true);
         }
+
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void rightClickEmpty(PlayerInteractEvent.RightClickEmpty event){
+        if(event.getEntity().level().isClientSide){
+            if(MelodyMagic.lock) {
+                lock=false;
+                locked_entity=null;
+            }
+
+        }
+
+    }
+/*    @SubscribeEvent
+    public static void explosionEvent(ExplosionEvent.Detonate event)
+    {
+        for(int i =0;i<event.getAffectedBlocks().size();){
+            BlockPos pos = event.getAffectedBlocks().get(i);
+            if( event.getLevel().getBlockState(pos).getBlock() instanceof TntBlock){
+                i++;
+            }else{
+                event.getAffectedBlocks().remove(i);
+            }
+
+        }
+
+    }*/
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event){
+
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void clientTickEvent(ClientTickEvent.Post event) {
 
     }
 }

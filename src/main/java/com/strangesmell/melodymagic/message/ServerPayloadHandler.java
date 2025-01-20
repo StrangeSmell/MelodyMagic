@@ -68,7 +68,7 @@ public class ServerPayloadHandler {
                     return null;
                 });
     }
-
+    //非持续旋律搜集器
     public static void function(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();
         ItemStack itemStack = new ItemStack(MelodyMagic.SOUND_CONTAINER_ITEM.get());
@@ -82,6 +82,10 @@ public class ServerPayloadHandler {
         List<String> strings = Util.getSoundEventNum2(compoundTag.copy(),soundEvents,num,subtitle);//location key
 
         List<String> listString = Util.getKeyFromSoundRes(strings,num);//这里判断是否满足条件，加入对应的effect key
+        //处理融合技
+        Util.doKeys2Key(listString);
+        Util.removeKey(listString);
+
 
         //结束存入KEY
         //记录玩家搜集的声音种类
@@ -145,7 +149,7 @@ public class ServerPayloadHandler {
 
 
     }
-
+    //持续旋律搜集器
     public static void handleContinueSoundContainer(IPayloadContext context, CompoundTag compoundTag){
         Player player = context.player();
         ItemStack itemStack = new ItemStack(MelodyMagic.CONTINUE_SOUND_CONTAINER_ITEM.get());
@@ -159,6 +163,11 @@ public class ServerPayloadHandler {
         List<String> strings = Util.getSoundEventNum2(compoundTag.copy(),soundEvents,num,subtitle);//location key
 
         List<String> listString = Util.getKeyFromSoundRes(strings,num);//这里判断是否满足条件，加入对应的effect key
+        //处理融合技
+        Util.doKeys2Key(listString);
+        Util.removeKey(listString);
+
+
         //存入额外数据
         for (String s : listString) {
             KEY2EFFECT.get(s).saveAdditionData(context, compoundTag,itemStack);

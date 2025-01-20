@@ -1,0 +1,12 @@
+{
+  "name": "末影箱",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  搜集末影箱的开启声会有什么效果呢……"
+    }
+  ]
+}

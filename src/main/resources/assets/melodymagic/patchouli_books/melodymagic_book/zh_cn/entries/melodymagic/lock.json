@@ -1,0 +1,12 @@
+{
+  "name": "锁",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  收集拉杆拉动的声音，在右键某个实体后会让你的视角锁定在它身上。"
+    }
+  ]
+}

@@ -13,33 +13,30 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.LecternMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.WrittenBookItem;
-import net.minecraft.world.item.component.WritableBookContent;
-import net.minecraft.world.item.component.WrittenBookContent;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clearable, MenuProvider {
+public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clearable {
     public static final int DATA_PAGE = 0;
     public static final int NUM_DATA = 1;
     public static final int SLOT_BOOK = 0;
     public static final int NUM_SLOTS = 1;
-    private final Container bookAccess = new Container() {
+    public static List<ItemStack> items =null;
+    private final SimpleContainer bookAccess = new SimpleContainer() {
         @Override
         public int getContainerSize() {
             return 1;
@@ -54,7 +51,7 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
         public ItemStack getItem(int p_59580_) {
             return p_59580_ == 0 ? CompositionWorkbenchBlockEntity.this.book : ItemStack.EMPTY;
         }
-
+        //todo:这里在移除唱片的时候，把items重新存入唱片，并重新检测符合的effect
         @Override
         public ItemStack removeItem(int p_59582_, int p_59583_) {
             if (p_59582_ == 0) {
@@ -68,7 +65,7 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
                 return ItemStack.EMPTY;
             }
         }
-
+        //todo:这里在移除唱片的时候，把items重新存入唱片，并重新检测符合的effect
         @Override
         public ItemStack removeItemNoUpdate(int p_59590_) {
             if (p_59590_ == 0) {
@@ -140,7 +137,7 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
     }
 
     public boolean hasBook() {
-        return this.book.is(Items.WRITABLE_BOOK) || this.book.is(Items.WRITTEN_BOOK);
+        return this.book.is(MelodyMagic.CONTINUE_SOUND_CONTAINER_ITEM.get());
     }
 
     /**
@@ -155,7 +152,7 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
         this.pageCount = 0;
         CompositionWorkbenchBlock.resetBookState(null, this.getLevel(), this.getBlockPos(), this.getBlockState(), false);
     }
-
+    //todo:这里在放入唱片的时候，把唱片存入items
     public void setBook(ItemStack stack, @Nullable Player player) {
         this.book = this.resolveBook(stack, player);
         this.page = 0;
@@ -181,6 +178,7 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
         return Mth.floor(f * 14.0F) + (this.hasBook() ? 1 : 0);
     }
 
+    //todo ?
     /**
      * Resolves the contents of the passed ItemStack, if it is a book
      */
@@ -239,23 +237,13 @@ public class CompositionWorkbenchBlockEntity extends BlockEntity implements Clea
         this.setBook(ItemStack.EMPTY);
     }
 
-    @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new LecternMenu(containerId, this.bookAccess, this.dataAccess);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("container.lectern");
-    }
-
     private static int getPageCount(ItemStack stack) {
-        WrittenBookContent writtenbookcontent = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
-        if (writtenbookcontent != null) {
-            return writtenbookcontent.pages().size();
-        } else {
-            WritableBookContent writablebookcontent = stack.get(DataComponents.WRITABLE_BOOK_CONTENT);
-            return writablebookcontent != null ? writablebookcontent.pages().size() : 0;
+        CompoundTag compoundTag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+        if (compoundTag.contains("page_count")) {
+            return compoundTag.getInt("page_count");
         }
+
+        return 0;
     }
 }

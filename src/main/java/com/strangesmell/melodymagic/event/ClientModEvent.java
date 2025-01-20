@@ -4,21 +4,26 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.entity.FriendlyVexModel;
 import com.strangesmell.melodymagic.entity.FriendlyVexRender;
+import com.strangesmell.melodymagic.entity.SuperSpectralArrowRender;
 import com.strangesmell.melodymagic.item.SoundContainerBakedModel;
 import com.strangesmell.melodymagic.item.SoundContainerItemStackRenderer;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.jarjar.nio.util.Lazy;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -31,6 +36,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Map;
 
 import static com.strangesmell.melodymagic.MelodyMagic.MODID;
+import static com.strangesmell.melodymagic.MelodyMagic.locked_entity;
+import static java.lang.Math.atan2;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
@@ -70,6 +77,7 @@ public class ClientModEvent {
     public static void clientSetupEvent(FMLClientSetupEvent event) {
         event.enqueueWork(()->{
             EntityRenderers.register(MelodyMagic.FRIENDLY_VEX.get(), FriendlyVexRender::new);
+            EntityRenderers.register(MelodyMagic.SUPER_SPECTRAL_ARROW.get(), SuperSpectralArrowRender::new);
         });
     }
 

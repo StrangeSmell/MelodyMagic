@@ -1,0 +1,12 @@
+{
+  "name": "bow",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  What is the effect of collecting the sound of arrows firing……"
+    }
+  ]
+}

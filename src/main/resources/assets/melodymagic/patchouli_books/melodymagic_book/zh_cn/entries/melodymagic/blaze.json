@@ -1,0 +1,12 @@
+{
+  "name": "烈焰人",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  搜集烈焰人火球发射声会有什么效果呢……"
+    }
+  ]
+}

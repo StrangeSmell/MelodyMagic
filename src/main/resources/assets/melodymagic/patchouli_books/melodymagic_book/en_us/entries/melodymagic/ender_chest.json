@@ -1,0 +1,12 @@
+{
+  "name": "ender chest",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  What effect will collecting the opening sound of the endgame box have……"
+    }
+  ]
+}

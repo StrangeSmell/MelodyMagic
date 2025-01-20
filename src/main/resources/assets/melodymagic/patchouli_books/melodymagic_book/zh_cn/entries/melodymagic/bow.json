@@ -1,0 +1,12 @@
+{
+  "name": "弓箭",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  收集弓箭的发射声会有什么效果呢……"
+    }
+  ]
+}

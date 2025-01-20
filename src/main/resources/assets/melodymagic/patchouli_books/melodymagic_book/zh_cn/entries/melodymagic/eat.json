@@ -1,0 +1,12 @@
+{
+  "name": "食物",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  收集吃完食物的打嗝声会有什么效果呢……"
+    }
+  ]
+}

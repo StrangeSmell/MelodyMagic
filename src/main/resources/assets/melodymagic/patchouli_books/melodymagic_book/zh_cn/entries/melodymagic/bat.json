@@ -1,0 +1,12 @@
+{
+  "name": "蝙蝠",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  搜集蝙蝠的叫声会有什么效果呢……"
+    }
+  ]
+}

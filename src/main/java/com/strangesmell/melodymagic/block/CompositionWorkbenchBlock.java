@@ -1,9 +1,15 @@
 package com.strangesmell.melodymagic.block;
 
 import com.mojang.serialization.MapCodec;
+import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.container.WandMenu;
+import com.strangesmell.melodymagic.item.ContinueSoundContainerItem;
+import com.strangesmell.melodymagic.item.SoundContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -171,8 +177,8 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
     }
     //todo
     private static void placeBook(@Nullable LivingEntity p_347484_, Level p_270065_, BlockPos p_270155_, BlockState p_270753_, ItemStack p_270173_) {
-        if (p_270065_.getBlockEntity(p_270155_) instanceof LecternBlockEntity lecternblockentity) {
-            lecternblockentity.setBook(p_270173_.consumeAndReturn(1, p_347484_));
+        if (p_270065_.getBlockEntity(p_270155_) instanceof CompositionWorkbenchBlockEntity compositionWorkbenchBlockEntity) {
+            compositionWorkbenchBlockEntity.setBook(p_270173_.consumeAndReturn(1, p_347484_));
             resetBookState(p_347484_, p_270065_, p_270155_, p_270753_, true);
             p_270065_.playSound(null, p_270155_, SoundEvents.BOOK_PUT, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
@@ -234,11 +240,7 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
         }
     }
 
-    /**
-     * Returns whether this block is capable of emitting redstone signals.
-     *
-     * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#isSignalSource} whenever possible. Implementing/overriding is fine.
-     */
+
     @Override
     protected boolean isSignalSource(BlockState state) {
         return true;
@@ -289,8 +291,8 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
     protected int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
         if (blockState.getValue(HAS_BOOK)) {
             BlockEntity blockentity = level.getBlockEntity(pos);
-            if (blockentity instanceof LecternBlockEntity) {
-                return ((LecternBlockEntity)blockentity).getRedstoneSignal();
+            if (blockentity instanceof CompositionWorkbenchBlockEntity) {
+                return ((CompositionWorkbenchBlockEntity)blockentity).getRedstoneSignal();
             }
         }
 
@@ -303,7 +305,7 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
     ) {
         if (state.getValue(HAS_BOOK)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        } else if (stack.is(ItemTags.LECTERN_BOOKS)) {
+        } else if (stack.is(MelodyMagic.CONTINUE_SOUND_CONTAINER_ITEM.get())) {
             return tryPlaceBook(player, level, pos, state, stack)
                     ? ItemInteractionResult.sidedSuccess(level.isClientSide)
                     : ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
@@ -317,8 +319,10 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (state.getValue(HAS_BOOK)) {
-            if (!level.isClientSide) {
-                this.openScreen(level, pos, player);
+            if (level.isClientSide) {
+
+                //Minecraft.getInstance().setScreen(effectBook);
+
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -327,19 +331,7 @@ public class CompositionWorkbenchBlock extends BaseEntityBlock {
         }
     }
 
-    @Nullable
-    @Override
-    protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return !state.getValue(HAS_BOOK) ? null : super.getMenuProvider(state, level, pos);
-    }
 
-    private void openScreen(Level level, BlockPos pos, Player player) {
-        BlockEntity blockentity = level.getBlockEntity(pos);
-        if (blockentity instanceof LecternBlockEntity) {
-            player.openMenu((LecternBlockEntity)blockentity);
-            player.awardStat(Stats.INTERACT_WITH_LECTERN);
-        }
-    }
 
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {

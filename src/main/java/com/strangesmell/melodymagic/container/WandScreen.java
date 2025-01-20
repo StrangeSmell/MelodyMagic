@@ -63,10 +63,7 @@ public class WandScreen extends AbstractContainerScreen<WandMenu> {
             poseStack.rotateAround(Axis.ZP.rotationDegrees(f1*coefficent),(float) this.width/k,(float)this.height/k-r,150);
         }
 
-
         pGuiGraphics.renderItem(new ItemStack(Items.AMETHYST_SHARD),  (int) (this.width/k-16*0.5), (int) (this.height/k-16*0.5-r));
-        //pGuiGraphics.renderItem(new ItemStack(Items.AMETHYST_SHARD),  (int) pMouseX/k,  (int) pMouseY/k);
-
 
         pGuiGraphics.pose().popPose();
 

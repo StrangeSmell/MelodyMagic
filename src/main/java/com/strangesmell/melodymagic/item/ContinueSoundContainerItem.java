@@ -1,12 +1,14 @@
 package com.strangesmell.melodymagic.item;
 
 import com.google.common.collect.Lists;
+import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.api.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,13 +20,16 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.strangesmell.melodymagic.MelodyMagic.KEY2EFFECT;
 import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 
-public class ContinueSoundContainerItem extends Item {
+public class ContinueSoundContainerItem extends Item implements SoundContainer , IItemHandler {
 
 
 
@@ -90,5 +95,52 @@ public class ContinueSoundContainerItem extends Item {
             }
 
         }
+    }
+
+    public static final ItemCapability<IItemHandler, ItemStack> ITEM_HANDLER =
+            ItemCapability.create(
+                    ResourceLocation.fromNamespaceAndPath(MelodyMagic.MODID, "continue_sound_item_handler"),
+                    // Provide the queried type. Here, we want to look up `IItemHandler` instances.`
+                    IItemHandler.class,
+                    // Provide the context type. We will allow the query to receive an extra `Direction side` parameter.
+                    ItemStack.class);
+
+    @Override
+    public boolean isSoundContainer() {
+        return false;
+    }
+    @Override
+    public boolean isContinueSoundContainer() {
+        return true;
+    }
+
+    @Override
+    public int getSlots() {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return null;
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        return null;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        return null;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 0;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return false;
     }
 }

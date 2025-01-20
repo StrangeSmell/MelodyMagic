@@ -1,0 +1,12 @@
+{
+  "name": "lock",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  Collect the sound of pulling the lever, and right clicking on an entity will lock your perspective onto it."
+    }
+  ]
+}

@@ -1,14 +1,20 @@
 package com.strangesmell.melodymagic.hud;
 
+import com.strangesmell.melodymagic.MelodyMagic;
+import com.strangesmell.melodymagic.playerLookControl.CameraLookControl;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.strangesmell.melodymagic.MelodyMagic.lock;
+import static com.strangesmell.melodymagic.MelodyMagic.locked_entity;
 
 public class RecordHud implements LayeredDraw.Layer {
     private static final RecordHud hud = new RecordHud();
@@ -44,8 +50,21 @@ public class RecordHud implements LayeredDraw.Layer {
                 i++;
             }
         }
-
-
         guiGraphics.pose().popPose();
+
+
+        if(locked_entity != null&&!locked_entity.isAlive()){
+            lock=false;
+            locked_entity =null;
+        }
+        if(Minecraft.getInstance().level==null)return;
+
+        if(MelodyMagic.lock){
+            Player player = Minecraft.getInstance().player;
+            CameraLookControl playerLookControl = new CameraLookControl(player ,deltaTracker );
+            playerLookControl.setLookAt(locked_entity);
+            playerLookControl.tick();
+
+        }
     }
 }

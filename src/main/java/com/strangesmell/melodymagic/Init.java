@@ -2,6 +2,7 @@ package com.strangesmell.melodymagic;
 
 import com.strangesmell.melodymagic.api.EffectUtil;
 import com.strangesmell.melodymagic.api.SoundEffect;
+import com.strangesmell.melodymagic.api.Util;
 import com.strangesmell.melodymagic.block.FakeNetherPortal;
 import com.strangesmell.melodymagic.block.FakeNetherPortalBlockEntity;
 import com.strangesmell.melodymagic.container.ChestConatiner;
@@ -9,6 +10,9 @@ import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.item.CollectionItem;
 import com.strangesmell.melodymagic.item.SoundContainerItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -52,6 +56,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -89,6 +94,7 @@ public class Init {
     public void init() {
         initMaps();
         initSoundInf();
+        initKeys2Key();
     }
 
     private static void initMaps() {
@@ -142,6 +148,7 @@ public class Init {
                 String biome =itemStack.get(DataComponents.CUSTOM_DATA).copyTag().getString(MODID+"bow_biome");
                 List<Holder<Biome>> biomeLits = new ArrayList<>();
                 level.registryAccess().registryOrThrow(Registries.BIOME).holders().forEach(biomeLits::add);
+
                 ItemStack potionArrow = Items.TIPPED_ARROW.getDefaultInstance();
                 PotionContents potionContents = itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
                 for (Holder<Biome> biomeHolder : biomeLits){
@@ -151,6 +158,7 @@ public class Init {
                         if(biomeHolder.is(Biomes.NETHER_WASTES)||biomeHolder.is(Biomes.SOUL_SAND_VALLEY)||biomeHolder.is(Biomes.CRIMSON_FOREST)||biomeHolder.is(Biomes.WARPED_FOREST)||biomeHolder.is(Biomes.BASALT_DELTAS)) potionContents=potionContents.withEffectAdded(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100));
                     }
                 }
+
                 potionArrow.set(DataComponents.POTION_CONTENTS, potionContents);
                 List<ItemStack> draw = new ArrayList<>();
                 draw.add(potionArrow);
@@ -259,6 +267,21 @@ public class Init {
                 if (player.isFallFlying()) {
                     FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level, Items.FIREWORK_ROCKET.getDefaultInstance(), player);
                     level.addFreshEntity(fireworkrocketentity);
+                }else{
+                    if(getHitResult(level, player, player.entityInteractionRange()) instanceof BlockHitResult blockHitResult){
+                        Vec3 vec3 = blockHitResult.getLocation();
+                        Direction direction = blockHitResult.getDirection();
+                        FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(
+                                level,
+                                player,
+                                vec3.x + (double)direction.getStepX() * 0.15,
+                                vec3.y + (double)direction.getStepY() * 0.15,
+                                vec3.z + (double)direction.getStepZ() * 0.15,
+                                Items.FIREWORK_ROCKET.getDefaultInstance()
+                        );
+                        level.addFreshEntity(fireworkrocketentity);
+                    }
+
                 }
             }
 
@@ -1041,11 +1064,106 @@ public class Init {
                 return "ominous_bottle";
             }
         }, List.of(20, DEFALUTRES));
+        initAll("lock", new HashSet<>(List.of(SoundEvents.LEVER_CLICK.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (!level.isClientSide) return;
+                HitResult hitResult = getHitResult(level, player, 10);
+                if(hitResult instanceof EntityHitResult entityHitResult) {
+                    lock = true;
+                    locked_entity = entityHitResult.getEntity();
+                }
+
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
+                return "lock";
+            }
+        }, List.of(20, DEFALUTRES));
+        initAll("hoe", new HashSet<>(List.of(SoundEvents.HOE_TILL.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if(player instanceof RemotePlayer) return;
+
+                HitResult hitResult = getHitResult(level, player, 10);
+                if(hitResult instanceof BlockHitResult blockHitResult) {
+                    BlockPos blockPos = blockHitResult.getBlockPos();
+                    BlockState blockState = level.getBlockState(blockPos);
+                    if (blockState.getBlock() instanceof BushBlock) {
+                        List<BlockPos> blockPoss = new ArrayList<>();
+                        blockPoss.add(blockPos);
+                        if(level.getBlockState(blockPos.east()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.east());
+                        if(level.getBlockState(blockPos.west()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.west());
+                        if(level.getBlockState(blockPos.north()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.north());
+                        if(level.getBlockState(blockPos.south()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.south());
+                        if(level.getBlockState(blockPos.north().east()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.north().east());
+                        if(level.getBlockState(blockPos.north().west()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.north().west());
+                        if(level.getBlockState(blockPos.south().east()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.south().east());
+                        if(level.getBlockState(blockPos.south().west()).getBlock() instanceof BushBlock) blockPoss.add(blockPos.south().west());
+                        for(BlockPos block : blockPoss) {
+                            if(player instanceof ServerPlayer serverPlayer){
+                                serverPlayer.gameMode.useItemOn(serverPlayer,level,Items.DIAMOND_HOE.getDefaultInstance() ,InteractionHand.MAIN_HAND, blockHitResult.withPosition(block));
+                            }
+                        }
 
 
-    }
+                    }else {
+                        if(player instanceof ServerPlayer serverPlayer){
+                            serverPlayer.gameMode.useItemOn(serverPlayer,level,Items.DIAMOND_HOE.getDefaultInstance() ,InteractionHand.MAIN_HAND, blockHitResult);
+                        }
+                    }
 
-    private void build() {
+                }
+
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack itemstack) {
+                return "hoe";
+            }
+        }, List.of(20, DEFALUTRES));
+
+        //融合技
+        initAll("recon_bolt", new HashSet<>(List.of(SoundEvents.WOLF_HOWL.getLocation().toString())), compoundTag, new SoundEffect() {
+            @Override
+            public void effect(Player player, Level level, InteractionHand pUsedHand, ItemStack itemStack) {
+                if (level.isClientSide) return;
+                String biome =itemStack.get(DataComponents.CUSTOM_DATA).copyTag().getString(MODID+"bow_biome");
+                List<Holder<Biome>> biomeLits = new ArrayList<>();
+                level.registryAccess().registryOrThrow(Registries.BIOME).holders().forEach(biomeLits::add);
+
+                ItemStack potionArrow = RECON_BOLT_ITEM.get().getDefaultInstance();
+                PotionContents potionContents = itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                for (Holder<Biome> biomeHolder : biomeLits){
+                    if(biomeHolder.getRegisteredName().contains(biome)){
+                        if(biomeHolder.is(Biomes.SNOWY_BEACH)||biomeHolder.is(Biomes.SNOWY_PLAINS)||biomeHolder.is(Biomes.SNOWY_SLOPES)||biomeHolder.is(Biomes.SNOWY_TAIGA))potionContents= potionContents.withEffectAdded(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100));
+                        if(biomeHolder.is(Biomes.SWAMP)||biomeHolder.is(Biomes.MANGROVE_SWAMP)) potionContents = potionContents.withEffectAdded(new MobEffectInstance(MobEffects.POISON, 100));
+                        if(biomeHolder.is(Biomes.NETHER_WASTES)||biomeHolder.is(Biomes.SOUL_SAND_VALLEY)||biomeHolder.is(Biomes.CRIMSON_FOREST)||biomeHolder.is(Biomes.WARPED_FOREST)||biomeHolder.is(Biomes.BASALT_DELTAS)) potionContents=potionContents.withEffectAdded(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100));
+                    }
+                }
+
+                potionArrow.set(DataComponents.POTION_CONTENTS, potionContents);
+                List<ItemStack> draw = new ArrayList<>();
+                draw.add(potionArrow);
+                EffectUtil.shoot((ServerLevel) level, player, pUsedHand, Items.BOW.getDefaultInstance(), draw, 3, 1, true, null);
+            }
+
+            @Override
+            public String name(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack collectionItem) {
+                return "recon_bolt";
+            }
+
+            public void saveAdditionData(IPayloadContext context, CompoundTag compoundTag,ItemStack itemStack){
+                Holder<Biome>  biome= context.player().level().getBiome(context.player().getOnPos()) ;
+                compoundTag.putString(MODID+"bow_biome", biome.getKey().location().getPath());
+            }
+            @Override
+            public Component toolTip(@Nullable Player player, @Nullable Level level, @Nullable InteractionHand pUsedHand, @Nullable ItemStack ItemStack) {
+                String biome =ItemStack.get(DataComponents.CUSTOM_DATA).copyTag().getString(MODID+"bow_biome");
+                return Component.translatable("recon_bolt ").append(Component.translatable("biome.minecraft."+biome)).setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
+            }
+        }, List.of(20, DEFALUTRES));
 
     }
 
@@ -1068,6 +1186,9 @@ public class Init {
         SOUND_INF.put(SoundEvents.CAT_PURR.getLocation().toString(), 1200);
         SOUND_INF.put(SoundEvents.TURTLE_AMBIENT_LAND.getLocation().toString(), 200);
         SOUND_INF.put(SoundEvents.CHICKEN_EGG.getLocation().toString(), 10);
+    }
+    public void initKeys2Key() {
+        KEYS2KEY.add(List.of("recon_bolt","bat","bow"));
     }
 
     //priority int,icon res

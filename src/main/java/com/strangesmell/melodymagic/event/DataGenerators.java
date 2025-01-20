@@ -3,6 +3,8 @@ package com.strangesmell.melodymagic.event;
 import com.google.common.collect.Iterables;
 import com.strangesmell.melodymagic.MelodyMagic;
 import com.strangesmell.melodymagic.api.MMCriterionTrigger;
+import com.strangesmell.melodymagic.block.CompositionWorkbenchBlock;
+import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -10,15 +12,21 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.recipes.*;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.VanillaBlockTagsProvider;
+import net.minecraft.data.tags.VanillaItemTagsProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
@@ -41,6 +49,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import static com.strangesmell.melodymagic.MelodyMagic.*;
@@ -53,6 +62,12 @@ public class DataGenerators {
         var packOutput = gen.getPackOutput();
         var helper = event.getExistingFileHelper();
         var lookupProvider = event.getLookupProvider();
+
+        CompletableFuture<HolderLookup.Provider> completablefuture1 = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
+
+        DataGenerator.PackGenerator datagenerator$packgenerator2 = gen.getVanillaPack(event.includeServer());
+        TagsProvider<Block> tagsprovider4 = datagenerator$packgenerator2.addProvider(bindRegistries(VanillaBlockTagsProvider::new, completablefuture1));
+
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         gen.addProvider(event.includeClient(), new EnglishLanguageProvider(packOutput));
         gen.addProvider(event.includeClient(), new ChineseLanguageProvider(packOutput));
@@ -60,6 +75,7 @@ public class DataGenerators {
         gen.addProvider(event.includeClient(), new StateProvider(packOutput, helper));
         gen.addProvider(event.includeServer(), new LootProvider(packOutput, lookupProvider));
         gen.addProvider(event.includeServer(), new CustomBlockTag(packOutput, lookupProvider));
+        gen.addProvider(event.includeServer(), new CustomItemTag(packOutput, lookupProvider, tagsprovider4.contentsGetter()));
         gen.addProvider(event.includeServer(), new CustomAdvancementProvider(packOutput, lookupProvider,existingFileHelper));
         gen.addProvider(event.includeServer(), new MMWorldGen(packOutput, lookupProvider));
         gen.addProvider(event.includeServer(), new CustomRecipeProvider(packOutput, lookupProvider));
@@ -114,6 +130,8 @@ public class DataGenerators {
             generatePottedMorningGloryBlockState(POT_MORNING_GLORY.get());
             //BlockModelBuilder modelBuilder =models().cross(name(MORNING_GLORY.get()),blockTexture(MORNING_GLORY.get())).renderType("cutout");
             //this.simpleBlockItem(SULFUR_BLOCK.get(), this.cubeAll(SULFUR_BLOCK.get()));
+            //simpleBlock(COMPOSITION_WORKBENCH.get(),models().singleTexture(name(COMPOSITION_WORKBENCH.get(), ResourceLocation.withDefaultNamespace("block/composition_workbench"),"composition_workbench", ResourceLocation.fromNamespaceAndPath(MODID,"block/composition_workbench")).renderType("cutout"));
+
         }
         public void generateMorningGloryBlockState(Block block) {
             BlockModelBuilder model = models().cross(name(block), blockTexture(block)).renderType("cutout");
@@ -125,6 +143,7 @@ public class DataGenerators {
             simpleBlock(block,models().singleTexture(name(block), ResourceLocation.withDefaultNamespace("block/flower_pot_cross"),"plant", ResourceLocation.fromNamespaceAndPath(MODID,"block/morning_glory")).renderType("cutout"));
 
         }
+
         private ResourceLocation key(Block block) {
             return BuiltInRegistries.BLOCK.getKey(block);
         }
@@ -155,6 +174,7 @@ public class DataGenerators {
             this.dropSelf(SOUND_PLAYER_BLOCK.get());
             this.dropSelf(MORNING_GLORY.get());
             this.dropSelf(POT_MORNING_GLORY.get());
+            this.dropSelf(COMPOSITION_WORKBENCH.get());
             this.dropOther(FAKE_NETHER_PORTAL.get(),Items.AIR);
 
         /*
@@ -182,6 +202,18 @@ public class DataGenerators {
             );
             this.tag(BlockTags.FLOWERS).add(
                     MORNING_GLORY.get()
+            );
+        }
+    }
+
+    public static class CustomItemTag extends VanillaItemTagsProvider {
+        public CustomItemTag(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, CompletableFuture<TagLookup<Block>> p_275572_) {
+            super(pOutput, pLookupProvider, p_275572_);
+        }
+
+        protected void addTags(HolderLookup.Provider pProvider) {
+            this.tag(ItemTags.ARROWS).add(
+                    RECON_BOLT_ITEM.get()
             );
         }
     }
@@ -284,6 +316,11 @@ public class DataGenerators {
         }
 
 
+    }
+    private static <T extends DataProvider> DataProvider.Factory<T> bindRegistries(
+            BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> tagProviderFactory, CompletableFuture<HolderLookup.Provider> lookupProvider
+    ) {
+        return p_255476_ -> tagProviderFactory.apply(p_255476_, lookupProvider);
     }
 
 }

@@ -29,7 +29,7 @@ import static com.strangesmell.melodymagic.MelodyMagic.KEY2EFFECT;
 import static com.strangesmell.melodymagic.api.Util.getSoundEffectToString;
 import static com.strangesmell.melodymagic.hud.SelectHud.subtitles;
 
-public class SoundContainerItem extends Item {
+public class SoundContainerItem extends Item implements SoundContainer{
     public SoundContainerItem(Properties pProperties) {
         super(pProperties);
     }
@@ -102,5 +102,13 @@ public class SoundContainerItem extends Item {
             }
 
         }
+    }
+    @Override
+    public boolean isSoundContainer() {
+        return true;
+    }
+    @Override
+    public boolean isContinueSoundContainer() {
+        return false;
     }
 }

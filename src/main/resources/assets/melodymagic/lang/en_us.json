@@ -7,6 +7,7 @@
   "item.melodymagic.sound_collection": "Melody collector",
   "item.melodymagic.continue_sound_collection": "Continuous Melody collector",
   "item.melodymagic.morning_glory": "Morning glory",
+  "item.melodymagic.recon_bolt": "Recon Bolt",
 
   "block.melodymagic.pot_morning_glory": "Potted Morning Glory",
   "block.melodymagic.morning_glory": "Morning Glory",
@@ -46,6 +47,13 @@
   "warden_sonic_boon": "sonic boon",
   "nine_cow": "nine cow",
   "water_breath": "water breath",
-  "lightning_bolt_thunder": "lightning"
+  "lightning_bolt_thunder": "lightning",
+
+  "container.composition_workbench": "Composition Workbench",
+
+  "tooltip.melodymagic.note.volume": "volume",
+  "tooltip.melodymagic.note.peach": "peach",
+  "tooltip.melodymagic.note.location": "location",
+  "tooltip.melodymagic.note.null": "null"
 
 }

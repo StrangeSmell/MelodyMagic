@@ -5,13 +5,16 @@ import com.strangesmell.melodymagic.container.ChestContainerScreen;
 import com.strangesmell.melodymagic.container.WandScreen;
 import com.strangesmell.melodymagic.entity.FriendlyVex;
 import com.strangesmell.melodymagic.message.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.level.block.TntBlock;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
@@ -69,6 +72,7 @@ public class MODEvent {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(MelodyMagic.WAND_MENU.get(), WandScreen::new);
+        //event.register(MelodyMagic.COMPOSITION_MENU.get(), CompositionScreen::new);
         event.register(MelodyMagic.CHEST_ROW1.get(), ChestContainerScreen::new);
         event.register(MelodyMagic.CHEST_ROW2.get(), ChestContainerScreen::new);
         event.register(MelodyMagic.CHEST_ROW3.get(), ChestContainerScreen::new);
@@ -88,6 +92,7 @@ public class MODEvent {
     {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) ->new ComponentItemHandler(itemStack, DataComponents.CONTAINER, 20), MelodyMagic.COLLECTION_ITEM.get());
     }
+
 
 
 }

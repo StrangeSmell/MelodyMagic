@@ -1,0 +1,12 @@
+{
+  "name": "recon bolt",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  What are the effects of combining magic while collecting the sounds required for bat magic and bow and arrow magic?"
+    }
+  ]
+}

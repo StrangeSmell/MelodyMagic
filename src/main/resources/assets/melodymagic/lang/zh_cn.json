@@ -7,6 +7,7 @@
   "item.melodymagic.sound_collection": "旋律收集器",
   "item.melodymagic.continue_sound_collection": "持久旋律收集器",
   "item.melodymagic.morning_glory": "牵牛花",
+  "item.melodymagic.recon_bolt": "侦察箭",
 
   "block.melodymagic.pot_morning_glory": "盆装牵牛花",
   "block.melodymagic.morning_glory": "牵牛花",
@@ -37,7 +38,12 @@
   "warden_sonic_boon": "音爆",
   "nine_cow": "九牛之力",
   "water_breath": "水下呼吸",
-  "lightning_bolt_thunder": "雷击"
+  "lightning_bolt_thunder": "雷击",
 
+  "container.composition_workbench": "编曲台",
 
+  "tooltip.melodymagic.note.volume": "音量",
+  "tooltip.melodymagic.note.peach": "音调",
+  "tooltip.melodymagic.note.location": "相对位置",
+  "tooltip.melodymagic.note.null": "空空如也"
 }

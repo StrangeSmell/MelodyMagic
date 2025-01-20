@@ -1,0 +1,12 @@
+{
+  "name": "箱子",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  搜集箱子的开启声会有什么效果呢……数量似乎也有一些影响……"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "侦察箭",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  组合魔法，同时搜集蝙蝠魔法和弓箭魔法所需要的声音会有什么效果呢？"
+    }
+  ]
+}

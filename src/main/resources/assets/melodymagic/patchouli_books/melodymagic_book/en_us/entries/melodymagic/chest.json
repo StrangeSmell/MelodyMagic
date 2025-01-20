@@ -1,0 +1,12 @@
+{
+  "name": "chest",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  What effect does the sound of collecting boxes opening have? The quantity seems to have some impact as well."
+    }
+  ]
+}

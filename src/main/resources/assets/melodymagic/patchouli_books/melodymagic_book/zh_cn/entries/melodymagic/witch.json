@@ -1,0 +1,12 @@
+{
+  "name": "女巫",
+  "icon": "minecraft:textures/particle/note.png",
+  "category": "melodymagic:melodymagic",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "  收集女巫投掷药水和喝下药水的声音会有什么效果呢……"
+    }
+  ]
+}

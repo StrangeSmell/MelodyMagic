@@ -243,6 +243,27 @@ public class Util {
         }
     }
 
+    public static void loadSoundDataFromTag(CompoundTag tag, List<SoundEvent> list1, List<List<Double>> list2,List<String> subtitles2,List<Float> range,List<Float> volume,List<Float> peach,List<Integer> time) {
+        int size = tag.getInt("creat_size") ;
+        if (size != 0) {
+            for (int i = 0; i < size; i++) {
+                ResourceLocation resourceLocation =ResourceLocation.fromNamespaceAndPath(tag.getString("namespace" + i),tag.getString("path" + i));
+                SoundEvent soundEvent =SoundEvent.createFixedRangeEvent(resourceLocation,tag.getFloat("range" + i));
+                list1.add(soundEvent);
+                subtitles2.add(tag.getString("subtitle" + i));
+                List<Double> xyz = Lists.newArrayList();
+                xyz.add(tag.getDouble("x" + i));
+                xyz.add(tag.getDouble("y" + i));
+                xyz.add(tag.getDouble("z" + i));
+                time.add(tag.getInt("time" + i));
+                list2.add(xyz);
+                range.add(tag.getFloat("range" + i));
+                volume.add(tag.getFloat("volume" + i));
+                peach.add(tag.getFloat("peach" + i));
+            }
+        }
+    }
+
     public static int getNumOfUntranslate(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
@@ -473,6 +494,29 @@ public class Util {
         }
         return listEffectString;
     }
+
+    //加入融合技能key
+    public static void doKeys2Key(List<String> keys) {
+        for (List<String> strings : KEYS2KEY) {
+            int j = 0;
+            while (keys.contains(strings.get(j+1))) {
+                j++;
+                if (j >= strings.size() - 1) break;
+            }
+            if (j == strings.size() - 1) keys.add(strings.getFirst());
+        }
+    }
+    //去除融合技所需的key
+    public static void removeKey(List<String> keys) {
+        for (List<String> strings : KEYS2KEY) {
+            if (keys.contains(strings.getFirst())) {
+                for (int j = 1; j < strings.size(); j++) {
+                    keys.remove(strings.get(j));
+                }
+            }
+        }
+    }
+
 
     public static void effect(List<SoundEvent> subtitles, List<List<Double>> distance, Level pLevel, Player pPlayer, InteractionHand pUsedHand){
         MobEffectInstance effectInstance = new MobEffectInstance(getRandomEffect(), 180, 1);
